@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: da3a2a1e570d01f4791b8f83526e2ce8
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Rapier Zero
+  fontNames:
+  - Rapier Zero
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d6d201054584c434f9a64750b5843bb0, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

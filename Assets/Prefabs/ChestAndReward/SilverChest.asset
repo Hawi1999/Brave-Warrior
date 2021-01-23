@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9d32f1a3a8338c4e964d5a373be6778, type: 3}
+  m_Name: SilverChest
+  m_EditorClassIdentifier: Assembly-CSharp::ChestData
+  Prefabs: {fileID: 3457977285969754169, guid: 478a7c5d38b3aa848a71ae1f45a2b6f0, type: 3}
+  NameOfRewards: []

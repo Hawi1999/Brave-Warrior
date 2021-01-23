@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3662648442104388291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3662648442104388300}
+  - component: {fileID: 3662648442104388301}
+  m_Layer: 5
+  m_Name: BTChon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &3662648442104388300
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3662648442104388291}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -214.875, y: 0.05206299}
+  m_SizeDelta: {x: 275.31204, y: 934.0282}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3662648442104388301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3662648442104388291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1bb51f37dd02649af89134f31f8e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TuDuoiLenTren:
+  - {fileID: 6385921246666631810, guid: 417b1c12f523d7d4ca501208b9451cc5, type: 3}
+  - {fileID: 4506488447348925726, guid: 57ca5dd72deac954fb0df770eda1b119, type: 3}
+  - {fileID: 1762318163384203274, guid: b233e3efddd6b9d41b2e952a7c2bbbc4, type: 3}
+  - {fileID: 5714985601507532943, guid: 971b2eb5ee328e246b10da7bef04d06b, type: 3}

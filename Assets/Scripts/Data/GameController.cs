@@ -1,0 +1,121 @@
+﻿using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+[Serializable]
+public class SaveScene {
+    public string NameScene;
+    public Vector3 Pos;
+
+    public SaveScene(string name, Vector3 pos)
+    {
+        NameScene = name;
+        Pos = pos;
+    }
+}
+public class GameController : MonoBehaviour
+{
+    /* Thể hiện duy nhất cho GameController
+     * 
+     */
+    public static GameController Instance { get; private set; }
+    /* Trình điều khiển là duy nhất
+     * Mỗi Cảnh sẽ có một Joytick riêng và qua mỗi cảnh sẽ được setJoytick vào 
+     */
+    public static Joystick MyJoy;
+    public static MAP_GamePlay MapGamePlay;
+    public BTThaoTacManHinh BTTTMH;
+    public static GameObject CanvasMain;
+    [SerializeField]
+    private GameObject LoadingMain;
+    [SerializeField]
+    private Slider sli_loading;
+    [SerializeField]
+    private GameObject MoMan;
+    public HienThiThongBao TB;
+    public static SceneGame LastScene = SceneGame.Loading;
+    public static Vector3 LastPos = new Vector3(0, 0, 0);
+    private void Start()
+    {
+        LoadingMain.SetActive(false);
+        MoMan.SetActive(false);
+        LoadScene(SceneGame.TrangTrai);
+    }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    public static string getStringTimeBySeconds(long Giay)
+    {
+
+        string s = "";
+        if (Giay < 0)
+        {
+            s += "-";
+            Giay *= -1;
+        }
+        long Gio = Giay / 3600;
+        if (Gio < 10)
+            s += "0";
+        s += Gio.ToString() + ":";
+        Giay -= Gio * 3600;
+        long Phut = Giay / 60;
+        if (Phut < 10)
+            s += "0";
+        s += Phut.ToString() + ":";
+        Giay -= Phut * 60;
+        if (Giay < 10)
+            s += "0";
+        s += Giay.ToString();
+        return s;
+    }
+
+    IEnumerator LoadAsynchronously(SceneGame scene)
+    {
+        LoadingMain.SetActive(true);
+        sli_loading.value = 0f;
+        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.ToString());
+        while (!operation.isDone)
+        {
+            sli_loading.value = Mathf.Clamp01(operation.progress / 0.9f);
+            yield return null;
+        }
+        LoadingMain.SetActive(false);
+        moMan();
+    }
+
+    [Serializable] 
+    public class HienThiThongBao
+    {
+        public ThongBao Prefabs_ChacChanKhong;
+        public ThongBao Prefabs_NhacNho;
+        public ThongBaoNen Prefabs_Nen;
+    }
+
+    public void LoadScene(SceneGame scene)
+    {
+        if (MAPController.Instance != null)
+            LastScene = MAPController.Instance.SceneCurrent; 
+        else 
+            LastScene = SceneGame.Loading;
+        StartCoroutine(LoadAsynchronously(scene));
+    }
+    public static void ClearAllSave()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    public void moMan()
+    {
+        MoMan.SetActive(true);
+    }
+}

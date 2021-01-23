@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - TuongTac
+  - NapSauCay
+  - VFXController
+  - CanvasMain
+  - Enemy
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - One
+  - Tree_LamMo
+  - QuanAo
+  - Enemy
+  - Wall
+  - Barrier
+  - Bullet
+  - PostPro
+  - Player
+  - Door
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: LaneMAP
+    uniqueID: 507573045
+    locked: 0
+  - name: HatBui
+    uniqueID: 2933349001
+    locked: 0
+  - name: Current
+    uniqueID: 716515781
+    locked: 0
+  - name: Skin
+    uniqueID: 1115661183
+    locked: 0

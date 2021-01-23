@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a008a1e061c38f040b39badb044e13ad, type: 3}
+  m_Name: 1_Ngo
+  m_EditorClassIdentifier: 
+  Pic: {fileID: 21300000, guid: 697fe4bae5549db40903623ce082167e, type: 3}
+  Name: "Ng\xF4"
+  CODE: ITEM_TREE_NGO
+  TypeSlot: 1
+  QuaTrinhLon:
+  - {fileID: -8410102861811760244, guid: 5b30427065364d8469717fff7bf5db54, type: 3}
+  - {fileID: 1599876148826346807, guid: 5b30427065364d8469717fff7bf5db54, type: 3}
+  - {fileID: -9018393974753155266, guid: 5b30427065364d8469717fff7bf5db54, type: 3}
+  - {fileID: -6620654793427740397, guid: 5b30427065364d8469717fff7bf5db54, type: 3}
+  ThoiGianLon: 20
+  SoLuong: 1
+  GiaBan: 38
+  GiaMua: 20
+  Offset_Shorting: 5
