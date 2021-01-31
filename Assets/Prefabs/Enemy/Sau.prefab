@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyName: "S\xE2u L\xE1"
-  Damage: 0
+  Damage: 2
   ED:
     MaxHP: 50
     SizeHP: 0.8

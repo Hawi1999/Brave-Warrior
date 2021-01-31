@@ -100,6 +100,8 @@
     <Compile Include="Assets\Scripts\Data\GameController.cs" />
     <Compile Include="Assets\Scripts\Data\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Data\RewardManager.cs" />
+    <Compile Include="Assets\Scripts\Data\ShowHPPlayer.cs" />
+    <Compile Include="Assets\Scripts\Data\TakeGoldFromMap.cs" />
     <Compile Include="Assets\Scripts\Data\WeaponManager.cs" />
     <Compile Include="Assets\Scripts\DesTroyThis.cs" />
     <Compile Include="Assets\Scripts\DoorTakeHit.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="Assets\Scripts\QuayHangSlotItem.cs" />
     <Compile Include="Assets\Scripts\Reset.cs" />
     <Compile Include="Assets\Scripts\Reward\Reward.cs" />
+    <Compile Include="Assets\Scripts\Reward\RewardGold.cs" />
     <Compile Include="Assets\Scripts\Reward\RewardWeapon.cs" />
     <Compile Include="Assets\Scripts\RoundData.cs" />
     <Compile Include="Assets\Scripts\Savemanager.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="Assets\Scripts\ThongBaoNen.cs" />
     <Compile Include="Assets\Scripts\VFX\Bui.cs" />
     <Compile Include="Assets\Scripts\VFX\BuiControl.cs" />
+    <Compile Include="Assets\Scripts\VFX\FlySmooth.cs" />
     <Compile Include="Assets\Scripts\VFX\PositionControl.cs" />
     <Compile Include="Assets\Scripts\VFX\ScaleControl.cs" />
     <Compile Include="Assets\Scripts\VFX\SpawnStars.cs" />

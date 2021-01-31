@@ -45,7 +45,7 @@ public class SpawnStars : MonoBehaviour
     public void Spawn()
     {
         Bui bui = Instantiate(this.bui, transform.position, Quaternion.identity);
-        bui.SetUp(sprite, 1f, MathQ.RotationToDirection(new Vector3(0, 0, Random.Range(RangeDirZ.x, RangeDirZ.y)).z), Random.Range(RangeSpeed.x, RangeSpeed.y), 0.5f, new Color(1,1,1));
+        bui.SetUp(sprite, 1f, MathQ.RotationToDirection(new Vector3(0, 0, Random.Range(RangeDirZ.x, RangeDirZ.y)).z), Random.Range(RangeSpeed.x, RangeSpeed.y), 1f, new Color(1,1,1));
     }
 
     public void setSpawn(bool a)

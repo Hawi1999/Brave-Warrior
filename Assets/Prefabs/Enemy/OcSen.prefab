@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyName: Oc Sen
-  Damage: 0
+  Damage: 2
   ED:
     MaxHP: 40
     SizeHP: 0.7

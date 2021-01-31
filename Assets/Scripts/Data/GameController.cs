@@ -34,13 +34,14 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject MoMan;
     public HienThiThongBao TB;
-    public static SceneGame LastScene = SceneGame.Loading;
+    public static string LastScene = "Loading";
     public static Vector3 LastPos = new Vector3(0, 0, 0);
     private void Start()
     {
         LoadingMain.SetActive(false);
         MoMan.SetActive(false);
-        LoadScene(SceneGame.TrangTrai);
+        LoadScene("TrangTrai");
+        
     }
     private void Awake()
     {
@@ -79,11 +80,11 @@ public class GameController : MonoBehaviour
         return s;
     }
 
-    IEnumerator LoadAsynchronously(SceneGame scene)
+    IEnumerator LoadAsynchronously(string name)
     {
         LoadingMain.SetActive(true);
         sli_loading.value = 0f;
-        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.ToString());
+        AsyncOperation operation = SceneManager.LoadSceneAsync(name);
         while (!operation.isDone)
         {
             sli_loading.value = Mathf.Clamp01(operation.progress / 0.9f);
@@ -101,12 +102,12 @@ public class GameController : MonoBehaviour
         public ThongBaoNen Prefabs_Nen;
     }
 
-    public void LoadScene(SceneGame scene)
+    public void LoadScene(string scene)
     {
         if (MAPController.Instance != null)
             LastScene = MAPController.Instance.SceneCurrent; 
         else 
-            LastScene = SceneGame.Loading;
+            LastScene = scene;
         StartCoroutine(LoadAsynchronously(scene));
     }
     public static void ClearAllSave()

@@ -33,7 +33,7 @@ public class ChooseReward : MonoBehaviour
             if (Choosing != null)
             {
                 Choosing.TakeReward(player);
-                OnChooseReward -= Choosing.Choose;
+
             }
         }
     }
@@ -66,7 +66,6 @@ public class ChooseReward : MonoBehaviour
             Choosing = Rewards[Rewards.Count - 1];
         }
         OnChooseReward -= reward.Choose;
-
     }
 
     private bool isNotExist(Reward reward)

@@ -23,16 +23,21 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void ShowHPSub(Enemy enemy, int dam, DamageElement ele)
+    public void ShowHPSub(DamageData damadata)
     {
         if (ShowHPSubPrefab == null)
         {
             Debug.Log("Ko có PrefabShowHPSub");
             return;
-
         }
+        if (!(damadata.To is Enemy))
+        {
+            Debug.Log("Dữ liệu sát thương ko tìm thấy mục tiêu");
+            return;
+        }
+        Enemy enemy = damadata.To as Enemy;
         ShowHPSub show = Instantiate(ShowHPSubPrefab, enemy.PR_HPsub.transform.position, Quaternion.identity);
-        show.StartUp(dam + enemy.LastDamage, ele);
+        show.StartUp(damadata.getDamage() + enemy.LastDamage, damadata.Type);
     }
 
     public void ShowHP(Enemy enemy)

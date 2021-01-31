@@ -83,12 +83,7 @@ public abstract class Weapon : MonoBehaviour
             {
                 Destroy(GetComponent<PositionControl>());
             }
-            ChooseReward chooseReward = host.GetComponent<ChooseReward>();
-            if (chooseReward != null)
-            {
-                chooseReward.Add(reward);
-            }
-            ThongBao.Nen("Đã trang bị " + " <color=" + getColorNameByLevelWeapon(TypeOfWeapon) + "> " + nameOfWeapon + " </color>");
+            ThongBao.Nen("Đã trang bị " + "<color=" + getColorNameByLevelWeapon(TypeOfWeapon) + ">" + nameOfWeapon + "</color>");
             OnEquip();
         }
         TrangThai = trangthai;

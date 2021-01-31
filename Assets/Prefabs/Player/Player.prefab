@@ -315,8 +315,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ColliderTakeDamaged: {fileID: 385986454818863689}
+  maxHP: 10
   speed: 8
-  Shield: 5
+  shield: 5
+  HealPhy: 100
   RenderSelected: {fileID: 8287429988482597534}
   layerTargetFind:
     serializedVersion: 2

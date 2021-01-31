@@ -10,7 +10,9 @@ public class Ene_OcSen : Enemy
         for (int i = -1; i <= 1; i++)
         {
             Vector2 NewDirection = ChangeDiretion(dirAttack, 45 * i);
-            Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(NewDirection)).StartUp(NewDirection);
+            BulletBase bull = Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(NewDirection));
+            DamageData dam = new DamageData(Damage, NewDirection, DamageElement.Normal, this);
+            bull.StartUp(dam);
         }
     }
 

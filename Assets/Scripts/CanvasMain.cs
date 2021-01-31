@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CanvasMain : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
         GameController.CanvasMain = this.gameObject;
     }

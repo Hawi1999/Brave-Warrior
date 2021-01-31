@@ -5,11 +5,11 @@ using UnityEngine.Events;
 
 public abstract class Entity : MonoBehaviour, ICameraTarget
 {
-    public virtual int MaxHP
+    public abstract int MaxHP
     {
-        get; set;
+        get;
     }
-    private int heath = 50;
+    protected int heath;
     public virtual int Heath
     {
         get
@@ -20,10 +20,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         {
             int old = heath;
             heath = Mathf.Clamp(value, 0, MaxHP);
-            if (heath != old)
-            {
-                OnHPChanged?.Invoke(old, heath);
-            }
+            OnHPChanged?.Invoke(old, heath, MaxHP);
             if (heath == 0)
             {
                 Death();
@@ -31,8 +28,12 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         }
     }
 
-    public UnityAction<int, int> OnHPChanged;
+
+    public UnityAction<int, int, int> OnHPChanged;
     public UnityAction<Entity> OnDeath;
+    public UnityAction<DamageData> OnTakeDamage;
+    public UnityAction<DamageData> OnTookDamage;
+
     private Weapon weapon;
     public Weapon WeaponCurrent
     {
@@ -65,7 +66,9 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
 
     public virtual void TakeDamage(DamageData dama)
     {
-        Heath -= dama.Damage;
+        OnTakeDamage?.Invoke(dama);
+        Damaged(dama.getDamage());
+        OnTookDamage?.Invoke(dama);
     }
     public virtual Vector3 getPosition()
     {
@@ -74,6 +77,11 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     public abstract Entity TargetFire
     {
         get; set;
+    }
+
+    protected virtual void Damaged(int damage)
+    {
+        Heath -= damage;
     }
 
     protected bool Died;
@@ -101,5 +109,6 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return (WeaponCurrent != null);
         }
     }
+
 
 }

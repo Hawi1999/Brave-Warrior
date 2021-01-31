@@ -5,17 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BulletBase : MonoBehaviour
 {
-    private Entity Host;
-    [SerializeField] protected int damage;
+    [SerializeField] protected DamageData damage;
     [SerializeField] protected float flySpeed;
     [SerializeField] private Transform dauDan;
     [SerializeField] protected LayerMask target;
     [SerializeField] GameObject VFXDestroyed;
 
-    public void setHost(Entity host)
-    {
-        Host = host;
-    }
+    SpriteRenderer render => GetComponent<SpriteRenderer>();
 
     protected Vector3 vitri_daudan
     {
@@ -31,8 +27,6 @@ public class BulletBase : MonoBehaviour
             }
         }
     }
-    private SpriteRenderer render;
-    protected Vector2 Direction;
 
 
     private float timeToDestroy = 5;
@@ -45,6 +39,7 @@ public class BulletBase : MonoBehaviour
         {
             gameObject.AddComponent<PolygonCollider2D>().isTrigger = true;
         }
+        render.sortingLayerName = "Current";
     }
     // Update is called once per frame
     void Update()
@@ -53,28 +48,25 @@ public class BulletBase : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if (transform.hasChanged)
+        {
+            render.sortingOrder = (int)(-10f * transform.position.y + 3);
+        }
         Fly();
     }
 
-    public void StartUp(Entity host, Vector2 dir, DamageData dam)
+    public void StartUp(DamageData dam)
     {
-        Direction = dir;
-        damage = dam.Damage;
-        this.Host = host;
-    }
-
-    public void StartUp(Vector2 dir)
-    {
-        Direction = dir;
+        damage = dam;
     }
 
     protected virtual void Fly()
     {
-        if (Direction != Vector2.zero)
+        if (damage.Direction != Vector3.zero)
         {
             Vector2 oldPos = transform.position;
-            Vector2 newPos = (transform.position + (Vector3)Direction * flySpeed * Time.deltaTime);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(vitri_daudan, Direction, Vector2.Distance(oldPos, newPos), target);
+            Vector2 newPos = (transform.position + damage.Direction * flySpeed * Time.deltaTime);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(vitri_daudan, damage.Direction, Vector2.Distance(oldPos, newPos), target);
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider != null && hit.collider.GetComponent<TakeHit>() != null)
@@ -83,15 +75,13 @@ public class BulletBase : MonoBehaviour
                 }
             }
             transform.position = newPos;
-            transform.rotation = MathQ.DirectionToQuaternion(Direction);
+            transform.rotation = MathQ.DirectionToQuaternion(damage.Direction);
         }
     }
 
     protected virtual void OnHitTarget(TakeHit take, RaycastHit2D hit)
     {
-        DamageData damdata = new DamageData(damage, Direction, default, Host, hit);
-        damdata.Direction = Direction;
-        take.TakeDamaged(damdata);
+        take.TakeDamaged(damage);
         Destroyed(hit);
     }
 

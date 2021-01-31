@@ -3,7 +3,10 @@ guid: 086ad7551d206c843bff6121132812ab
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PosDefault: {instanceID: 0}
+  - TeleporterPrefabs: {instanceID: 0}
+  - TT: {fileID: 5062751958523865363, guid: 66a213aa102d40d4eb5f7bf080361f94, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

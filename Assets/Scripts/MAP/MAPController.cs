@@ -2,13 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public enum SceneGame
-{
-    Loading = 0,
-    TrangTrai = 1,
-    OpenMap1 = 2,
-    Map1_0 = 3
-}
 
 public class MAPController : MonoBehaviour
 {
@@ -20,7 +13,7 @@ public class MAPController : MonoBehaviour
     private Vector3 MAX;
     [SerializeField]
     private Vector3 MIN;
-    public SceneGame SceneCurrent;
+    public string SceneCurrent;
 
     public Vector3[] LimitMoveMap;
     protected Transform PRLimitMoveMap;
@@ -198,9 +191,9 @@ public class MAPController : MonoBehaviour
         return new Vector3(0, 0, Vector2.Angle(DT, new Vector2(1, 0))*k);
     }
 
-    public virtual void LoadScene(SceneGame scene)
+    public virtual void LoadScene(string scene)
     {
-        if (scene == SceneGame.TrangTrai)
+        if (scene == "TrangTrai")
         {
             Destroy(PlayerController.Instance.gameObject);
         }

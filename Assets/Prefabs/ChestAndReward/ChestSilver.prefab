@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  rewards: []
   OffSetSpawnWard: {x: 0, y: 0.4}
 --- !u!114 &32471105955115433
 MonoBehaviour:
@@ -165,4 +166,4 @@ MonoBehaviour:
   star: {fileID: 21300000, guid: 6f35c935174ca7340b0deb6ec8c49fcd, type: 3}
   OffsetDirZ: {x: 0, y: 360}
   RangeSpeed: {x: 1, y: 2}
-  RangeTimeSpawn: {x: 0.2, y: 0.3}
+  RangeTimeSpawn: {x: 0.1, y: 0.2}

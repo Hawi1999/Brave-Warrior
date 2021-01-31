@@ -20,7 +20,7 @@ public class ShowHP : MonoBehaviour
         {
             Vector2 a = Rtf.sizeDelta;
             Rtf.sizeDelta = new Vector2(enemy.ED.SizeHP, 0.1f);
-            HPChanged(0, enemy.Heath);
+            HPChanged(0, enemy.Heath, enemy.MaxHP);
         } else
         {
             Debug.Log("Enemy is null");
@@ -29,7 +29,7 @@ public class ShowHP : MonoBehaviour
 
     
 
-    public void HPChanged(int oldHP, int newHP)
+    public void HPChanged(int oldHP, int newHP, int maxHP)
     {
         if (enemy == null)
         {

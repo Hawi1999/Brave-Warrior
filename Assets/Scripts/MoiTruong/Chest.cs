@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Chest : MonoBehaviour
 {
-    protected SpriteRenderer render;
-    protected AnimationQ ani;
+    protected SpriteRenderer render => GetComponent<SpriteRenderer>();
+    protected AnimationQ ani => GetComponent<AnimationQ>();
     protected BoxCollider2D col;
     protected StarsControl starsControl;
     public TypeChest type;
@@ -18,8 +18,6 @@ public class Chest : MonoBehaviour
     private float TimeStart;
     private void Start()
     {
-        render = GetComponent<SpriteRenderer>();
-        ani = GetComponent<AnimationQ>();
         starsControl = GetComponent<StarsControl>();
 
         Color a = render.color;
@@ -45,9 +43,7 @@ public class Chest : MonoBehaviour
         }
         Reward reward = rewards[Random.Range(0, rewards.Length)];
         reward = Instantiate(reward, transform.position, Quaternion.identity);
-        PositionControl pct = reward.gameObject.AddComponent<PositionControl>();
-        pct.SetUp(transform.position, transform.position + (Vector3)OffSetSpawnWard, 0.5f);
-        pct.StartAnimation();
+        reward.Appear();
     }
 
     private void Update()

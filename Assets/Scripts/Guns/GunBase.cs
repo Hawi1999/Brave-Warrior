@@ -51,18 +51,31 @@ public class GunBase : Weapon
 
     public override void Attack()
     {
-        Shoot();
-    }
-    public virtual void Shoot()
-    {
         if (!ReadyToAttack)
         {
             return;
         }
+        Shoot();
+        OverLoadShooting();
+        
+    }
+    public virtual void Shoot()
+    {
         Vector3 DirShoot = GiatSung(Host.DirectFire);
         BulletBase bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-        bull.StartUp(Host, DirShoot.normalized, new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D()));
+        DamageData damageData = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+        bull.StartUp(damageData);
         lastShoot = Time.time;
+        
+    }
+
+    protected virtual void OverLoadShooting()
+    {
+        if (Host is PlayerController)
+        {
+            PlayerController player = Host as PlayerController;
+            player.UseHealPhy(0.5f/ SpeedShoot);
+        }
     }
 
 

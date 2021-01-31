@@ -155,11 +155,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MAX: {x: 10000, y: 10000, z: 0}
   MIN: {x: -10000, y: -10000, z: 0}
-  SceneCurrent: 3
+  SceneCurrent: Map1_0
   LimitMoveMap: []
   PosDefault: {fileID: 1790491917}
   TeleporterPrefabs: {fileID: 0}
   LTeleportion: []
+  TT: {fileID: 5062751958523865363, guid: 66a213aa102d40d4eb5f7bf080361f94, type: 3}
 --- !u!156049354 &285278719
 Grid:
   m_ObjectHideFlags: 0

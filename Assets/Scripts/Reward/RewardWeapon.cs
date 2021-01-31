@@ -7,17 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class RewardWeapon : Reward
 {
-    Weapon weapon
-    {
-        get { return GetComponent<Weapon>(); }
-    }
-    HienTenVuKhi hientenvukhi
-    {
-        get
-        {
-            return GetComponent<HienTenVuKhi>();
-        }
-    }
+    Weapon weapon => GetComponent<Weapon>();
+    HienTenVuKhi hientenvukhi => GetComponent<HienTenVuKhi>();
     public override bool WaitingForGet
     {
         get
@@ -46,6 +37,34 @@ public class RewardWeapon : Reward
     public override void TakeReward(PlayerController host)
     {
         host.TrangBi(weapon);
+        host.GetComponent<ChooseReward>().Remove(this);
         hientenvukhi.AnDi();
+    }
+
+    public override void Appear()
+    {
+        PositionControl pct = gameObject.AddComponent<PositionControl>();
+        pct.SetUp(transform.position, transform.position + new Vector3(0,0.4f,0), 0.5f);
+        pct.StartAnimation();
+    }
+
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && WaitingForGet)
+        {
+            ChooseReward chooseReward = collision.GetComponent<ChooseReward>();
+            chooseReward.Add(this);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && WaitingForGet)
+        {
+            ChooseReward chooseReward = collision.GetComponent<ChooseReward>();
+            chooseReward.Remove(this);
+        }
     }
 }

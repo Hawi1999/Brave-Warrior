@@ -28,7 +28,6 @@ public class RewardManager : MonoBehaviour
         List <Reward> Rewards = new List<Reward>();
         // Thêm danh dách Reward
         Rewards.AddRange(Instance.WeaponRewards);
-        Debug.Log(Rewards[0].Name + " & " + Name);
         return Array.Find(Rewards.ToArray(), e => e.Name == Name);
 
     }

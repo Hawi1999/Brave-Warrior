@@ -10,14 +10,14 @@ public class StartGame : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(LoadAsynchronously(SceneGame.Loading));
+        StartCoroutine(LoadAsynchronously("Loading"));
     }
 
-    IEnumerator LoadAsynchronously(SceneGame scene)
+    IEnumerator LoadAsynchronously(string scene)
     {
         Loading.SetActive(true);
         sli.value = 0f;
-        AsyncOperation operation = SceneManager.LoadSceneAsync(scene.ToString());
+        AsyncOperation operation = SceneManager.LoadSceneAsync(scene);
         while (!operation.isDone)
         {
             sli.value = Mathf.Clamp01(operation.progress / 0.9f);

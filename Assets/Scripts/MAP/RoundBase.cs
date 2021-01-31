@@ -28,7 +28,7 @@ public class RoundBase : MonoBehaviour
     private GameObject PRSpawnEnemy;
     private bool started = false;
     private int idmax = 0;
-    [HideInInspector] public BoxCollider2D col;
+    public BoxCollider2D col => GetComponent<BoxCollider2D>();
     private void Start()
     {
         setMap();
@@ -240,7 +240,6 @@ public class RoundBase : MonoBehaviour
 
     private void setMap()
     {
-        col = GetComponent<BoxCollider2D>();
         col.size = 2 * NuaBanKinh;
         if (Dots != null)
         {

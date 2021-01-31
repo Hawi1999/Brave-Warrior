@@ -91,10 +91,6 @@ public class Enemy : Entity
         {
             return ED.MaxHP;
         }
-        set
-        {
-            ED.MaxHP = value;
-        }
     }
     protected PlayerController targetAttack
     {
@@ -163,11 +159,15 @@ public class Enemy : Entity
         if (EnemyManager.Instance != null)
         {
             EnemyManager.Instance.ShowHP(this);
-            OnDamageTook += EnemyManager.Instance.ShowHPSub;
+            OnTookDamage += EnemyManager.Instance.ShowHPSub;
         } else
         { 
             Debug.Log("Instance cho EnemtManager không tồn tại");
         }
+        OnTakeDamage += OnTakedamage;
+
+        OnTookDamage += VFXDamageTook;
+
         Heath = MaxHP;
         render = GetComponent<SpriteRenderer>();
         anim = GetComponent<AnimationQ>();
@@ -191,26 +191,29 @@ public class Enemy : Entity
     }
 
     #region Xử lý sát thương
-    public override void TakeDamage(DamageData damadata)
+
+    private void VFXDamageTook(DamageData damadata)
     {
-        int dam = damadata.Damage;
-        DamageElement ele = DamageElement.Normal;
-        if (damadata.Type == DamageElement.Normal)
-        {
-            int d = damadata.Damage - ED.Shield;
-            dam = (int)Mathf.Clamp(d, 0, Mathf.Infinity);
-        }
-        OnDamageTook?.Invoke(this, dam, ele);
         lastDirTook = damadata.Direction;
         if (buicontrol != null)
-            buicontrol.SpawnBui(dam/2, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
-        Damaged(dam);
+            buicontrol.SpawnBui(damadata.getDamage() / 2, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
+    }
+    public override void TakeDamage(DamageData dama)
+    {
+        base.TakeDamage(dama);
+        LastDamage = dama.getDamage() + LastDamage;
+        lastTimeTakeDamage = Time.time;
+
     }
 
-    private void Damaged(int Damage)
+    private void OnTakedamage(DamageData damadata)
     {
-        LastDamage = Damage + LastDamage;
-        Heath -= Damage;
+        damadata.To = this;
+        damadata.Decrease(Random.Range(-1, 2));
+        if (damadata.Type == DamageElement.Normal)
+        {
+            damadata.Decrease(ED.Shield);
+        }
     }
     #endregion
 
@@ -260,7 +263,8 @@ public class Enemy : Entity
     {
         Vector2 dirAttack = getDirToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
         BulletEnemy bullet = Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(dirAttack));
-        bullet.StartUp(this, dirAttack, new DamageData(Damage, dirAttack, default, this, new RaycastHit2D()));
+        DamageData dam = new DamageData(Damage, dirAttack, default, this, new RaycastHit2D());
+        bullet.StartUp(dam);
     }
 
     protected Vector2 getDirToPlayer(Vector2 dir)
@@ -364,9 +368,6 @@ public class Enemy : Entity
     {
         anim.setAnimation(code);
     }
-    #endregion
-    #region ActionEvent
-    public UnityAction<Enemy, int, DamageElement> OnDamageTook;
     #endregion
 
 }

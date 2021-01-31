@@ -151,6 +151,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Loading
       objectReference: {fileID: 0}
+    - target: {fileID: 7181739191824232278, guid: 745f2ef729acbab49a48cab4a46e041d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7181739191824232282, guid: 745f2ef729acbab49a48cab4a46e041d,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -6,14 +6,19 @@ public class Gun_K20 : GunBase
 {
     [SerializeField] Transform TFRadanPhaiTren;
     [SerializeField] Transform TFRadanPhaiDuoi;
-
+    [SerializeField] Transform TFRadanPhaiGiua;
     // false cho dưới và 1 cho trên
     private bool vitriTren;
     private int nextAmountbullet = 1;
+
     public override Vector3 viTriRaDan
     {
         get
         {
+            if (nextAmountbullet == 1)
+            {
+                return TFRadanPhaiGiua.position;
+            }
             if (render.flipY)
             {
                 if (vitriTren)
@@ -41,13 +46,12 @@ public class Gun_K20 : GunBase
 
     public override void Shoot()
     {
-        if (!ReadyToAttack)
-            return;
         if (nextAmountbullet == 1)
         {
             Vector3 DirShoot = GiatSung(Host.DirectFire);
             BulletBase bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            bull.StartUp(Host, DirShoot.normalized, new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D()));
+            DamageData dam = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            bull.StartUp(dam);
             lastShoot = Time.time;
             nextAmountbullet = 2;
         } else if (nextAmountbullet == 2)
@@ -55,12 +59,14 @@ public class Gun_K20 : GunBase
             vitriTren = true;
             Vector3 DirShoot = GiatSung(Host.DirectFire);
             BulletBase bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            bull.StartUp(Host, DirShoot.normalized, new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D()));
+            DamageData dam1 = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            bull.StartUp(dam1);
 
             vitriTren = false;
             DirShoot = GiatSung(Host.DirectFire);
             bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            bull.StartUp(Host, DirShoot.normalized, new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D()));
+            DamageData dam2 = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            bull.StartUp(dam2);
             lastShoot = Time.time;
             nextAmountbullet = 1;
         }
@@ -74,14 +80,34 @@ public class Gun_K20 : GunBase
         {
             if (vitriTren)
             {
-                Vector3 Do = MathQ.DirectionToRotation(direction);
-                Do += new Vector3(0, 0, Random.Range(0, DoGiat / 2));
-                return MathQ.RotationToDirection(Do.z).normalized;
+                if (render.flipY)
+                {
+
+                    Vector3 Do = MathQ.DirectionToRotation(direction);
+                    Do += new Vector3(0, 0, Random.Range(-DoGiat / 2, 0));
+                    return MathQ.RotationToDirection(Do.z).normalized;
+                }
+                else
+                {
+                    Vector3 Do = MathQ.DirectionToRotation(direction);
+                    Do += new Vector3(0, 0, Random.Range(0, DoGiat / 2));
+                    return MathQ.RotationToDirection(Do.z).normalized;
+                }
             }else
             {
-                Vector3 Do = MathQ.DirectionToRotation(direction);
-                Do += new Vector3(0, 0, Random.Range(-DoGiat/2, 0));
-                return MathQ.RotationToDirection(Do.z).normalized;
+                if (render.flipY)
+                {
+                    Vector3 Do = MathQ.DirectionToRotation(direction);
+                    Do += new Vector3(0, 0, Random.Range(0, DoGiat / 2));
+                    return MathQ.RotationToDirection(Do.z).normalized;
+                    
+                } 
+                else
+                {
+                    Vector3 Do = MathQ.DirectionToRotation(direction);
+                    Do += new Vector3(0, 0, Random.Range(-DoGiat/2, 0));
+                    return MathQ.RotationToDirection(Do.z).normalized;
+                }
             }
         }
     }

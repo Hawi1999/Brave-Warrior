@@ -5,7 +5,7 @@ using UnityEngine;
 public class Teleporttion
 {
     public bool isVisible = true;
-    public SceneGame ConnectScene;
+    public string ConnectScene;
     public string Name_Scene;
     public string Info_BT;
     public Vector3 PositionGo;
@@ -14,7 +14,7 @@ public class Teleporttion
 
 public class TeleportScene : MonoBehaviour
 {
-    private SceneGame ConnectScene;
+    private string ConnectScene;
     [SerializeField]
     GoTo EventE;
     private BTThaoTacManHinh BT_Current;
@@ -31,10 +31,10 @@ public class TeleportScene : MonoBehaviour
         if (BT_Current != null) return;
         BT_Current = Instantiate(GameController.Instance.BTTTMH, GameController.CanvasMain.transform);
         BT_Current.gameObject.SetActive(true);
-        BT_Current.AddButton(0, TextInfo, () => GameController.Instance.LoadScene(ConnectScene));
+        BT_Current.AddButton(0, TextInfo, () => MAPController.Instance.LoadScene(ConnectScene));
     }
 
-    private void LoadScene(SceneGame scene)
+    private void LoadScene(string scene)
     {
         if (PlayerController.Instance.HasWeapon)
         {
