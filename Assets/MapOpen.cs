@@ -9,13 +9,13 @@ public class MapOpen : MAPController
     private ShowHPPlayer TT;
     protected override PlayerController CreatePlayer()
     {
-        PlayerController[] players = FindObjectsOfType<PlayerController>();
-        for (int i = 0; i < players.Length; i++)
+        if (ParentGamePlay.Instance != null)
         {
-            Destroy(players[i].gameObject);
+            Destroy(ParentGamePlay.Instance.gameObject);
         }
+        Instantiate(new GameObject("ParentGamePlay")).AddComponent<ParentGamePlay>();
         PlayerController player = base.CreatePlayer();
-        DontDestroyOnLoad(player);
+        player.transform.parent = ParentGamePlay.Instance;
         GunBase gun = WeaponManager.GetWeaponByName("Gun K1") as GunBase;
         gun = Instantiate(gun);
         player.TrangBi(gun);
@@ -35,12 +35,12 @@ public class MapOpen : MAPController
         {
             GameController.Instance.LoadScene(scene);
         }
-        else if(PlayerController.Instance.HasWeapon)
+        else if(PlayerController.PlayerCurrent.HasWeapon)
         {
             GameController.Instance.LoadScene(scene);
         } else
         {
-            ThongBao.NhacNho("Bạn cần vũ khí để đi tiếp");
+            Notification.ReMind("Bạn cần vũ khí để đi tiếp");
         }
     }
 }

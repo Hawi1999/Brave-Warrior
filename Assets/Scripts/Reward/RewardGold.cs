@@ -6,8 +6,8 @@ public class RewardGold : Reward
 {
     public override string Name => "Reward Gold " + Level.ToString();
     [Range(1, 3)]
-    [SerializeField] int Level;
-    [SerializeField] int amount;
+    [SerializeField] int Level = 1;
+    int amount;
     public int Amount => amount;
     [SerializeField] TakeGoldFromMap Prejabs;
 
@@ -15,7 +15,8 @@ public class RewardGold : Reward
 
     public override void Appear()
     {
-        for (int i = 0; i < amount; i++)
+        amount = Random.Range(5 * Level, 10 * Level + 1);
+        for (int i = 0; i < Amount; i++)
         {
             TakeGoldFromMap tg = Instantiate(Prejabs, transform.position, Quaternion.identity);
             tg.MoveToPosion(transform.position + new Vector3(Random.Range(-2, 2), Random.Range(-2, 2), 0));

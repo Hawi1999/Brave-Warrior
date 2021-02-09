@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 public enum TrangThaiTrangBiVuKhi
 {
     Tudo,
@@ -16,12 +19,12 @@ public enum LevelWeapon
     VeryRare,
     Legendary,
 }
-[RequireComponent(typeof(Reward))]
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(RewardWeapon))]
 [RequireComponent(typeof(HienTenVuKhi))]
 public abstract class Weapon : MonoBehaviour
 {
     // Không thể bắn khi nằm trong túi
+    [SerializeField] Sprite Picture;
     [SerializeField] protected string nameOfWeapon;
     [SerializeField] protected LevelWeapon type;
 
@@ -33,20 +36,27 @@ public abstract class Weapon : MonoBehaviour
     [HideInInspector] public TrangThaiTrangBiVuKhi TrangThai;
     [HideInInspector] public Entity Host;
     [HideInInspector] public Enemy Target;
+    [HideInInspector] public SpriteRenderer render;
+
+    public UnityAction OnAttack;
 
     protected Reward reward => GetComponent<Reward>();
-    protected SpriteRenderer render => GetComponent<SpriteRenderer>();
     protected HienTenVuKhi hientenvukhi => GetComponent<HienTenVuKhi>();
     public abstract Vector3 viTriRaDan
     {
         get;
     }
-    protected virtual void Start()
-    {
-    }
     protected abstract bool ReadyToAttack
     {
         get;
+    }
+
+    protected virtual void Start()
+    {
+        render = Instantiate(new GameObject("Picture"), transform).AddComponent<SpriteRenderer>();
+        render.sprite = Picture;
+        render.sortingLayerName = "Skin";
+        render.sortingOrder = 15;
     }
     public abstract void Attack();
     public void ChangEQuip(Entity host, TrangThaiTrangBiVuKhi trangthai)
@@ -83,7 +93,7 @@ public abstract class Weapon : MonoBehaviour
             {
                 Destroy(GetComponent<PositionControl>());
             }
-            ThongBao.Nen("Đã trang bị " + "<color=" + getColorNameByLevelWeapon(TypeOfWeapon) + ">" + nameOfWeapon + "</color>");
+            Notification.NoticeBelow("Đã trang bị " + "<color=" + getColorNameByLevelWeapon(TypeOfWeapon) + ">" + nameOfWeapon + "</color>");
             OnEquip();
         }
         TrangThai = trangthai;

@@ -50,7 +50,7 @@ public class Gun_K20 : GunBase
         {
             Vector3 DirShoot = GiatSung(Host.DirectFire);
             BulletBase bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            DamageData dam = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            DamageData dam = setUpDamageData();
             bull.StartUp(dam);
             lastShoot = Time.time;
             nextAmountbullet = 2;
@@ -59,13 +59,13 @@ public class Gun_K20 : GunBase
             vitriTren = true;
             Vector3 DirShoot = GiatSung(Host.DirectFire);
             BulletBase bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            DamageData dam1 = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            DamageData dam1 = setUpDamageData();
             bull.StartUp(dam1);
 
             vitriTren = false;
             DirShoot = GiatSung(Host.DirectFire);
             bull = Instantiate(VienDan, viTriRaDan, MathQ.DirectionToQuaternion(DirShoot));
-            DamageData dam2 = new DamageData(SatThuong, DirShoot, default, Host, new RaycastHit2D());
+            DamageData dam2 = setUpDamageData();
             bull.StartUp(dam2);
             lastShoot = Time.time;
             nextAmountbullet = 1;

@@ -7,10 +7,9 @@ public class MAPTrangTrai : MAPController
 {
     protected override PlayerController CreatePlayer()
     {
-        PlayerController[] players = FindObjectsOfType<PlayerController>();
-        for (int i = 0; i < players.Length; i++)
+        if (ParentGamePlay.Instance != null)
         {
-            Destroy(players[i].gameObject);
+            Destroy(ParentGamePlay.Instance.gameObject);
         }
         PlayerController player = base.CreatePlayer();
         return player;

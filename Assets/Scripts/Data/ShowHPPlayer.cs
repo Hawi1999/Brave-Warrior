@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShowHPPlayer : MonoBehaviour
 {
-    PlayerController player => PlayerController.Instance;
+    PlayerController player => PlayerController.PlayerCurrent;
 
     public Slider sliderHeath;
     public Slider sliderShield;
@@ -13,6 +13,7 @@ public class ShowHPPlayer : MonoBehaviour
 
     public Text textHealth;
     public Text textShield;
+    public Image fillHealPhy;
     private void Awake()
     {
         SetUp();
@@ -31,7 +32,7 @@ public class ShowHPPlayer : MonoBehaviour
         {
             OnHPChanged(0, player.Heath, player.MaxHP);
             OnShieldChanged(0, player.CurentShield, player.MaxShield);
-            OnHealPhyChanged(0, player.CurrentHealPhy, player.MaxHealphy);
+            OnHealPhyChanged(0, player.CurrentHealPhy, player.MaxHealphy, false);
         }
     }
 
@@ -49,11 +50,18 @@ public class ShowHPPlayer : MonoBehaviour
         textShield.text = b.ToString() + "/" + c.ToString();
     }
 
-    private void OnHealPhyChanged(float a, float b, float c)
+    private void OnHealPhyChanged(float a, float b, float c, bool Tied)
     {
-        Debug.Log("Cham hoi luon");
         sliderSpeedAttack.maxValue = c;
         sliderSpeedAttack.value = b;
+        if (Tied)
+        {
+            fillHealPhy.color = Color.red;
+        }
+        else
+        {
+            fillHealPhy.color = Color.yellow;
+        }
     }
 
     private void OnDestroy()

@@ -36,12 +36,12 @@ public class TeleportScene : MonoBehaviour
 
     private void LoadScene(string scene)
     {
-        if (PlayerController.Instance.HasWeapon)
+        if (PlayerController.PlayerCurrent.HasWeapon)
         {
             GameController.Instance.LoadScene(ConnectScene);
         } else
         {
-            ThongBao.NhacNho("Bạn cần vũ khí để tiếp tục");
+            Notification.ReMind("Bạn cần vũ khí để tiếp tục");
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    [SerializeField] private ShowHP ShowHPPrefab;
+    [SerializeField] private ShowHPEnemy ShowHPPrefab;
     [SerializeField] private ShowHPSub ShowHPSubPrefab;
     public LayerMask WallAndBarrier;
     public static EnemyManager Instance
@@ -37,17 +37,24 @@ public class EnemyManager : MonoBehaviour
         }
         Enemy enemy = damadata.To as Enemy;
         ShowHPSub show = Instantiate(ShowHPSubPrefab, enemy.PR_HPsub.transform.position, Quaternion.identity);
-        show.StartUp(damadata.getDamage() + enemy.LastDamage, damadata.Type);
+        if (damadata.Mediated)
+        {
+            show.StartUp(damadata.TextMediated);
+        } else
+        {
+            show.StartUp(damadata.Damage, damadata.Type, damadata.IsCritical);
+        }
     }
 
-    public void ShowHP(Enemy enemy)
+    public ShowHPEnemy ShowHP(Enemy enemy)
     {
         if (ShowHPPrefab == null)
         {
             Debug.Log("Ko có PrefabShowHP");
-            return;
+            return null;
         }
-        ShowHP show = Instantiate(ShowHPPrefab, enemy.PR_HP);
+        ShowHPEnemy show = Instantiate(ShowHPPrefab, enemy.PR_HP);
         show.SetStart(enemy);
+        return show;
     }
 }

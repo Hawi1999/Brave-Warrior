@@ -97,8 +97,8 @@ public class GameController : MonoBehaviour
     [Serializable] 
     public class HienThiThongBao
     {
-        public ThongBao Prefabs_ChacChanKhong;
-        public ThongBao Prefabs_NhacNho;
+        public Notification Prefabs_ChacChanKhong;
+        public Notification Prefabs_NhacNho;
         public ThongBaoNen Prefabs_Nen;
     }
 

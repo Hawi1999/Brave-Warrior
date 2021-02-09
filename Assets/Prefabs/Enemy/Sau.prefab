@@ -167,9 +167,9 @@ MonoBehaviour:
   EnemyName: "S\xE2u L\xE1"
   Damage: 2
   ED:
-    MaxHP: 50
-    SizeHP: 0.8
-    Shield: 1
+    MaxHP: 30
+    Size: {x: 0.8, y: 0.5}
+    Shield: 0
     time_range_move: {x: 1, y: 2}
     time_range_idle: {x: 2, y: 4}
     time_range_attack: {x: 2, y: 5}
@@ -270,7 +270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bab82f9155c5354689521856cfa98e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuiPF: {fileID: 5533233973321091005, guid: 48552eb0219157b479e42c01d85a8967, type: 3}
   color: {r: 0.35745466, g: 0.735849, b: 0.2742079, a: 1}
   Offset: {x: 0, y: 0.2, z: 0}
   RangeSpawn: {x: 0.4, y: 0.2}

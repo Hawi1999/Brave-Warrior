@@ -37,7 +37,7 @@ public class ChestManager : MonoBehaviour
             return null;
         }
         Chest chest = Instantiate(cdt.Prefabs, Position, Quaternion.identity);
-        chest.setUp(RewardManager.GetRewardsByName(cdt.NameOfRewards));
+        chest.setUp(cdt);
         return chest;
     }
 

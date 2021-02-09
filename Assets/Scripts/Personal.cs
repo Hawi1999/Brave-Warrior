@@ -163,11 +163,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            ThongBao.Nen("Bạn nhận được <color=yellow>$" + a.ToString() + "</color>. ");
+            Notification.NoticeBelow("Bạn nhận được <color=yellow>$" + a.ToString() + "</color>. ");
         }
         else
         {
-            ThongBao.Nen("Bạn bị trừ <color=yellow>$" + (-a).ToString() + "</color>. ");
+            Notification.NoticeBelow("Bạn bị trừ <color=yellow>$" + (-a).ToString() + "</color>. ");
         }
     }
     private void ThongBaoDiaChanged(int o, int n)
@@ -176,11 +176,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            ThongBao.Nen("Bạn nhận được <color=blue>" + a.ToString() + " Kim Cương Xanh</color>. ");
+            Notification.NoticeBelow("Bạn nhận được <color=blue>" + a.ToString() + " Kim Cương Xanh</color>. ");
         }
         else
         {
-            ThongBao.Nen("Bạn bị trừ <color=blue>" + (-a).ToString() + " Kim Cương Xanh</color>. ");
+            Notification.NoticeBelow("Bạn bị trừ <color=blue>" + (-a).ToString() + " Kim Cương Xanh</color>. ");
         }
     }
     private void ThongBaoTLChanged(int o, int n)
@@ -188,11 +188,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            ThongBao.Nen("Bạn nhận được <color=orange>" + a.ToString() + " Thể Lực</color>. ");
+            Notification.NoticeBelow("Bạn nhận được <color=orange>" + a.ToString() + " Thể Lực</color>. ");
         }
         else
         {
-            ThongBao.Nen("Bạn bị trừ <color=orange>" + (-a).ToString() + " Thể Lực</color>. ");
+            Notification.NoticeBelow("Bạn bị trừ <color=orange>" + (-a).ToString() + " Thể Lực</color>. ");
         }
     }
     private void ThongBaoDKNChanged(int o, int n)
@@ -200,11 +200,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            ThongBao.Nen("Bạn nhận được <color=cyan>" + a.ToString() + " Exp</color>. ");
+            Notification.NoticeBelow("Bạn nhận được <color=cyan>" + a.ToString() + " Exp</color>. ");
         }
         else
         {
-            ThongBao.Nen("Bạn bị trừ <color=cyan>" + a.ToString() + " Exp</color>.");
+            Notification.NoticeBelow("Bạn bị trừ <color=cyan>" + a.ToString() + " Exp</color>.");
         }
     }
 

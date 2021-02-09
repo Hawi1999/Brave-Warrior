@@ -11,7 +11,7 @@ public class Chest : MonoBehaviour
     protected BoxCollider2D col;
     protected StarsControl starsControl;
     public TypeChest type;
-    public Reward[] rewards;
+    ChestData chestData;
     public Vector2 OffSetSpawnWard;
     bool opened = false;
 
@@ -29,19 +29,19 @@ public class Chest : MonoBehaviour
         TimeStart = Time.time;
     }
 
-    public void setUp(Reward[] rewards)
+    public void setUp(ChestData chestData)
     {
-        this.rewards = rewards;
+        this.chestData = chestData;
     }
     public void OpenChest()
     {
         ani.setAnimation("OpenChest");
-        if (rewards == null || rewards.Length == 0)
+        if (chestData.NameOfRewards == null || chestData.NameOfRewards.Length == 0)
         {
             Debug.Log("Danh sach phần thưởng trống");
             return;
         }
-        Reward reward = rewards[Random.Range(0, rewards.Length)];
+        Reward reward = RewardManager.GetRewardByName(chestData.getRandomReward());
         reward = Instantiate(reward, transform.position, Quaternion.identity);
         reward.Appear();
     }

@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(PlayerController))]
 public class ChooseReward : MonoBehaviour
 {
+    public static ChooseReward Instance;
     [HideInInspector] public List<Reward> Rewards;
     private Reward rewardcr;
-    private PlayerController player;
+    private PlayerController player => PlayerController.PlayerCurrent;
+
+
+    void Awake()
+    {
+        Instance = this;
+    }
     public Reward Choosing
     {
         get
@@ -20,11 +26,6 @@ public class ChooseReward : MonoBehaviour
             rewardcr = value;
             OnChooseReward?.Invoke(value);
         }
-    }
-
-    private void Start()
-    {
-        player = GetComponent<PlayerController>();
     }
     private void Update()
     {
@@ -44,7 +45,7 @@ public class ChooseReward : MonoBehaviour
         {
             Rewards = new List<Reward>();
         }
-        if (isNotExist(reward))
+        if (!isExist(reward))
         {
             Rewards.Add(reward);
             OnChooseReward += reward.Choose;
@@ -54,30 +55,30 @@ public class ChooseReward : MonoBehaviour
 
     public void Remove(Reward reward)
     {
-        if (Rewards != null)
+        if (Rewards != null && isExist(reward))
         {
             Rewards.Remove(reward);
+            if (Rewards.Count == 0)
+            {
+                Choosing = null;
+            } else
+            {
+                Choosing = Rewards[Rewards.Count - 1];
+            }
+            OnChooseReward -= reward.Choose;
         }
-        if (Rewards.Count == 0)
-        {
-            Choosing = null;
-        } else
-        {
-            Choosing = Rewards[Rewards.Count - 1];
-        }
-        OnChooseReward -= reward.Choose;
     }
 
-    private bool isNotExist(Reward reward)
+    private bool isExist(Reward reward)
     {
         foreach (Reward reward1 in Rewards)
         {
             if (reward == reward1)
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     UnityAction<Reward> OnChooseReward;

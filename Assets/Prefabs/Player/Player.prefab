@@ -221,11 +221,9 @@ GameObject:
   - component: {fileID: 5105349363824851858}
   - component: {fileID: 5105349363824851861}
   - component: {fileID: 5105349363824851860}
-  - component: {fileID: 5105349363824851848}
   - component: {fileID: 5105349363824851851}
   - component: {fileID: 4945552684278111320}
   - component: {fileID: 6806645738978168983}
-  - component: {fileID: -8332571855675083950}
   m_Layer: 16
   m_Name: Player
   m_TagString: Player
@@ -315,10 +313,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ColliderTakeDamaged: {fileID: 385986454818863689}
-  maxHP: 10
-  speed: 8
-  shield: 5
-  HealPhy: 100
+  maxHP: 8
+  speed: 6
+  shield: 3
+  healPhy: 100
   RenderSelected: {fileID: 8287429988482597534}
   layerTargetFind:
     serializedVersion: 2
@@ -326,18 +324,6 @@ MonoBehaviour:
   OffSetWeapon: {x: 0, y: 0.3, z: 0}
   PermitMove: 0
   Direction: {x: 1, y: 0, z: 0}
---- !u!114 &5105349363824851848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5105349363824851853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4266f1a4af70c934d8d3cb5d5896fbb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &5105349363824851851
 Rigidbody2D:
   serializedVersion: 4
@@ -414,19 +400,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.72288644, y: 0.2036295}
   m_EdgeRadius: 0
---- !u!114 &-8332571855675083950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5105349363824851853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1401174c88b3f4f4994f7f5cb6622b1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Rewards: []
 --- !u!1001 &6368736747187926330
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -5,18 +5,13 @@ using UnityEngine;
 public class DK : MonoBehaviour
 {
     public Joystick MyJoy { get => GameController.MyJoy; }
-    
-    PlayerController player;
-    // Start is called before the first frame update
-    void Start()
-    {
-        player = GetComponent<PlayerController>();
-    }
+
+    PlayerController player => PlayerController.PlayerCurrent;
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (MyJoy != null)
+        if (MyJoy != null && player != null)
         {
             Vector2 dire = MyJoy.Direction;
             player.Move(dire.normalized);
@@ -24,7 +19,7 @@ public class DK : MonoBehaviour
                 player.Direction = dire;
         } else
         {
-            Debug.LogWarning("Khong tim thay he thong dieu khien");
+            Debug.LogWarning("Khong tim thay he thong dieu khien hoac player khong ton tai");
         }
     }
 }

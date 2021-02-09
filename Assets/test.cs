@@ -2,5 +2,8 @@
 
 public class test : MonoBehaviour
 {
-    public Color color; 
+    private void Start()
+    {
+        ChestManager.Instance.ReWardChest(TypeChest.Copper, transform.position);
+    }
 }

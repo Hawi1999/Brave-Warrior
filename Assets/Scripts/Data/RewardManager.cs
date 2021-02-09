@@ -8,6 +8,7 @@ public class RewardManager : MonoBehaviour
     public static RewardManager Instance;
 
     public List<RewardWeapon> WeaponRewards;
+    public List<RewardGold> GoldRewards;
 
 
     private void Awake()
@@ -28,6 +29,7 @@ public class RewardManager : MonoBehaviour
         List <Reward> Rewards = new List<Reward>();
         // Thêm danh dách Reward
         Rewards.AddRange(Instance.WeaponRewards);
+        Rewards.AddRange(Instance.GoldRewards);
         return Array.Find(Rewards.ToArray(), e => e.Name == Name);
 
     }

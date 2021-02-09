@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BulletBase : MonoBehaviour
 {
-    [SerializeField] protected DamageData damage;
+    [HideInInspector] protected DamageData damage;
     [SerializeField] protected float flySpeed;
     [SerializeField] private Transform dauDan;
     [SerializeField] protected LayerMask target;
@@ -55,10 +55,12 @@ public class BulletBase : MonoBehaviour
         Fly();
     }
 
-    public void StartUp(DamageData dam)
+    public virtual void StartUp(DamageData dam)
     {
         damage = dam;
     }
+
+
 
     protected virtual void Fly()
     {
@@ -81,7 +83,7 @@ public class BulletBase : MonoBehaviour
 
     protected virtual void OnHitTarget(TakeHit take, RaycastHit2D hit)
     {
-        take.TakeDamaged(damage);
+        take.TakeDamaged(damage.Clone);
         Destroyed(hit);
     }
 

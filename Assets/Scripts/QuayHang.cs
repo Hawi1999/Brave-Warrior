@@ -310,11 +310,11 @@ public class QuayHang : Bag
         if (!slotCurrent) return;
         if (TGD == QuayHang_TGD.Ban)
         {
-            ThongBao.ChacChanKhong("Bạn có chắc muốn bán vật phẩm với giá <color=yellow>$" + (slotCurrent.item.getGiaBan() * aMountCurrent).ToString() + "</color>?", Sell);
+            Notification.AreYouSure("Bạn có chắc muốn bán vật phẩm với giá <color=yellow>$" + (slotCurrent.item.getGiaBan() * aMountCurrent).ToString() + "</color>?", Sell);
         }
         if (TGD == QuayHang_TGD.Mua)
         {
-            ThongBao.NhacNho("Mầm sẽ được mua tự động khi bạn trồng");
+            Notification.ReMind("Mầm sẽ được mua tự động khi bạn trồng");
         }
     }
     public void onClickBan_Mua(QuayHang_TGD a)

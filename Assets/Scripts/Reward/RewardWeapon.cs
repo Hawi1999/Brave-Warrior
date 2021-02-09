@@ -4,7 +4,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(HienTenVuKhi))]
 [RequireComponent(typeof(Weapon))]
-[RequireComponent(typeof(BoxCollider2D))]
 public class RewardWeapon : Reward
 {
     Weapon weapon => GetComponent<Weapon>();
@@ -23,6 +22,20 @@ public class RewardWeapon : Reward
             return "Reward " + weapon.NameOfWeapon;
         }
     }
+
+    private void Update()
+    {
+        if (player != null)
+            {
+            if (isNearPlayer(1f) && player.WeaponCurrent != weapon)
+            {
+                ChooseReward.Instance.Add(this);
+            } else if (player != null)
+            {
+                ChooseReward.Instance.Remove(this);
+            }
+        }
+    }
     public override void Choose(Reward reward)
     {
         if (this == reward)
@@ -37,7 +50,7 @@ public class RewardWeapon : Reward
     public override void TakeReward(PlayerController host)
     {
         host.TrangBi(weapon);
-        host.GetComponent<ChooseReward>().Remove(this);
+        ChooseReward.Instance.Remove(this);
         hientenvukhi.AnDi();
     }
 
@@ -48,23 +61,10 @@ public class RewardWeapon : Reward
         pct.StartAnimation();
     }
 
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private bool isNearPlayer(float Distance)
     {
-        if (collision.CompareTag("Player") && WaitingForGet)
-        {
-            ChooseReward chooseReward = collision.GetComponent<ChooseReward>();
-            chooseReward.Add(this);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && WaitingForGet)
-        {
-            ChooseReward chooseReward = collision.GetComponent<ChooseReward>();
-            chooseReward.Remove(this);
-        }
+        if (player == null)
+            return false;
+        return Vector2.Distance(transform.position, player.getPosition()) <= Distance;
     }
 }

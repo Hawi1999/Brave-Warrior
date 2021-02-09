@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: GoldChest
   m_EditorClassIdentifier: Assembly-CSharp::ChestData
   Prefabs: {fileID: 1350410359043051585, guid: 901b13b85b126ae48baf279956287edb, type: 3}
+  UuTien: c8000000
+  NameOfRewards:
+  - Reward Gold 3

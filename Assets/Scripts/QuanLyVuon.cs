@@ -60,6 +60,7 @@ public class QuanLyVuon : MonoBehaviour
     private bool DangTrongVuon = false;
     private Transform GO_TheoDoi;
     private DatTrong dat_current;
+    private PlayerController player => PlayerController.PlayerCurrent;
     void Start() 
     {
         StartUp();
@@ -182,14 +183,19 @@ public class QuanLyVuon : MonoBehaviour
         GameController.MyJoy?.gameObject.SetActive(true);
         if (dat_current != null)
         dat_current.cachChonTrong = CachChonTrong.Empty;
-        PlayerController.Instance.PermitMove = true;
+        player.OnCheckForMove -= LockMove;
+    }
+
+    void LockMove(BoolAction permitMove)
+    {
+        permitMove.IsOK = false;
     }
     void onClickChon()
     {
         if (dat_current == null)
         {
             int gia = (int)((5000 + (dats.Count - 6) * 5000)*Buffer.Neft_DOLA);
-            ThongBao.ChacChanKhong("Bạn có chắc muốn mua mãnh đất này với giá <color=yellow>$" + gia.ToString() + "</color>?", () => MuaDat(gia));
+            Notification.AreYouSure("Bạn có chắc muốn mua mãnh đất này với giá <color=yellow>$" + gia.ToString() + "</color>?", () => MuaDat(gia));
         }
         else
         {
@@ -230,8 +236,7 @@ public class QuanLyVuon : MonoBehaviour
         ChonCay.Main.SetActive(true);
         VC.CapNhatDanhSachChonMoi();
         GameController.MyJoy?.gameObject.SetActive(false);
-
-        PlayerController.Instance.PermitMove = false;
+        player.OnCheckForMove += LockMove;
     }
     void ThuHoach()
     {
@@ -240,7 +245,7 @@ public class QuanLyVuon : MonoBehaviour
         Personal.AddDKN(cay.ThoiGianLon/10);
         Kho.AddItemSave(cay, cay.SoLuong);
         dat_current.ThuHoach();
-        VFXController.ThuHoach(vfx, cay, cay.SoLuong, pos);
+        VFXManager.ThuHoach(vfx, cay, cay.SoLuong, pos);
         SaveGame();
     }
     IEnumerator Wait(DatTrong dat, float seconds)
@@ -253,7 +258,7 @@ public class QuanLyVuon : MonoBehaviour
     {
         if (Personal.DOLA < gia)
         {
-            ThongBao.NhacNho("Bạn không đủ tiền để thực hiện hành động");
+            Notification.ReMind("Bạn không đủ tiền để thực hiện hành động");
             return;
         } else
         {
@@ -279,7 +284,7 @@ public class QuanLyVuon : MonoBehaviour
             SaveGame();
         } else
         {
-            ThongBao.NhacNho("Tiền của ban không đủ để thực hiện hành động");
+            Notification.ReMind("Tiền của ban không đủ để thực hiện hành động");
         }
 
 

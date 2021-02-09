@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 public class StarsControl : MonoBehaviour
 {
-    public Bui bui;
+    public Dust bui;
     public Sprite star;
     [SerializeField] private Vector2 OffsetDirZ;
     [SerializeField] private Vector2 RangeSpeed;
@@ -26,6 +26,8 @@ public class StarsControl : MonoBehaviour
             OnSetSpawn += spawn.setSpawn;
         }
     }
+
+
     public void SetUp(Transform tf, Vector3 positionStart, Vector2 Dir, int Sl, float Dis)
     {
         for (int i = 0; i < Sl; i++)

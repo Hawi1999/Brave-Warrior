@@ -8,10 +8,11 @@ using UnityEngine.Tilemaps;
 
 public enum DamageElement
 {
-    Normal,
-    Fire,
-    Poison,
-    Ice,
+    Normal = 0,
+    Fire = 1,
+    Poison = 2,
+    Ice = 4,
+    Electric = 5
 }
 
 
@@ -19,7 +20,7 @@ public enum DamageElement
 public class EnemyData
 {
     public int MaxHP = 50;
-    public float SizeHP = 1;
+    public Vector2 Size = new Vector2(0.7f, 0.3f);
     public int Shield = 0;
 
     public Vector2 time_range_move = new Vector2(1f, 2f);
@@ -96,7 +97,7 @@ public class Enemy : Entity
     {
         get
         {
-            return PlayerController.Instance;
+            return PlayerController.PlayerCurrent;
         }
     }
     private bool HasPlayerNear
@@ -115,10 +116,9 @@ public class Enemy : Entity
     {
         get
         {
-            return PlayerController.Instance;
+            return PlayerController.PlayerCurrent;
         }
     }
-    private bool PermitMove = true;
     private Vector3 lastDirTook = new Vector3(0,1,0);
     // Di chuyển
     private bool isMoving = false;
@@ -146,8 +146,18 @@ public class Enemy : Entity
 
     public override Vector3 PositionSpawnWeapon => vitriradan;
     public Transform tranSform => transform;
-
-    public UnityAction<Weapon, Weapon> OnWeaponChanged { get ; set ; }
+    protected override bool PermitAttack
+    {
+        get
+        {
+            BoolAction check = new BoolAction(true);
+            OnCheckForAttack?.Invoke(check);
+            return check.IsOK 
+                && Time.time - time_start_attack > time_delay_attack 
+                && targetAttack != null 
+                && Vector2.Distance(targetAttack.ColliderTakeDamaged.bounds.center, vitriradan) <= 6f; ;
+        }
+    }
 
     #endregion
     private void Awake()
@@ -162,11 +172,13 @@ public class Enemy : Entity
             OnTookDamage += EnemyManager.Instance.ShowHPSub;
         } else
         { 
-            Debug.Log("Instance cho EnemtManager không tồn tại");
+            Debug.Log("Instance cho EnemyManager không tồn tại");
         }
         OnTakeDamage += OnTakedamage;
-
         OnTookDamage += VFXDamageTook;
+        OnCheckForAttack += checkAttack;
+
+        OnDeath += onDeath;
 
         Heath = MaxHP;
         render = GetComponent<SpriteRenderer>();
@@ -190,37 +202,47 @@ public class Enemy : Entity
         Destroy(this.gameObject);
     }
 
+    private void onDeath(Entity enitty)
+    {
+        OnTookDamage -= EnemyManager.Instance.ShowHPSub;
+        OnTakeDamage -= OnTakedamage;
+        OnTookDamage -= VFXDamageTook;
+        OnCheckForAttack -= checkAttack;
+
+        OnDeath -= onDeath;
+    }
+
     #region Xử lý sát thương
 
     private void VFXDamageTook(DamageData damadata)
     {
-        lastDirTook = damadata.Direction;
         if (buicontrol != null)
-            buicontrol.SpawnBui(damadata.getDamage() / 2, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
+            buicontrol.SpawnBui(damadata.Damage / 2, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
     }
     public override void TakeDamage(DamageData dama)
     {
         base.TakeDamage(dama);
-        LastDamage = dama.getDamage() + LastDamage;
+        LastDamage = dama.Damage + LastDamage;
         lastTimeTakeDamage = Time.time;
 
     }
 
     private void OnTakedamage(DamageData damadata)
     {
-        damadata.To = this;
-        damadata.Decrease(Random.Range(-1, 2));
-        if (damadata.Type == DamageElement.Normal)
-        {
-            damadata.Decrease(ED.Shield);
-        }
+        lastDirTook = damadata.Direction;
+        XuLyDan(damadata);
+    }
+    protected override void XuLyDanNormal(DamageData damadata)
+    {
+        base.XuLyDanNormal(damadata);
+        damadata.Decrease(ED.Shield);
     }
     #endregion
 
     private void Update()
     {
         setSorting();
-        CheckAttack();
+        CheckForAttack();
     }
 
     private void setSorting()
@@ -245,26 +267,55 @@ public class Enemy : Entity
 
     private void FixedUpdate()
     {
-        Move();
+        if (PermitMove)
+        {
+            Move();
+        } else
+        {
+            rig.velocity = Vector2.zero;
+        }
+    }
+    public override Vector3 getPosition()
+    {
+        return transform.position + new Vector3(0, 0.1f, 0);
     }
 
     #region Di chuyển và tấn công
 
-    protected virtual void CheckAttack()
+    protected virtual void CheckForAttack()
     {
-        if (Time.time - time_start_attack > time_delay_attack && targetAttack != null && Vector2.Distance(targetAttack.ColliderTakeDamaged.bounds.center, vitriradan) <= 6f)
+        BoolAction checkAttack = new BoolAction(true);
+        OnCheckForAttack?.Invoke(checkAttack);
+        if (checkAttack.IsOK)
         {
             Attack();
             time_start_attack = Time.time;
             time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
         }
     }
+
+    private void checkAttack(BoolAction permit)
+    {
+        permit.IsOK = Time.time - time_start_attack > time_delay_attack && targetAttack != null && Vector2.Distance(targetAttack.ColliderTakeDamaged.bounds.center, vitriradan) <= 6f;
+    }
+
     protected virtual void Attack()
     {
         Vector2 dirAttack = getDirToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
         BulletEnemy bullet = Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(dirAttack));
-        DamageData dam = new DamageData(Damage, dirAttack, default, this, new RaycastHit2D());
+        DamageData dam = setUpDamageData(dirAttack);
         bullet.StartUp(dam);
+    }
+
+
+    protected DamageData setUpDamageData(Vector3 NewDirection)
+    {
+        int SatThuong = Damage;
+        DamageData damageData = new DamageData();
+        damageData.Damage = SatThuong;
+        damageData.Direction = NewDirection;
+        damageData.From = this;
+        return damageData;
     }
 
     protected Vector2 getDirToPlayer(Vector2 dir)
@@ -274,6 +325,14 @@ public class Enemy : Entity
         return MathQ.RotationToDirection(Do.z).normalized;
     }
 
+    public override Vector2 getSize()
+    {
+        return transform.localScale * ED.Size;
+    }
+    public override Vector2 getCenter()
+    {
+        return transform.position + new Vector3(0, 0.1f) * transform.localScale.y;
+    }
     private void Move()
     {
         if (round == null)

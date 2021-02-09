@@ -7,12 +7,11 @@ using UnityEngine.Events;
 
 
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(ChooseReward))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AnimationQ))]
 public class PlayerController : Entity
 {
-    public static PlayerController Instance;
+    public static PlayerController PlayerCurrent;
     public Collider2D ColliderTakeDamaged;
     [SerializeField] int maxHP;
     [SerializeField] private float speed = 1;
@@ -32,7 +31,8 @@ public class PlayerController : Entity
         {
             int old = heath;
             heath = Mathf.Clamp(value, 0, MaxHP);
-            OnHeathChanged?.Invoke(old, heath, MaxHP);
+            if (PlayerCurrent == this)
+                OnHeathChanged?.Invoke(old, heath, MaxHP);
             if (heath == 0)
             {
                 Death();
@@ -51,7 +51,8 @@ public class PlayerController : Entity
         {
             int o = _currentShield;
             _currentShield = value;
-            OnShieldChanged?.Invoke(o, value, MaxShield);
+            if (PlayerCurrent == this)
+                OnShieldChanged?.Invoke(o, value, MaxShield);
         }
     }
     private float lastTimeTakeDamage;
@@ -67,15 +68,23 @@ public class PlayerController : Entity
         {
             float o = _currentHealphy;
             _currentHealphy = value;
-            OnHealPhyChanged?.Invoke(o, value, MaxHealphy);
+            if (PlayerCurrent == this)
+                OnHealPhyChanged?.Invoke(o, value, MaxHealphy, Tied);
         }
     }
     SpriteRenderer Render => GetComponent<SpriteRenderer>();
     AnimationQ anim => GetComponent<AnimationQ>();
     Rigidbody2D rig => GetComponent<Rigidbody2D>();
-    public bool PermitMove;
     private bool Tied;
-    private bool PermitAttack => !Tied;
+    protected override bool PermitAttack
+    {
+        get
+        {
+            BoolAction check = new BoolAction(true);
+            OnCheckForAttack?.Invoke(check);
+            return check.IsOK && !Tied;
+        }
+    }
     [HideInInspector] public Vector3 Direction = new Vector3(1, 0, 0);
     private Entity targetfire;
     public override Entity TargetFire
@@ -101,7 +110,7 @@ public class PlayerController : Entity
             return transform.position + OffSetWeapon;
         }
     }
-    public bool HasEnemyNear
+    public bool HasEnemyAliveNear
     {
         get
         {
@@ -109,9 +118,6 @@ public class PlayerController : Entity
             return TargetFire.IsALive;
         }
     }
-    
-
-    public Transform tranSform => transform;
     private void Awake()
     {
         gameObject.tag = "Player";
@@ -120,7 +126,6 @@ public class PlayerController : Entity
     // Start is called before the first frame update
     void Start()
     {
-        PermitMove = true;
         Heath = MaxHP;
         CurentShield = MaxShield;
         CurrentHealPhy = 0;
@@ -156,7 +161,7 @@ public class PlayerController : Entity
         } else
         {
             if (Control.KeyOne || Input.GetKey(KeyCode.X))
-                {
+            {
                 Debug.Log("Chưa trang vị vũ khí");
             }
         }
@@ -171,7 +176,7 @@ public class PlayerController : Entity
     }
     void CheckDistanceWithTargetFire()
     {
-        if (!HasEnemyNear)
+        if (!HasEnemyAliveNear)
             return;
         if (Vector2.Distance(TargetFire.transform.position, transform.position) >= 8.1f)
         {
@@ -190,7 +195,7 @@ public class PlayerController : Entity
     {
         if (CurrentHealPhy > 0)
         {
-            CurrentHealPhy = Mathf.Clamp(_currentHealphy - Time.deltaTime * MaxHealphy / 3, 0, MaxHealphy);
+            CurrentHealPhy = Mathf.Clamp(_currentHealphy - Time.deltaTime * MaxHealphy / 2.5f, 0, MaxHealphy);
             if (CurrentHealPhy == MaxHealphy)
             {
                 Tied = true;
@@ -203,7 +208,7 @@ public class PlayerController : Entity
 
     void setDirecFire()
     {
-        if (HasEnemyNear && WeaponCurrent != null)
+        if (HasEnemyAliveNear && WeaponCurrent != null)
         {
             DirectFire = (TargetFire.PositionColliderTakeDamage - WeaponCurrent.viTriRaDan).normalized;
         } else
@@ -218,7 +223,7 @@ public class PlayerController : Entity
     {
         if (PermitMove && (a != Vector2.zero))
         {
-            if (HasEnemyNear)
+            if (HasEnemyAliveNear)
             {
                 if (DirectFire.x < 0) Render.flipX = true;
                 else if (DirectFire.x > 0) Render.flipX = false;
@@ -264,12 +269,12 @@ public class PlayerController : Entity
     }
     public override Vector3 getPosition()
     {
-        return base.getPosition() + new Vector3(0,1,0);
+        return transform.position + new Vector3(0,0.25f,0);
     
     }
 
     public UnityAction<Enemy> OnTargetFireChanged;
     public static UnityAction<int, int, int> OnShieldChanged;
-    public static UnityAction<float, float, float> OnHealPhyChanged;
+    public static UnityAction<float, float, float, bool> OnHealPhyChanged;
     public static UnityAction<int, int, int> OnHeathChanged;
 }

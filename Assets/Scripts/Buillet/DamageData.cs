@@ -3,49 +3,63 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class DamageData
+public class DamageData : Object
 {
-    public Entity To;
-    public Entity From;
-    public DamageElement Type = DamageElement.Normal;
-    private int DamageOriginal;
+    public Entity To = null;
+    public Entity From = null;
+    public int Damage
+    {
+        get
+        {
+            return Mathf.Max(0, _damageOriginal - DamageDecrease);
+        }
+        set
+        {
+            _damageOriginal = value;
+        }
+    }
     private int DamageDecrease = 0;
-    public RaycastHit2D hit;
-    public Vector3 Direction;
+    public bool IsCritical = false;
+    public RaycastHit2D hit = new RaycastHit2D();
+    public Vector3 Direction = Vector3.up;
 
-    public DamageData(int da, Vector3 Direction, [DefaultValue(DamageElement.Normal)] DamageElement ele, Entity From, RaycastHit2D hit)
-    {
-        this.Type = ele;
-        this.From = From;
-        this.DamageOriginal = da;
-        this.hit = hit;
-        this.Direction = Direction;
-        DamageDecrease = 0;
-    }
+    private int _damageOriginal;
+    // Đạn bình thường
 
-    public DamageData(int da, Vector3 Direction, [DefaultValue(DamageElement.Normal)] DamageElement ele, Entity From)
-    {
-        this.Type = ele;
-        this.From = From;
-        this.DamageOriginal = da;
-        this.hit = new RaycastHit2D();
-        this.Direction = Direction;
-        DamageDecrease = 0;
-    }
+    public DamageElement Type = DamageElement.Normal;
 
-    public int getDamage()
-    {
-        return Mathf.Max(0, DamageOriginal - DamageDecrease);
-    }
+    // Đạn Điện
+    public float timeGiatDien = 4;
 
-    public void Decrease(int a)
+    // Đạn Lửa
+    public float FireTime = 4;
+    public bool FireFrom = false;
+    public float FireRatio = 0.2f;
+    public float FireDamagePerSecond = 4;
+
+    // Đạn Độc
+    public float PoisonTime = 4;
+    public bool PoisonFrom = false;
+    public float PoisonRatio = 0.2f;
+    public float PoisonDamagePerSecond = 5;
+
+    // Đạn Băng
+    public float IceTime = 1;
+    public float IceRatio = 0.2f;
+
+    public bool Mediated = false;
+    public string TextMediated = "<color=red> Trung </color><color=blue>Hòa </color>";
+
+    public virtual void Decrease(int a)
     {
         DamageDecrease += a;
     }
 
-    public void DecreaseByPercent(float _0to1_)
+    public virtual void DecreaseByPercent(float _0to1_)
     {
-        DamageDecrease += (int)(DamageOriginal * _0to1_);
+        DamageDecrease += (int)(Damage * _0to1_);
     }
+
+    public DamageData Clone => (DamageData)this.MemberwiseClone();
 
 }

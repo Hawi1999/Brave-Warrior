@@ -4,16 +4,8 @@ using UnityEngine;
 
 public class BuiControl : MonoBehaviour
 {
-    protected Sprite[] sprites
-    {
-        get
-        {
-            if (VFXManager.Instance == null)
-                return null;
-            return VFXManager.Instance.Bui;
-        }
-    }
-    public Bui BuiPF;
+    protected Sprite[] sprites => VFXManager.Instance.SpritesBui;
+    public Dust BuiPF => VFXManager.Instance.DustPrefab;
     public Color color;
 
     protected virtual Vector2 Center

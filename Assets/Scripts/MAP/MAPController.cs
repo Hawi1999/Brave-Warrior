@@ -42,8 +42,8 @@ public class MAPController : MonoBehaviour
         setLimitForCamera();
         setLimitForPlayerMove();
         SetPlayerPositionInMap();
-        if (PlayerController.Instance != null)
-            CameraMove.Instance.transform.position = PlayerController.Instance.getPosition();
+        if (PlayerController.PlayerCurrent != null)
+            CameraMove.Instance.transform.position = PlayerController.PlayerCurrent.getPosition();
     }
 
     protected virtual PlayerController CreatePlayer()
@@ -62,7 +62,7 @@ public class MAPController : MonoBehaviour
         {
             player = Instantiate(PlayerManager.Instance.PlayerPrefabs[0]);
         }
-        PlayerController.Instance = player;
+        PlayerController.PlayerCurrent = player;
         return player;
     }
 
@@ -142,8 +142,8 @@ public class MAPController : MonoBehaviour
     public virtual void SetPlayerPosDefault()
     {
         GameObject player;
-        if (PlayerController.Instance != null)
-            player = PlayerController.Instance.gameObject;
+        if (PlayerController.PlayerCurrent != null)
+            player = PlayerController.PlayerCurrent.gameObject;
         else
         {
             Debug.Log("Khong tim thay Player");
@@ -154,8 +154,8 @@ public class MAPController : MonoBehaviour
     public virtual void SetPlayerPositionInMap()
     {
         GameObject player;
-        if (PlayerController.Instance != null)
-            player = PlayerController.Instance.gameObject;
+        if (PlayerController.PlayerCurrent != null)
+            player = PlayerController.PlayerCurrent.gameObject;
         else
         {
             Debug.Log("Khong tim thay Player");
@@ -195,7 +195,7 @@ public class MAPController : MonoBehaviour
     {
         if (scene == "TrangTrai")
         {
-            Destroy(PlayerController.Instance.gameObject);
+            Destroy(PlayerController.PlayerCurrent.gameObject);
         }
         GameController.Instance.LoadScene(scene);
     }

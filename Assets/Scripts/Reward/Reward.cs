@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Reward: MonoBehaviour
 {
+
+    protected PlayerController player => PlayerController.PlayerCurrent;
     public abstract string Name
     {
         get;

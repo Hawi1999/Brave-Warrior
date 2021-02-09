@@ -32,7 +32,7 @@ public class KhoNongSan : Bag
         BT.ChangeText(0, "Mở Kho");
         BT.SetListener(0, Open);
         HienBT();
-        PlayerController.Instance.PermitMove = true;
+        PlayerController.PlayerCurrent.OnCheckForMove -= LockMove;
     }
     protected override void Open()
     {
@@ -40,8 +40,15 @@ public class KhoNongSan : Bag
         BT.ChangeText(0, "Sắp Xếp");
         BT.SetListener(0, SapXep);
         UpdateList();
-        PlayerController.Instance.PermitMove = false;
+        PlayerController.PlayerCurrent.OnCheckForMove += LockMove;
     }
+
+    private void LockMove(BoolAction permitMove)
+    {
+        permitMove.IsOK = false;
+    }
+
+
 
     public void AddItemSave(Item item, int SoLuong)
     {

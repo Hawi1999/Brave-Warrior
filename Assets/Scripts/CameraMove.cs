@@ -15,7 +15,7 @@ public class CameraMove : MonoBehaviour
     {
         get
         {
-            return PlayerController.Instance;
+            return PlayerController.PlayerCurrent;
         }
     }
 
@@ -52,7 +52,7 @@ public class CameraMove : MonoBehaviour
 
     Vector3 targetMove()
     {
-        if (!Player.HasEnemyNear)
+        if (!Player.HasEnemyAliveNear)
             return Player.getPosition();
         return (Player.TargetFire.PositionColliderTakeDamage + Player.getPosition())/2;
     }

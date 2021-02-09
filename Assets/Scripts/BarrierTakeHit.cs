@@ -24,7 +24,7 @@ public class BarrierTakeHit : TakeHit
     }
     public override void TakeDamaged(DamageData data)
     {
-        Shield -= data.getDamage();
+        Shield -= data.Damage;
     }
 
     private void Destroyed()
