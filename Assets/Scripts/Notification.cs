@@ -44,13 +44,13 @@ public class Notification : MonoBehaviour
             Debug.LogWarning("Khong tin thay CanvasMain");
             return;
         }
-        if (ThongBaoNen.Instance == null)
+        if (NoticeBackground.Instance == null)
         {
-            ThongBaoNen.Instance = Instantiate(GameController.Instance.TB.Prefabs_Nen, cv.transform);
-            ThongBaoNen.Instance.setString(content);
+            NoticeBackground.Instance = Instantiate(GameController.Instance.TB.Prefabs_Nen, cv.transform);
+            NoticeBackground.Instance.setString(content);
         } else
         {
-            ThongBaoNen.Instance.addString(content);
+            NoticeBackground.Instance.addString(content);
         }
     }
 }

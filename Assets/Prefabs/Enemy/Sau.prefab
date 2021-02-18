@@ -164,8 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35476477354aba84899adfb6c9f65d51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Direction: {x: 0, y: 0, z: 0}
   EnemyName: "S\xE2u L\xE1"
-  Damage: 2
+  Damage: 3
   ED:
     MaxHP: 30
     Size: {x: 0.8, y: 0.5}
@@ -184,6 +185,7 @@ MonoBehaviour:
     m_Bits: 0
   Selecting: {fileID: 7972459615058464469}
   speedMove: 3
+  LastDamageData: {fileID: 0}
 --- !u!61 &53768036269688357
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -243,13 +245,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animate:
+  animates:
   - code: Run
     sprites:
     - {fileID: -1137668749285471773, guid: 8b14ae1d6deb180499710cd2e357158a, type: 3}
     - {fileID: 4923050534710727810, guid: 8b14ae1d6deb180499710cd2e357158a, type: 3}
     - {fileID: 6126103107544077922, guid: 8b14ae1d6deb180499710cd2e357158a, type: 3}
     - {fileID: 8990589829601979213, guid: 8b14ae1d6deb180499710cd2e357158a, type: 3}
+    - {fileID: 4111971564713417764, guid: 8b14ae1d6deb180499710cd2e357158a, type: 3}
     FPS: 8
     Loop: 1
   - code: Idle

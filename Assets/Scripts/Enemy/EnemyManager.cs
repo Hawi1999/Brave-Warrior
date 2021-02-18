@@ -6,6 +6,10 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private ShowHPEnemy ShowHPPrefab;
     [SerializeField] private ShowHPSub ShowHPSubPrefab;
+    [SerializeField] private VFXSpawn VFXSpawnPrefabs;
+
+
+
     public LayerMask WallAndBarrier;
     public static EnemyManager Instance
     {
@@ -56,5 +60,43 @@ public class EnemyManager : MonoBehaviour
         ShowHPEnemy show = Instantiate(ShowHPPrefab, enemy.PR_HP);
         show.SetStart(enemy);
         return show;
+    }
+
+    public Enemy Spawn(Enemy Prefab, Vector3 position)
+    {
+        Enemy enemy = Instantiate(Prefab, position, Quaternion.identity);
+        if (VFXSpawnPrefabs == null)
+        {
+            Debug.Log("Không có VFXSpawn, không thể spawn enemy");
+            enemy.gameObject.SetActive(true);
+        } else
+        {
+            VFXSpawn v = Instantiate(VFXSpawnPrefabs, position, Quaternion.identity);
+            enemy.gameObject.SetActive(false);
+            v.OnCompleteVFX += () => enemy.gameObject.SetActive(true);
+        }
+        return enemy;
+    }
+
+    public Enemy Spawn(Enemy Prefab, Vector3 position, Vector2[] limitMove)
+    {
+        Enemy enemy = Spawn(Prefab, position);
+        enemy.setLimitMove(limitMove);
+        return enemy;
+    }
+
+    public Enemy Spawn(Enemy Prefab, Vector3 position, Transform transform)
+    {
+        Enemy enemy = Spawn(Prefab, position);
+        enemy.transform.parent = transform;
+        return enemy;
+    }
+
+    public Enemy Spawn(Enemy Prefab, Vector3 position,Transform transform, Vector2[] limitMove)
+    {
+        Enemy enemy = Spawn(Prefab, position);
+        enemy.setLimitMove(limitMove);
+        enemy.transform.parent = transform;
+        return enemy;
     }
 }

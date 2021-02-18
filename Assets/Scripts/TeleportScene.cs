@@ -17,8 +17,8 @@ public class TeleportScene : MonoBehaviour
     private string ConnectScene;
     [SerializeField]
     GoTo EventE;
-    private BTThaoTacManHinh BT_Current;
-    private string TextInfo;
+
+    bool inIn = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,36 +26,33 @@ public class TeleportScene : MonoBehaviour
         EventE.OnGoOut += GoOut;
     }
 
-    private void GoIn(Collider2D c)
+    private void Update()
     {
-        if (BT_Current != null) return;
-        BT_Current = Instantiate(GameController.Instance.BTTTMH, GameController.CanvasMain.transform);
-        BT_Current.gameObject.SetActive(true);
-        BT_Current.AddButton(0, TextInfo, () => MAPController.Instance.LoadScene(ConnectScene));
+        if (inIn)
+        {
+            if (Control.GetKey("X"))
+            {
+                MAPController.Instance.LoadScene(ConnectScene);
+                inIn = false;
+            }
+        }
     }
 
-    private void LoadScene(string scene)
+    private void GoIn(Collider2D c)
     {
-        if (PlayerController.PlayerCurrent.HasWeapon)
-        {
-            GameController.Instance.LoadScene(ConnectScene);
-        } else
-        {
-            Notification.ReMind("Bạn cần vũ khí để tiếp tục");
-        }
+        inIn = true;
+        Control.OnWaitToClick?.Invoke("X");
     }
 
     private void GoOut(Collider2D c)
     {
-        if (BT_Current == null) return;
-        Destroy(BT_Current.gameObject);
+        inIn = false;
+        Control.OnEndWaitToClick?.Invoke("X");
     }
 
     public void SetUp(Teleporttion tele)
     {
-
         ConnectScene = tele.ConnectScene;
-        TextInfo = tele.Info_BT;
         EventE.vanBan.text = tele.Name_Scene;
         gameObject.transform.position = tele.PositionGo;
     }

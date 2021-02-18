@@ -11,7 +11,6 @@ public class DrawMap1 : DrawMap
     public LockRoom LR;
 
     private Vector3Int CenterCurrent;
-    private Vector2 lastHalfRound;
     private int numberCurrent;
     protected override void Draw()
     {

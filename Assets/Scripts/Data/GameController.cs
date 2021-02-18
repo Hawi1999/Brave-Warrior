@@ -94,13 +94,16 @@ public class GameController : MonoBehaviour
         moMan();
     }
 
+    #region Notification
     [Serializable] 
     public class HienThiThongBao
     {
         public Notification Prefabs_ChacChanKhong;
         public Notification Prefabs_NhacNho;
-        public ThongBaoNen Prefabs_Nen;
+        public NoticeBackground Prefabs_Nen;
     }
+
+    #endregion
 
     public void LoadScene(string scene)
     {

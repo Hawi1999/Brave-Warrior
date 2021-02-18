@@ -19,7 +19,7 @@ public class RewardGold : Reward
         for (int i = 0; i < Amount; i++)
         {
             TakeGoldFromMap tg = Instantiate(Prejabs, transform.position, Quaternion.identity);
-            tg.MoveToPosion(transform.position + new Vector3(Random.Range(-2, 2), Random.Range(-2, 2), 0));
+            tg.MoveToPosion(transform.position + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0));
         }
     }
 

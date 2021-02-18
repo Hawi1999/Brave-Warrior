@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TakeDamage : TakeHit
+public class TakeDamage : MonoBehaviour, TakeHit
 {
     public Entity entity;
-    public override void TakeDamaged(DamageData dama)
+    public void TakeDamaged(DamageData dama)
     {
         entity.TakeDamage(dama);
+    }
+
+    public Collider2D GetCollider()
+    {
+        return GetComponent<Collider2D>();
     }
 }

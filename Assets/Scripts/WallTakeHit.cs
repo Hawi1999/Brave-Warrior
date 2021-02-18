@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallTakeHit : TakeHit
+public class WallTakeHit : MonoBehaviour, TakeHit
 {
-    public override void TakeDamaged(DamageData data)
+    public void TakeDamaged(DamageData data)
     {
 
     }
+    public Collider2D GetCollider()
+    {
+        return GetComponent<Collider2D>();
+    }
+
 }

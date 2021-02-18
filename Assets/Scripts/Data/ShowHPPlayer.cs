@@ -31,7 +31,7 @@ public class ShowHPPlayer : MonoBehaviour
         if (player != null)
         {
             OnHPChanged(0, player.Heath, player.MaxHP);
-            OnShieldChanged(0, player.CurentShield, player.MaxShield);
+            OnShieldChanged(0, player.ShieldCurrent, player.MaxShield);
             OnHealPhyChanged(0, player.CurrentHealPhy, player.MaxHealphy, false);
         }
     }

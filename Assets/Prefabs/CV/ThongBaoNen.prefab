@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3390407934834575199}
   - component: {fileID: 6514756820620703155}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4723855727519217060}
   - component: {fileID: 8494605117718941622}
   - component: {fileID: 1292324623143736041}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.8037488, b: 0.6839622, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 6961393131115966798}
   - component: {fileID: 313731306512087411}
   - component: {fileID: 6178642306913199923}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ThongBaoNen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5471698, g: 0.33294767, b: 0.33294767, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -264,10 +264,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6462011687307692417}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a33f67ba79ed3904682243b23791c958, type: 3}
+  m_Script: {fileID: 11500000, guid: e9675c10bc6451547a10886671dd74f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeRun: 3
+  TimeRun: 4
   TimeDelay: 2
   sli: {fileID: 6514756820620703155}
   ghi: {fileID: 1292324623143736041}
@@ -282,8 +282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6867330641497171824}
   - component: {fileID: 7073595269442529432}
-  - component: {fileID: 4195228728104280541}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,32 +317,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7570363876206895206}
   m_CullTransparentMesh: 0
---- !u!114 &4195228728104280541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570363876206895206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1

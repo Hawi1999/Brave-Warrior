@@ -312,18 +312,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36be5799f28c3a145bdabd0b8c0f0c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Direction: {x: 1, y: 0, z: 0}
   ColliderTakeDamaged: {fileID: 385986454818863689}
-  maxHP: 8
+  maxHP: 20
   speed: 6
-  shield: 3
+  shield: 10
   healPhy: 100
   RenderSelected: {fileID: 8287429988482597534}
   layerTargetFind:
     serializedVersion: 2
     m_Bits: 2048
   OffSetWeapon: {x: 0, y: 0.3, z: 0}
-  PermitMove: 0
-  Direction: {x: 1, y: 0, z: 0}
 --- !u!50 &5105349363824851851
 Rigidbody2D:
   serializedVersion: 4
@@ -357,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animate:
+  animates:
   - code: Run
     sprites:
     - {fileID: -2684102947291226346, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
@@ -366,11 +365,11 @@ MonoBehaviour:
     - {fileID: -1149673380122903276, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
     - {fileID: 8350362020719645861, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
     - {fileID: 8117856743858075646, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
-    FPS: 10
+    FPS: 12
     Loop: 1
   - code: Idle
     sprites:
-    - {fileID: -2684102947291226346, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
+    - {fileID: 8117856743858075646, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
     - {fileID: 8801126876103537992, guid: ac7cda525c497ac4dacb660a958707d5, type: 3}
     FPS: 4
     Loop: 1

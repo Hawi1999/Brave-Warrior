@@ -11,7 +11,7 @@ public class DamageData : Object
     {
         get
         {
-            return Mathf.Max(0, _damageOriginal - DamageDecrease);
+            return Mathf.Max(0, _damageOriginal - (DamageDecrease + (int)((_damageOriginal) * DamagePercentDecrease)));
         }
         set
         {
@@ -19,8 +19,9 @@ public class DamageData : Object
         }
     }
     private int DamageDecrease = 0;
+    private float DamagePercentDecrease = 0;
     public bool IsCritical = false;
-    public RaycastHit2D hit = new RaycastHit2D();
+    public Vector3 PointHit;
     public Vector3 Direction = Vector3.up;
 
     private int _damageOriginal;
@@ -49,7 +50,12 @@ public class DamageData : Object
 
     public bool Mediated = false;
     public string TextMediated = "<color=red> Trung </color><color=blue>Hòa </color>";
+    public float BackForce = 0.2f;
 
+    // From
+    public bool FromMeleeWeapon = false;
+    public bool FromGunWeapon = false;
+    public bool FromTNT = false;
     public virtual void Decrease(int a)
     {
         DamageDecrease += a;
@@ -57,7 +63,7 @@ public class DamageData : Object
 
     public virtual void DecreaseByPercent(float _0to1_)
     {
-        DamageDecrease += (int)(Damage * _0to1_);
+        DamagePercentDecrease += _0to1_;
     }
 
     public DamageData Clone => (DamageData)this.MemberwiseClone();

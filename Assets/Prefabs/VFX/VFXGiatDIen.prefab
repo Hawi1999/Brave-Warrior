@@ -94,22 +94,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animate:
+  animates:
   - code: 0
     sprites:
     - {fileID: -2938036837865641743, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
     - {fileID: -2510613750192993170, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
-    FPS: 8
+    FPS: 0
     Loop: 1
   - code: 1
     sprites:
     - {fileID: -5805271983477060887, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
     - {fileID: -8544605236293965136, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
-    FPS: 8
+    FPS: 0
     Loop: 1
   - code: 2
     sprites:
     - {fileID: -1667463500575132208, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
     - {fileID: -73063535393207930, guid: 79e041f3d60022e40a57ca8245f54348, type: 3}
-    FPS: 8
+    FPS: 6
     Loop: 1

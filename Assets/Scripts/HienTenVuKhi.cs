@@ -21,21 +21,21 @@ public class HienTenVuKhi : MonoBehaviour
             renderName = Instantiate(new GameObject("Name"), transform.position + LocalPosition + new Vector3(0,0.2f,0), Quaternion.identity, ThongTin.transform).AddComponent<SpriteRenderer>();
             renderName.sprite = Name;
             renderName.sortingLayerName = "Skin";
-            renderName.sortingOrder = 1;
+            renderName.sortingOrder = 15;
             renderName.color = Weapon.getColorByLevelWeapon(weapon.TypeOfWeapon);
         } else
         {
-            Debug.Log("Chưa có hình ảnh tên cho súng " + weapon.NameOfWeapon);
+            Debug.Log("Chưa có hình ảnh tên cho súng " + weapon.GetNameOfWeapon());
         }
         if (MuiTen != null)
         {
             renderMT = Instantiate(new GameObject("MT"), transform.position + LocalPosition, Quaternion.identity, ThongTin.transform).AddComponent<SpriteRenderer>();
             renderMT.sprite = MuiTen;
             renderMT.sortingLayerName = "Skin";
-            renderMT.sortingOrder = 1;
+            renderMT.sortingOrder = 15;
         } else
         {
-            Debug.Log("Chưa có hình ảnh mũi tên cho súng " + weapon.NameOfWeapon);
+            Debug.Log("Chưa có hình ảnh mũi tên cho súng " + weapon.GetNameOfWeapon());
         }
         AnDi();
     }

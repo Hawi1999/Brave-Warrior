@@ -38,9 +38,9 @@ public class LockRoom : Door
             animate.setAnimation("Open");
         }
     }
-    public void OnAnimateFinished(string code)
+    public void OnAnimateFinished(Animate animate)
     {
-        if (code == "Open")
+        if (animate.code == "Open")
         {
             if (render != null)
                 render.sprite = null;
@@ -51,7 +51,7 @@ public class LockRoom : Door
                 buicontrol.SpawnBui(25);
             }
         }
-        if (code == "Close")
+        if (animate.code == "Close")
         {
             if (buicontrol != null)
             {

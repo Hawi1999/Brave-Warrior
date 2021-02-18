@@ -16,9 +16,6 @@ public class MapOpen : MAPController
         Instantiate(new GameObject("ParentGamePlay")).AddComponent<ParentGamePlay>();
         PlayerController player = base.CreatePlayer();
         player.transform.parent = ParentGamePlay.Instance;
-        GunBase gun = WeaponManager.GetWeaponByName("Gun K1") as GunBase;
-        gun = Instantiate(gun);
-        player.TrangBi(gun);
         if (TT == null)
         {
             Debug.Log("Không có Prefab hiển thị máu Player");

@@ -32,13 +32,9 @@ public class BulletBase : MonoBehaviour
     private float timeToDestroy = 5;
     private float timelife;
 
-    private void Start()
+    protected virtual void Start()
     {
         timelife = Time.time;
-        if (GetComponent<Collider2D>() == null)
-        {
-            gameObject.AddComponent<PolygonCollider2D>().isTrigger = true;
-        }
         render.sortingLayerName = "Current";
     }
     // Update is called once per frame
@@ -57,9 +53,8 @@ public class BulletBase : MonoBehaviour
 
     public virtual void StartUp(DamageData dam)
     {
-        damage = dam;
+        damage = dam.Clone;
     }
-
 
 
     protected virtual void Fly()
@@ -73,7 +68,8 @@ public class BulletBase : MonoBehaviour
             {
                 if (hit.collider != null && hit.collider.GetComponent<TakeHit>() != null)
                 {
-                    OnHitTarget(hit.collider.GetComponent<TakeHit>(), hit);
+                    damage.PointHit = hit.point;
+                    OnHitTarget(hit.collider.GetComponent<TakeHit>(), damage.PointHit);
                 }
             }
             transform.position = newPos;
@@ -81,18 +77,29 @@ public class BulletBase : MonoBehaviour
         }
     }
 
-    protected virtual void OnHitTarget(TakeHit take, RaycastHit2D hit)
+    protected virtual void OnHitTarget(TakeHit take, Vector3 point)
     {
         take.TakeDamaged(damage.Clone);
-        Destroyed(hit);
+        Destroyed(damage.PointHit);
     }
 
-    public void Destroyed(RaycastHit2D hit)
+
+    public void Destroyed(Vector3 position)
     {
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
         if (VFXDestroyed != null)
         {
-            Destroy(Instantiate(VFXDestroyed, hit.point, rotation), 0.2f);
+            Destroy(Instantiate(VFXDestroyed, position, rotation), 0.2f);
+        }
+        Destroy(gameObject);
+    }
+
+    public void Destroyed()
+    {
+        Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
+        if (VFXDestroyed != null)
+        {
+            Destroy(Instantiate(VFXDestroyed, transform.position, rotation), 0.2f);
         }
         Destroy(gameObject);
     }

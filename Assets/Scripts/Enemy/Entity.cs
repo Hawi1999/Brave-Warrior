@@ -1,5 +1,4 @@
-﻿using DigitalRuby.Tween;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -82,7 +81,6 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             OnHPChanged?.Invoke(old, heath, MaxHP);
         }
     }
-
     protected virtual bool PermitMove
     {
         get
@@ -92,7 +90,6 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return pm.IsOK;
         }
     }
-
     protected virtual bool PermitAttack
     {
         get
@@ -102,6 +99,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return check.IsOK;
         }
     }
+
+    [HideInInspector] public Vector3 Direction;
     // Được gọi khi HO thay đổi
     public UnityAction<int, int, int> OnHPChanged;
     // Được goi khi Entity Die
@@ -129,88 +128,99 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             {
                 if (weapon != null )
                 {
-                    weapon.ChangEQuip(this, TrangThaiTrangBiVuKhi.Tudo);
+                    weapon.ChangEQuip(this, WeaponStatus.Free);
+                    OnUnEquipment(weapon);
                 }
                 weapon = value;
                 if (value != null)
                 {
-                    weapon.ChangEQuip(this, TrangThaiTrangBiVuKhi.DangTrangBi);
+                    weapon.ChangEQuip(this, WeaponStatus.Equiping);
+                    OnEquipment(weapon);
                 }
             }
         }
     }
-
+    protected virtual void Start()
+    {
+        OnTakeDamage += XLD;
+        OnTookDamage += BackForce;
+    }
     protected virtual void Death()
     {
         OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
-
     public virtual void TakeDamage(DamageData dama)
     {
-
         dama.To = this;
         OnTakeDamage?.Invoke(dama);
         Damaged(dama.Damage);
         OnTookDamage?.Invoke(dama);
         CheckHP();
     }
-
-    protected virtual void XuLyDan(DamageData damadata)
+    protected virtual void XLD(DamageData damadata)
     {
 
         if (damadata.Type == DamageElement.Normal)
         {
-            XuLyDanNormal(damadata);
+            XLDNormal(damadata);
         } else
         if (damadata.Type == DamageElement.Electric)
         {
-            XuLyDanElec(damadata);
+            XLDElec(damadata);
         } else
         if (damadata.Type == DamageElement.Fire)
         {
-            XuLyDanFire(damadata);
+            XLDFire(damadata);
         } else
         if (damadata.Type == DamageElement.Ice)
         {
-            XuLyDanIce(damadata);
+            XLDIce(damadata);
         } else
         if (damadata.Type == DamageElement.Poison)
         {
-            XuLyDanPoison(damadata);
+            XLDPoison(damadata);
         }
     }
-
-    protected virtual void XuLyDanNormal(DamageData damageData)
+    protected virtual void XLDNormal(DamageData damageData)
     {
 
     }
-    protected virtual void XuLyDanElec(DamageData damageData)
+    protected virtual void XLDElec(DamageData damageData)
     {
         Electrified.Shockwave(this, damageData.timeGiatDien);
     }
-    protected virtual void XuLyDanFire(DamageData damageData)
+    protected virtual void XLDFire(DamageData damageData)
     {
         if (!damageData.FireFrom)
         {
-            Freeze fre = GetComponent<Freeze>();
-            if (fre != null)
-            {
-                fre.EndUp();
-                damageData.Mediated = true;
-            }
-            else
-            if (Random.Range(0, 1f) < damageData.FireRatio)
-            {
-                Burnt.Chay(this, damageData.FireTime);
-            }
+            XLDFireNotFireFrom(damageData);
         }
         else
         {
-            damageData.Damage = (int)Mathf.Clamp(Burnt.Tile * MaxHP, Burnt.MinDamage, Burnt.MaxDamage);
+            XLDFireFireFrom(damageData);
         }
     }
-    protected virtual void XuLyDanPoison(DamageData damageData)
+    protected virtual void XLDFireNotFireFrom(DamageData damageData)
+    {
+        Freeze fre = GetComponent<Freeze>();
+        if (fre != null)
+        {
+            fre.EndUp();
+            damageData.Mediated = true;
+        }
+        else
+        if (Random.Range(0, 1f) < damageData.FireRatio)
+        {
+            Burnt.Chay(this, damageData.FireTime);
+        }
+    }
+
+    protected virtual void XLDFireFireFrom(DamageData damageData)
+    {
+        damageData.Damage = (int)Mathf.Clamp(Burnt.Tile * MaxHP, Burnt.MinDamage, Burnt.MaxDamage);
+    }
+    protected virtual void XLDPoison(DamageData damageData)
     {
         if (!damageData.PoisonFrom)
         {
@@ -224,7 +234,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             damageData.Damage = (int)Mathf.Clamp(Poisoned.Tile * MaxHP, Poisoned.MinDamage, Poisoned.MaxDamage);
         }
     }
-    protected virtual void XuLyDanIce(DamageData damaData)
+    protected virtual void XLDIce(DamageData damaData)
     {
         Burnt b = GetComponent<Burnt>();
         if (b)
@@ -249,10 +259,17 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     {
         get; set;
     }
-
     protected virtual void Damaged(int damage)
     {
         Heath -= damage;
+    }
+    protected virtual void BackForce(DamageData damadata)
+    {
+        iTween.MoveAdd(gameObject, iTween.Hash(
+            "amount", damadata.Direction * damadata.BackForce,
+            "time", 0.4f,
+            "easeType", iTween.EaseType.easeOutExpo,
+            "onupdate", "fixTransform"));
     }
     protected void CheckHP()
     {
@@ -278,7 +295,6 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return transform.position;
         }
     }
-
     public bool HasWeapon
     {
         get
@@ -286,21 +302,30 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return (WeaponCurrent != null);
         }
     }
-
-    private void BounceBack()
-    {
-        
-    }
-
     public virtual Vector2 getSize()
     {
         return transform.localScale;
     }
-
     public virtual Vector2 getCenter()
     {
         return transform.position;
     }
+    public virtual void OnEquipment(Weapon weapon)
+    {
+    }
+    public virtual void OnUnEquipment(Weapon weapon)
+    {
+    }
+    public virtual void OnPocket(Weapon weapon)
+    {
+    }
+    protected virtual void OnDestroy()
+    {
+        OnTakeDamage -= XLD;
+        OnTookDamage -= BackForce;
+    }
+
+
 
 
 }

@@ -211,13 +211,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animate:
+  animates:
   - code: Run
     sprites:
     - {fileID: 2573403565269679386, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
     - {fileID: -6872825371662969889, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
     - {fileID: 1430381864662261963, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
     - {fileID: -7356578579880789933, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
+    - {fileID: 8550845465806940317, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
     FPS: 8
     Loop: 1
   - code: Idle
@@ -238,8 +239,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2979647d06c76438d52104fe38d3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Direction: {x: 0, y: 0, z: 0}
   EnemyName: Oc Sen
-  Damage: 2
+  Damage: 3
   ED:
     MaxHP: 25
     Size: {x: 0.7, y: 0.6}
@@ -258,6 +260,7 @@ MonoBehaviour:
     m_Bits: 0
   Selecting: {fileID: 8016068684839711897}
   speedMove: 2
+  LastDamageData: {fileID: 0}
 --- !u!114 &820714659440900481
 MonoBehaviour:
   m_ObjectHideFlags: 0

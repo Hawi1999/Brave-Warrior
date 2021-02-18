@@ -18,53 +18,58 @@ public class ColorToTile
     public Color color;
     public Tile tile;
 }
+
+[System.Serializable]
+public class ColorToTiles
+{
+    public Color color;
+    public Tile[] tile;
+}
 public class DataMap : MonoBehaviour
 {
     public static DataMap Instance
     {
         get; private set;
     }
-    [SerializeField] private LevelEnemy[] _LevelEnemys;
-    public static LevelEnemy[] LevelEnemys;
-    [SerializeField] private ColorToTile[] _TileData;
-    public static ColorToTile[] TileDatas;
-    [SerializeField] private Texture2D[] _MAP20x10;
-    public static Texture2D[] MAP20x10;
-    [SerializeField] private LockRoom _Door;
-    public static LockRoom Door;
+    [SerializeField] public LevelEnemy[] _LevelEnemys;
+    [SerializeField] public ColorToTiles[] _TilesData;
+    [SerializeField] public ColorToTile[] _TileData;
+    [SerializeField] public Texture2D[] _Map1;
+    [SerializeField] public LockRoom _Door;
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(Instance.gameObject);
-            Instance = this;
-        }
-        TileDatas = _TileData;
-        MAP20x10 = _MAP20x10;
-        LevelEnemys = _LevelEnemys;
-        Door = _Door;
+        Instance = this;
     }
 
     public static Texture2D getRandomSpriteMap()
     {
-        if (MAP20x10 == null || MAP20x10.Length == 0)
+        if (Instance._Map1 == null || Instance._Map1.Length == 0)
         {
             return null;
         }
-        return MAP20x10[UnityEngine.Random.Range(0, MAP20x10.Length)];
+        return Instance._Map1[UnityEngine.Random.Range(0, Instance._Map1.Length)];
     }
 
     public static Tile getTileByColor(Color color)
     {
-        if (TileDatas == null || TileDatas.Length == 0)
+        if (Instance._TilesData != null && Instance._TilesData.Length != 0)
         {
-            return null;
+            foreach (ColorToTiles colorToTiles in Instance._TilesData)
+            {
+                if (colorToTiles.color == color)
+                {
+                    if (colorToTiles.tile != null && colorToTiles.tile.Length != 0)
+                    {
+                        return colorToTiles.tile[UnityEngine.Random.Range(0, colorToTiles.tile.Length)];
+                    }
+                }
+            }
         }
-        return Array.Find(TileDatas, e => e.color == color)?.tile;
+        if (Instance._TileData != null && Instance._TileData.Length != 0)
+        {
+            return Array.Find(Instance._TileData, e => e.color == color)?.tile;
+        }
+        return null;
     }
 
     public static List<Enemy> getListEnemyByLevel(int level_total,int minLevel, int maxLevel)
@@ -72,7 +77,7 @@ public class DataMap : MonoBehaviour
         List<LevelEnemy> listEnable = new List<LevelEnemy>();
         int total_Uutien = 0;
         // Lấy danh sách có thể có Enemy
-        foreach (LevelEnemy le in LevelEnemys)
+        foreach (LevelEnemy le in Instance._LevelEnemys)
         {
             if (le.Level <= maxLevel && le.Level >= minLevel)
             {

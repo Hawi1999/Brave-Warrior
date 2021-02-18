@@ -66,6 +66,7 @@ public class Burnt : ElementalBuffBad
             DamageData dam = new DamageData();
             dam.Type = DamageElement.Fire;
             dam.FireFrom = true;
+            dam.BackForce = 0f;
             target.TakeDamage(dam);
         }
     }

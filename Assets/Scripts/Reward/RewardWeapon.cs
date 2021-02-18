@@ -12,14 +12,14 @@ public class RewardWeapon : Reward
     {
         get
         {
-            return weapon.TrangThai == TrangThaiTrangBiVuKhi.Tudo;
+            return weapon.TrangThai == WeaponStatus.Free;
         }
     }
     public override string Name
     {
         get
         {
-            return "Reward " + weapon.NameOfWeapon;
+            return "Reward " + weapon.GetNameOfWeapon();
         }
     }
 
@@ -49,7 +49,7 @@ public class RewardWeapon : Reward
     }
     public override void TakeReward(PlayerController host)
     {
-        host.TrangBi(weapon);
+        host.Equipment(weapon);
         ChooseReward.Instance.Remove(this);
         hientenvukhi.AnDi();
     }

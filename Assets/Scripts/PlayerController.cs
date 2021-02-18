@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -33,7 +32,7 @@ public class PlayerController : Entity
             heath = Mathf.Clamp(value, 0, MaxHP);
             if (PlayerCurrent == this)
                 OnHeathChanged?.Invoke(old, heath, MaxHP);
-            if (heath == 0)
+            if (heath <= 0)
             {
                 Death();
             }
@@ -41,7 +40,7 @@ public class PlayerController : Entity
     }
     public int MaxShield => shield;
     int _currentShield;
-    public int CurentShield
+    public int ShieldCurrent
     {
         get
         {
@@ -55,7 +54,7 @@ public class PlayerController : Entity
                 OnShieldChanged?.Invoke(o, value, MaxShield);
         }
     }
-    private float lastTimeTakeDamage;
+    private float lastTimeReceivedamage;
     public int MaxHealphy => healPhy;
     float _currentHealphy;
     public float CurrentHealPhy
@@ -85,7 +84,6 @@ public class PlayerController : Entity
             return check.IsOK && !Tied;
         }
     }
-    [HideInInspector] public Vector3 Direction = new Vector3(1, 0, 0);
     private Entity targetfire;
     public override Entity TargetFire
     {
@@ -124,10 +122,11 @@ public class PlayerController : Entity
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         Heath = MaxHP;
-        CurentShield = MaxShield;
+        ShieldCurrent = MaxShield;
         CurrentHealPhy = 0;
     }
 
@@ -136,13 +135,15 @@ public class PlayerController : Entity
         CurrentHealPhy += Mathf.Clamp(MaxHealphy * percent, 0, MaxHealphy);
     }
 
-    public void TrangBi(Weapon w)
+    public void Equipment(Weapon w)
     {
         WeaponCurrent = w;
     }
 
     private void Update()
     {
+        if (PlayerCurrent != this)
+            return;
         if (transform.hasChanged)
         {
             if (Render != null)
@@ -155,24 +156,17 @@ public class PlayerController : Entity
         setDirecFire();
         CheckShield();
         CheckHealPhy();
-        if (Control.KeyOne || Input.GetKey(KeyCode.X) && WeaponCurrent != null)
+        if ((Control.GetKey("Attack") || Input.GetKey(KeyCode.X)) && WeaponCurrent != null)
         {
             Attack();
         } else
         {
-            if (Control.KeyOne || Input.GetKey(KeyCode.X))
+            if (Control.GetKey("Attack") || Input.GetKey(KeyCode.X))
             {
                 Debug.Log("Chưa trang vị vũ khí");
             }
         }
 
-    }
-    void Attack()
-    {
-        if (PermitAttack)
-        {
-            WeaponCurrent.Attack();
-        }
     }
     void CheckDistanceWithTargetFire()
     {
@@ -185,10 +179,10 @@ public class PlayerController : Entity
     }
     void CheckShield()
     {
-        if (Time.time - lastTimeTakeDamage > 5f && _currentShield < MaxShield)
+        if (Time.time - lastTimeReceivedamage > 5f && _currentShield < MaxShield)
         {
-            CurentShield += 1;
-            lastTimeTakeDamage += 1;
+            ShieldCurrent += 1;
+            lastTimeReceivedamage += 1;
         }
     }
     void CheckHealPhy()
@@ -205,18 +199,60 @@ public class PlayerController : Entity
             Tied = false;
         }
     }
-
+    
     void setDirecFire()
     {
         if (HasEnemyAliveNear && WeaponCurrent != null)
         {
-            DirectFire = (TargetFire.PositionColliderTakeDamage - WeaponCurrent.viTriRaDan).normalized;
+            DirectFire = (TargetFire.PositionColliderTakeDamage - WeaponCurrent.PositionStartAttack).normalized;
         } else
         {
             if (Direction != Vector3.zero)
             {
                 DirectFire = Direction;
             }
+        }
+    }
+    void Attack()
+    {
+        if (PermitAttack)
+        {
+            DamageData damageData = new DamageData();
+            damageData.Decrease(UnityEngine.Random.Range(-1, 2));
+            OnSetUpDamageToAttack?.Invoke(damageData);
+            if (WeaponCurrent.Attack(damageData.Clone))
+            {
+                OnAttacked?.Invoke();
+            }
+        }
+    }
+    protected override void XLDFireNotFireFrom(DamageData damageData)
+    {
+        if (damageData.FromTNT)
+        {
+            damageData.DecreaseByPercent(0.8f);
+            damageData.FireTime = 1f;
+        }
+        base.XLDFireNotFireFrom(damageData);
+    }
+
+    protected override void XLDFireFireFrom(DamageData damageData)
+    {
+        damageData.Damage = 1;
+    }
+
+    protected override void XLDPoison(DamageData damageData)
+    {
+        if (!damageData.PoisonFrom)
+        {
+            if (Random.Range(0, 1f) < damageData.PoisonRatio)
+            {
+                Poisoned.NhiemDoc(this, damageData.PoisonTime);
+            }
+        }
+        else
+        {
+            damageData.Damage = 2;
         }
     }
     public void Move(Vector2 a)
@@ -226,12 +262,12 @@ public class PlayerController : Entity
             if (HasEnemyAliveNear)
             {
                 if (DirectFire.x < 0) Render.flipX = true;
-                else if (DirectFire.x > 0) Render.flipX = false;
+                else Render.flipX = false;
             }
             else
                 {
                     if (a.x < 0) Render.flipX = true;
-                    else if (a.x > 0) Render.flipX = false;
+                    else Render.flipX = false;
                 }
             if (rig != null)
                 rig.velocity = a.normalized * speed;
@@ -250,18 +286,21 @@ public class PlayerController : Entity
     }
     protected override void Damaged(int dam)
     {
-        if (dam > CurentShield)
+        int d = dam;
+        if (dam > ShieldCurrent)
         {
-            dam = dam - CurentShield;
-            CurentShield = 0;
+            dam = dam - ShieldCurrent;
+            ShieldCurrent = 0;
         }
         else
         {
-            CurentShield -= dam;
+            ShieldCurrent -= dam;
             dam = 0;
         }
         Heath -= dam;
-        lastTimeTakeDamage = Time.time;
+        if (PlayerCurrent == this && d != 0) 
+            OnReceiveDamage?.Invoke();
+        lastTimeReceivedamage = Time.time;
     }
     protected override void Death()
     {
@@ -270,11 +309,42 @@ public class PlayerController : Entity
     public override Vector3 getPosition()
     {
         return transform.position + new Vector3(0,0.25f,0);
-    
+    }
+
+    public override void OnEquipment(Weapon weapon)
+    {
+        OnAttacked += weapon.OnAttacked;
+    }
+
+    public override void OnUnEquipment(Weapon weapon)
+    {
+        OnAttacked -= weapon.OnAttacked;
+    }
+
+    public override void OnPocket(Weapon weapon)
+    {
+        OnAttacked -= weapon.OnAttacked;
+    }
+
+    public override Vector2 getSize()
+    {
+        return new Vector2(0.5f, 0.5f);
+    }
+
+    public override Vector2 getCenter()
+    {
+        return (Vector2)transform.position + new Vector2(0, 0.2f);
     }
 
     public UnityAction<Enemy> OnTargetFireChanged;
     public static UnityAction<int, int, int> OnShieldChanged;
     public static UnityAction<float, float, float, bool> OnHealPhyChanged;
     public static UnityAction<int, int, int> OnHeathChanged;
+    public static UnityAction<DamageData> OnSetUpDamageToAttack;
+    // Gọi khi tấn công
+    public static UnityAction OnAttacked;
+    //
+    public static UnityAction OnHit;
+    // Gọi khi nhân dame nào đó
+    public static UnityAction OnReceiveDamage;
 }

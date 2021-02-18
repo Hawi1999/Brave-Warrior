@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum TypeChest
 {
+    
     Copper = 0,
     Silver = 1,
     Gold = 2,
+    Start = 3,
 }
 
 
@@ -22,6 +24,7 @@ public class ChestManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
+
 
     public Chest ReWardChest(TypeChest type, Vector3 Position)
     {

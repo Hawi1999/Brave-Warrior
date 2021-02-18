@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Animate:
+  animates:
   - code: OpenChest
     sprites:
     - {fileID: -3238855642220000695, guid: d7873358e742321478ebe5df2054388c, type: 3}
@@ -133,7 +133,7 @@ MonoBehaviour:
     - {fileID: 6423105775338220355, guid: d7873358e742321478ebe5df2054388c, type: 3}
     - {fileID: -4892501965641982052, guid: d7873358e742321478ebe5df2054388c, type: 3}
     - {fileID: -2329450677526008181, guid: d7873358e742321478ebe5df2054388c, type: 3}
-    FPS: 10
+    FPS: 15
     Loop: 0
 --- !u!114 &3457977285969754169
 MonoBehaviour:
@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  rewards: []
   OffSetSpawnWard: {x: 0, y: 0.4}
 --- !u!114 &32471105955115433
 MonoBehaviour:

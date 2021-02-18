@@ -44,26 +44,25 @@ public class Enemy : Entity
     [SerializeField] SpriteRenderer Selecting;
     [SerializeField] float speedMove = 5;
 
-    private int lastDamage;
-    public int LastDamage
-    {
-        get
-        {
-            if (Time.time - lastTimeTakeDamage < 0.5f)
-                return lastDamage;
-            else
-                return 0;
-        }
-        set
-        {
-            lastDamage = value;
-            lastTimeTakeDamage = Time.time;
-        }
-    }
-    private float lastTimeTakeDamage = 0;
+    private Vector2[] limitMove;
+
     #endregion
 
     #region EditorInvisible
+    [HideInInspector] public DamageData LastDamageData;
+    private DamageData _CurrentDamageData;
+    [HideInInspector] public DamageData CurrentDamageData
+    {
+        set
+        {
+            LastDamageData = _CurrentDamageData;
+            _CurrentDamageData = value;
+        }
+        get
+        {
+            return _CurrentDamageData;
+        }
+    }
     public override int Heath { get => base.Heath; set => base.Heath = value; }
     public virtual bool IsForFind
     {
@@ -107,11 +106,11 @@ public class Enemy : Entity
             return targetAttack != null;
         }
     }
-    private SpriteRenderer render;
-    private AnimationQ anim;
-    private Rigidbody2D rig;
-    private RoundBase round;
-    private BuiControl buicontrol;
+    private SpriteRenderer render => GetComponent<SpriteRenderer>();
+    private AnimationQ anim => GetComponent<AnimationQ>();
+    private Rigidbody2D rig => GetComponent<Rigidbody2D>();
+    private RoundBase round => RoundBase.RoundCurrent;
+    private BuiControl buicontrol => GetComponent<BuiControl>();
     private PlayerController player
     {
         get
@@ -119,7 +118,6 @@ public class Enemy : Entity
             return PlayerController.PlayerCurrent;
         }
     }
-    private Vector3 lastDirTook = new Vector3(0,1,0);
     // Di chuyển
     private bool isMoving = false;
     private Vector2 dirMove = new Vector2(0,0);
@@ -164,8 +162,9 @@ public class Enemy : Entity
     {
         gameObject.tag = "Enemy";
     }
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         if (EnemyManager.Instance != null)
         {
             EnemyManager.Instance.ShowHP(this);
@@ -174,18 +173,12 @@ public class Enemy : Entity
         { 
             Debug.Log("Instance cho EnemyManager không tồn tại");
         }
-        OnTakeDamage += OnTakedamage;
         OnTookDamage += VFXDamageTook;
         OnCheckForAttack += checkAttack;
-
         OnDeath += onDeath;
 
+        Selecting?.gameObject.SetActive(false);
         Heath = MaxHP;
-        render = GetComponent<SpriteRenderer>();
-        anim = GetComponent<AnimationQ>();
-        rig = GetComponent<Rigidbody2D>();
-        buicontrol = GetComponent<BuiControl>();
-        round = RoundBase.RoundCurrent;
         isMoving = false;
         time_start_idle = Random.Range(Time.time - Random.Range(ED.time_range_idle.x, ED.time_range_idle.y), Time.time);
         time_start_attack = Time.time;
@@ -197,18 +190,21 @@ public class Enemy : Entity
     {
         Died = true;
         if (buicontrol)
-            buicontrol.SpawnBui(20, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
+            buicontrol.SpawnBui(20, (int)MathQ.DirectionToRotation(CurrentDamageData.Direction).z, 45);
         OnDeath?.Invoke(this);
         Destroy(this.gameObject);
     }
 
     private void onDeath(Entity enitty)
     {
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
         OnTookDamage -= EnemyManager.Instance.ShowHPSub;
-        OnTakeDamage -= OnTakedamage;
         OnTookDamage -= VFXDamageTook;
         OnCheckForAttack -= checkAttack;
-
         OnDeath -= onDeath;
     }
 
@@ -217,24 +213,17 @@ public class Enemy : Entity
     private void VFXDamageTook(DamageData damadata)
     {
         if (buicontrol != null)
-            buicontrol.SpawnBui(damadata.Damage / 2, (int)MathQ.DirectionToRotation(lastDirTook).z, 45);
+            buicontrol.SpawnBui(damadata.Damage / 2, (int)MathQ.DirectionToRotation(CurrentDamageData.Direction).z, 45);
     }
     public override void TakeDamage(DamageData dama)
     {
+        CurrentDamageData = dama;
         base.TakeDamage(dama);
-        LastDamage = dama.Damage + LastDamage;
-        lastTimeTakeDamage = Time.time;
-
     }
 
-    private void OnTakedamage(DamageData damadata)
+    protected override void XLDNormal(DamageData damadata)
     {
-        lastDirTook = damadata.Direction;
-        XuLyDan(damadata);
-    }
-    protected override void XuLyDanNormal(DamageData damadata)
-    {
-        base.XuLyDanNormal(damadata);
+        base.XLDNormal(damadata);
         damadata.Decrease(ED.Shield);
     }
     #endregion
@@ -284,9 +273,7 @@ public class Enemy : Entity
 
     protected virtual void CheckForAttack()
     {
-        BoolAction checkAttack = new BoolAction(true);
-        OnCheckForAttack?.Invoke(checkAttack);
-        if (checkAttack.IsOK)
+        if (PermitAttack)
         {
             Attack();
             time_start_attack = Time.time;
@@ -333,42 +320,63 @@ public class Enemy : Entity
     {
         return transform.position + new Vector3(0, 0.1f) * transform.localScale.y;
     }
-    private void Move()
+
+    public void setLimitMove(Vector2[] vector2s)
     {
-        if (round == null)
+        limitMove = vector2s;
+    }
+
+    private void fixTransform()
+    {
+        if (limitMove == null)
         {
             return;
+        }
+        Vector3 position = tranSform.position;
+        if (position.x < limitMove[0].x)
+        {
+            position.x = limitMove[0].x;
+        }
+        if (position.y < limitMove[0].y)
+        {
+            position.y = limitMove[0].y;
+        }
+        if (position.x > limitMove[1].x)
+        {
+            position.x = limitMove[1].x;
+        }
+        if (position.y > limitMove[1].y)
+        {
+            position.y = limitMove[1].y;
+        }
+        transform.position = position;
+
+
+    }
+    private void Move()
+    {
+        if (limitMove == null || limitMove.Length == 1)
+        {
+            Debug.Log("Chưa có giới hạn di chuyển");
         }
         if (!isMoving)
         {
             if (Time.time - time_start_idle > time_idle)
             {
-                RoundBase roundCurrent = RoundBase.RoundCurrent;
-                if (roundCurrent == null)
+                if (limitMove == null || limitMove.Length == 1)
                 {
                     dirMove = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-                    Debug.Log("Round is null");
                 }
                 else
                 {
-                    BoxCollider2D col = roundCurrent.col;
-                    if (col == null)
+                    Vector3 pos;
+                    int test = 0;
+                    do
                     {
-                        dirMove = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-                    } else
-                    {
-                        Vector3 center = col.bounds.center;
-                        float sizeX = col.bounds.size.x / 2;
-                        float sizeY = col.bounds.size.y / 2;
-                        Vector3 pos;
-                        int test = 0;
-                        do
-                        {
-                            pos = center + new Vector3(Random.Range(-sizeX, sizeX), Random.Range(-sizeY, sizeY), 0);
-                            test++;
-                        } while (!CanSeePosition(transform.position, pos) && test < 10);
-                        dirMove = (pos - transform.position).normalized;
-                    }
+                        pos = new Vector3(Random.Range(limitMove[0].x, limitMove[1].x), Random.Range(limitMove[0].y, limitMove[1].y), 0);
+                        test++;
+                    } while (!CanSeePosition(transform.position, pos) && test < 10);
+                    dirMove = (pos - transform.position).normalized;
                 }
                 isMoving = true;
                 time_start_move = Time.time;
@@ -427,6 +435,17 @@ public class Enemy : Entity
     {
         anim.setAnimation(code);
     }
+
+    public override void OnEquipment(Weapon weapon)
+    {
+        
+    }
+
+    public override void OnUnEquipment(Weapon weapon)
+    {
+        
+    }
+
     #endregion
 
 }

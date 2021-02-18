@@ -4,6 +4,10 @@ public class test : MonoBehaviour
 {
     private void Start()
     {
-        ChestManager.Instance.ReWardChest(TypeChest.Copper, transform.position);
+        ChestManager.Instance.ReWardChest(TypeChest.Start, transform.position);
+    }
+    private void Update()
+    {
+        
     }
 }

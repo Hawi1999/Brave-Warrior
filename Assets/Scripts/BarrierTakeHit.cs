@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarrierTakeHit : TakeHit
+public class BarrierTakeHit : MonoBehaviour, TakeHit
 {
     [SerializeField] private int shield = 5;
     [SerializeField] VFXSpawnDestroyed VFX;
@@ -22,7 +22,7 @@ public class BarrierTakeHit : TakeHit
             }
         }
     }
-    public override void TakeDamaged(DamageData data)
+    public void TakeDamaged(DamageData data)
     {
         Shield -= data.Damage;
     }
@@ -34,5 +34,11 @@ public class BarrierTakeHit : TakeHit
             Instantiate(VFX, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360))));
         }
         Destroy(gameObject);
+    }
+
+
+    public Collider2D GetCollider()
+    {
+        return GetComponent<Collider2D>();
     }
 }

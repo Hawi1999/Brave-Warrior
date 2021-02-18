@@ -20,18 +20,25 @@ public class RoundBase : MonoBehaviour
     private Tilemap tilemap;
     private List<Dot> Dots;
     protected int Current_IDDot;
+    private GameObject PRSpawnEnemy;
     private List<LockRoom> LockRooms;
-    [SerializeField] private VFXSpawn VFXSpawnPrefabs;
     private Vector2Int NuaBanKinh;
     private Vector2Int PositionStartWorld;
     private List<Enemy> ListEnemySpawned;
-    private GameObject PRSpawnEnemy;
     private bool started = false;
     private int idmax = 0;
     public BoxCollider2D col => GetComponent<BoxCollider2D>();
     private void Start()
     {
         setMap();
+    }
+
+    public virtual Vector2[] getMINMAX()
+    {
+        Vector2[] vector2 = new Vector2[2];
+        vector2[0] = PositionStartWorld;
+        vector2[1] = vector2[0] + NuaBanKinh * 2;
+        return vector2;
     }
     private void StartRound(int a)
     {
@@ -112,6 +119,7 @@ public class RoundBase : MonoBehaviour
     }
     private void SpawnEnemy(int a)
     {
+
         if (PRSpawnEnemy == null)
         {
             PRSpawnEnemy = Instantiate(new GameObject("PR Enemy Spawned"), transform);
@@ -132,47 +140,32 @@ public class RoundBase : MonoBehaviour
         {
             ListEnemySpawned = new List<Enemy>();
         }
-        if (VFXSpawnPrefabs == null)
-        {
-            Debug.Log("Không có VFXSpawn, không thể spawn enemy");
-            return;
-        }
         foreach (Enemy LE in listEnemy)
         {
-            Vector3 position = getPositonInRound();
-            VFXSpawn v = Instantiate(VFXSpawnPrefabs, position, Quaternion.identity, PRSpawnEnemy.transform);
-            Enemy enemy = Instantiate(LE, position, Quaternion.identity, PRSpawnEnemy.transform);
-            enemy.gameObject.SetActive(false);
-            ListEnemySpawned.Add(enemy);
-            enemy.OnDeath += HasEnemyDying;
-            v.OnCompleteVFX += () => HienEnemy(enemy);
-        }
-    }
 
-    private void HienEnemy(Enemy enemy)
-    {
-        enemy.gameObject.SetActive(true);
+            Vector3 position = getPositonInRound();
+            Enemy ene = EnemyManager.Instance.Spawn(LE, position, PRSpawnEnemy.transform, getMINMAX());
+            ene.OnDeath += HasEnemyDying;
+            ListEnemySpawned.Add(ene);
+        }
     }
 
     private Vector3 getPositonInRound()
     {
         Vector3 Position = transform.position + new Vector3(UnityEngine.Random.Range(-NuaBanKinh.x, NuaBanKinh.x), UnityEngine.Random.Range(-NuaBanKinh.y, NuaBanKinh.y));
-        if (tilemap == null)
+       
+        int i = 0;
+        while (HasCollisionInRound(Position) && i < 100)
         {
-            return Position;
-        } else
-        {
-            while (HasCollisionInRound(Position))
-            {
-                Position = transform.position + new Vector3(UnityEngine.Random.Range(-NuaBanKinh.x, NuaBanKinh.x), UnityEngine.Random.Range(-NuaBanKinh.y, NuaBanKinh.y));
-            }
-            return Position;
+            Position = transform.position + new Vector3(UnityEngine.Random.Range(-NuaBanKinh.x, NuaBanKinh.x), UnityEngine.Random.Range(-NuaBanKinh.y, NuaBanKinh.y));
+            i++;
         }
+        return Position;
 
     }
 
     private bool HasCollisionInRound(Vector3 pos)
-    {
+    {/*
         if (tilemap != null)
         {
             Vector3Int newPos = new Vector3Int(Mathf.CeilToInt(pos.x) - 1, Mathf.CeilToInt(pos.y) - 1, 0);
@@ -188,8 +181,25 @@ public class RoundBase : MonoBehaviour
                     }
                 }
             }
+        }*/
+
+        /*Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos, new Vector2(0.5f, 0.5f),
+            LayerMask.NameToLayer("Wall") | 
+            LayerMask.NameToLayer("Barrier") | 
+            LayerMask.NameToLayer("River"));
+        if (collider2Ds != null && collider2Ds.Length != 0)
+        {
+            return false;
         }
-        return false;
+        return true;*/
+
+        if (tilemap == null)
+            return false;
+        else
+        {
+            Vector3Int position = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), 0);
+            return tilemap.GetTile(position) != null;
+        }
     }
 
     protected virtual void OnStartRound(int id)
@@ -266,9 +276,9 @@ public class RoundBase : MonoBehaviour
             }
         }
         LockRooms = new List<LockRoom>();
-        LockRoom a = Instantiate(DataMap.Door, transform);
+        LockRoom a = Instantiate(DataMap.Instance._Door, transform);
         a.transform.position = col.bounds.center + new Vector3(0, NuaBanKinh.y, 0);
-        LockRoom b = Instantiate(DataMap.Door, transform);
+        LockRoom b = Instantiate(DataMap.Instance._Door, transform);
         b.transform.position = col.bounds.center + new Vector3(0, -NuaBanKinh.y - 1, 0);
         LockRooms.Add(a);
         LockRooms.Add(b);

@@ -163,12 +163,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6364246619193368867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a34d2643b063249ac7192f88472c14, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f9ddc74bc4ed2b4a93c838adc67d459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OK: {fileID: 1217594131595530038}
   ThongTin: {fileID: 6364246618519749230}
-  Huy: {fileID: 0}
+  Huy: {fileID: 1217594131595530038}
 --- !u!1 &6364246620368062371
 GameObject:
   m_ObjectHideFlags: 0

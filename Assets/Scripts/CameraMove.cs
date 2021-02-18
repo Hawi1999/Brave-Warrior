@@ -27,6 +27,10 @@ public class CameraMove : MonoBehaviour
         else
             Destroy(gameObject);
     }
+    private void Start()
+    {
+        PlayerController.OnReceiveDamage += Shake;
+    }
 
     // Update is called once per frame
     void LateUpdate()
@@ -39,6 +43,15 @@ public class CameraMove : MonoBehaviour
         Vector3 old_position = transform.position;
         Vector3 target_pos = targetMove();
         MoveSmooth(old_position, target_pos);
+    }
+    private void Shake(Vector3 delta, float time)
+    {
+        iTween.ShakePosition(gameObject, delta, time);
+    }
+
+    private void Shake()
+    {
+        Shake(new Vector3(0.1f, 0.1f), 0.2f);
     }
 
     void MoveSmooth(Vector3 oldPosition, Vector3 target)
@@ -57,6 +70,11 @@ public class CameraMove : MonoBehaviour
         return (Player.TargetFire.PositionColliderTakeDamage + Player.getPosition())/2;
     }
 
+    private void OnDestroy()
+    {
+        PlayerController.OnReceiveDamage -= Shake;
+    }
+
 
 
     public void setLimit(Vector3 min, Vector3 max)
@@ -68,7 +86,6 @@ public class CameraMove : MonoBehaviour
             Xmax = Mathf.Infinity;
             Ymax = Mathf.Infinity;
         }
-
         Camera cam = Camera.main;
         float height = 2f * cam.orthographicSize;
         float width = height * cam.aspect;

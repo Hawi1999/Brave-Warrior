@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TakeHit : MonoBehaviour
+public interface TakeHit 
 {
-    public virtual void TakeDamaged (DamageData data)
-    {
-        Debug.Log("Bạn phải Overide hàn TakeDamaged");
-    }
+    Collider2D GetCollider();
+    void TakeDamaged(DamageData data);
 }

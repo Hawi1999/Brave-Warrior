@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CopperChest
   m_EditorClassIdentifier: Assembly-CSharp::ChestData
   Prefabs: {fileID: 4949742329491685155, guid: 0dd91e73a5be3104b9172d33397d54a6, type: 3}
-  UuTien: 6400000050c30000f4010000e8030000
+  UuTien: 6400000064000000640000006400000010270000
   NameOfRewards:
   - Reward Gun K1
   - Reward Gun K20
   - Reward Gun Lima
   - Reward Gold 1
+  - Reward Melee Sword of Light

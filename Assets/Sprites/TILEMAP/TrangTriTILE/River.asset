@@ -32,10 +32,10 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 3394965231073338750, guid: 8f9aecd232b34dc4abe21d5e70615955,
+  m_InstancedGameObject: {fileID: 3394965231073338750, guid: 9a30cdcf29bdc8a418e05374f8590796,
     type: 3}
-  m_Flags: -1
-  m_ColliderType: 1
+  m_Flags: 0
+  m_ColliderType: 0
   Sprites:
   - {fileID: -3663761578151886962, guid: 5078755d74c67a6409951c8e6dd038ec, type: 3}
   - {fileID: -7185255062576871469, guid: 5078755d74c67a6409951c8e6dd038ec, type: 3}

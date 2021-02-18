@@ -26,7 +26,7 @@ public class WeaponManager : MonoBehaviour
         if (Instance == null)
             return null;
         List <Weapon> Weapons = Instance.Weapons;
-        return Array.Find(Weapons.ToArray(), e => e.NameOfWeapon == Name);
+        return Array.Find(Weapons.ToArray(), e => e.GetNameOfWeapon() == Name);
     }
 
     public static Weapon[] GetWeaponsByName(string[] Name)

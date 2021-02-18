@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class AnimationP {
+public class Animate {
     public string code;
     public Sprite[] sprites;
     public float FPS = 5;
@@ -15,10 +15,10 @@ public class AnimationP {
 [RequireComponent(typeof(SpriteRenderer))]
 public class AnimationQ : MonoBehaviour
 {
-    [SerializeField] AnimationP[] Animate;
+    [SerializeField] Animate[] animates;
 
     string CodeCurrent;
-    AnimationP aniCurrent;
+    Animate aniCurrent;
     SpriteRenderer render;
     int id;
     int Id
@@ -58,7 +58,7 @@ public class AnimationQ : MonoBehaviour
                 {
                     Id++;
                 }
-                tim = 0;
+                tim -= 1 / aniCurrent.FPS;
             } else
             {
                 tim += Time.deltaTime;
@@ -73,7 +73,7 @@ public class AnimationQ : MonoBehaviour
             render.sprite = aniCurrent.sprites[Id];
             OnRenderChanged?.Invoke(aniCurrent, Id);
             if (id == aniCurrent.sprites.Length - 1)
-                OnAnimateFinished?.Invoke(aniCurrent.code);
+                OnAnimateFinished?.Invoke(aniCurrent);
         }
     }
 
@@ -81,13 +81,23 @@ public class AnimationQ : MonoBehaviour
     {
         if (aniCurrent != null && aniCurrent.code == code)
             return;
-        AnimationP animateP = Array.Find(Animate, e => e.code == code);
+        Animate animateP = Array.Find(animates, e => e.code == code);
         if (animateP == null) return;
         aniCurrent = animateP;
         Id = 0;
         tim = 0;
     }
 
-    public UnityAction<AnimationP,int> OnRenderChanged;
-    public UnityAction<string> OnAnimateFinished;
+    public int getAounmtSprite(string code)
+    {
+        Animate animate = Array.Find(animates, e => e.code == code);
+        if (animate != null && animate.sprites != null)
+        {
+            return animate.sprites.Length;
+        }
+        return 0;
+    }
+
+    [HideInInspector] public UnityAction<Animate,int> OnRenderChanged;
+    [HideInInspector] public UnityAction<Animate> OnAnimateFinished;
 }

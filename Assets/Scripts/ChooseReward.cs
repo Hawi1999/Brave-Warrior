@@ -10,7 +10,7 @@ public class ChooseReward : MonoBehaviour
     private Reward rewardcr;
     private PlayerController player => PlayerController.PlayerCurrent;
 
-
+    private float lastChoose;
     void Awake()
     {
         Instance = this;
@@ -29,12 +29,12 @@ public class ChooseReward : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Control.GetKey("X") && Time.time - lastChoose > 0.5f)
         {
             if (Choosing != null)
             {
                 Choosing.TakeReward(player);
-
+                lastChoose = Time.time;
             }
         }
     }
@@ -49,6 +49,7 @@ public class ChooseReward : MonoBehaviour
         {
             Rewards.Add(reward);
             OnChooseReward += reward.Choose;
+            Control.OnWaitToClick?.Invoke("X");
         }
         Choosing = reward;
     }
@@ -66,6 +67,8 @@ public class ChooseReward : MonoBehaviour
                 Choosing = Rewards[Rewards.Count - 1];
             }
             OnChooseReward -= reward.Choose;
+        if (Rewards.Count == 0)
+            Control.OnEndWaitToClick?.Invoke("X");
         }
     }
 
