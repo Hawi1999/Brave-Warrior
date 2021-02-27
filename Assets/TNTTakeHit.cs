@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class TNTTakeHit : MonoBehaviour, TakeHit
+public class TNTTakeHit : MonoBehaviour, ITakeHit
 {
     public int Damage = 25;
     public float BackFore = 2f;
@@ -72,13 +72,13 @@ public class TNTTakeHit : MonoBehaviour, TakeHit
         {
             DamageData damage = DamageData.Clone;
             damage.Type = DamageElement.Fire;
-            TakeHit take = collider2D.gameObject.GetComponent<TakeHit>();
+            ITakeHit take = collider2D.gameObject.GetComponent<ITakeHit>();
             if (take != null)
             {
                 float Distance = Vector2.Distance(take.GetCollider().bounds.center,transform.position);
                 Distance = Mathf.Clamp(Distance, 0f, Radius);
                 damage.Damage = (int)(((float)((Radius - Distance)/Radius)) * Damage);
-                damage.BackForce = (Radius - Distance) * BackFore;
+                damage.BackForce = ((Radius - Distance)/(Radius)) * BackFore;
                 damage.Direction = (take.GetCollider().bounds.center - transform.position).normalized;
                 damage.FireRatio = 1f;
                 damage.FromTNT = true;

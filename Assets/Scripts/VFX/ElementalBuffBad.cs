@@ -4,4 +4,8 @@ using UnityEngine;
 
 public abstract class ElementalBuffBad : ElementalBuff
 {
+    public override void EndUp()
+    {
+        Destroy(this);
+    }
 }

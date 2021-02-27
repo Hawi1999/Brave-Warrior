@@ -267,8 +267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9675c10bc6451547a10886671dd74f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeRun: 4
-  TimeDelay: 2
+  TimeRun: 2
+  TimeDelay: 1
   sli: {fileID: 6514756820620703155}
   ghi: {fileID: 1292324623143736041}
   listTBN: []

@@ -8,7 +8,7 @@ public abstract class ElementalBuff : MonoBehaviour
 
     public virtual void EndUp()
     {
-        Destroy(this);
+        gameObject.SetActive(false);
     }
 
     public void EndLock()

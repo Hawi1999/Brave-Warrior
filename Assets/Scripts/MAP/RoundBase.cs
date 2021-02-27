@@ -143,22 +143,26 @@ public class RoundBase : MonoBehaviour
         foreach (Enemy LE in listEnemy)
         {
 
-            Vector3 position = getPositonInRound();
+            Vector3 position = getRandomPositonInRound();
             Enemy ene = EnemyManager.Instance.Spawn(LE, position, PRSpawnEnemy.transform, getMINMAX());
             ene.OnDeath += HasEnemyDying;
             ListEnemySpawned.Add(ene);
         }
     }
 
-    private Vector3 getPositonInRound()
+    public virtual Vector3 getRandomPositonInRound()
     {
         Vector3 Position = transform.position + new Vector3(UnityEngine.Random.Range(-NuaBanKinh.x, NuaBanKinh.x), UnityEngine.Random.Range(-NuaBanKinh.y, NuaBanKinh.y));
        
         int i = 0;
-        while (HasCollisionInRound(Position) && i < 100)
+        while (HasCollisionInRound(Position))
         {
             Position = transform.position + new Vector3(UnityEngine.Random.Range(-NuaBanKinh.x, NuaBanKinh.x), UnityEngine.Random.Range(-NuaBanKinh.y, NuaBanKinh.y));
             i++;
+            if (i >= 100)
+            {
+                return transform.position;
+            }
         }
         return Position;
 
@@ -198,26 +202,44 @@ public class RoundBase : MonoBehaviour
         else
         {
             Vector3Int position = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), 0);
-            return tilemap.GetTile(position) != null;
+            GameObject game = tilemap.GetInstantiatedObject(position);
+            if (game == null)
+            {
+                return false;
+            } else
+            {
+                if (game.TryGetComponent<Collider2D>(out Collider2D col))
+                {
+                    return !col.isTrigger;
+                } else
+                {
+                    return false;
+                }
+            }
         }
     }
 
     protected virtual void OnStartRound(int id)
     {
-
+        if (id == 0)
+        {
+            PlayerController.PlayerCurrent.setLimitMove(getMINMAX());
+        }
     }
 
     protected virtual void OnClear()
     {
-        if (ChestManager.Instance)
-        {
-            ChestManager.Instance.ReWardChest(TypeChest.Copper, transform.position);
-        }
+        Vector3 pos = getRandomPositonInRound();
+        pos = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), 0) + new Vector3(0.5f, 0.5f, 0);
+        ChestManager.Instance.ReWardChest(TypeChest.Copper, pos);
     }
 
     protected virtual void OnEndRound(int a)
     {
-
+        if (a == idmax - 1)
+        {
+            PlayerController.PlayerCurrent.setLimitMove(null);
+        }
     }
 
     protected virtual void OnHasEnemyDie(Enemy enemy)

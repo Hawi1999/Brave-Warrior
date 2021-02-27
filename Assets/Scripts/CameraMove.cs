@@ -20,6 +20,8 @@ public class CameraMove : MonoBehaviour
     }
 
     float Xmin, Xmax, Ymin, Ymax;
+
+    bool isShaking = false;
     private void Awake()
     {
         if (Instance == null)
@@ -40,9 +42,44 @@ public class CameraMove : MonoBehaviour
             Debug.LogWarning("Khong tim thay Player");
             return;
         }
-        Vector3 old_position = transform.position;
+        isShaking = false;
+        CheckStatus();
         Vector3 target_pos = targetMove();
-        MoveSmooth(old_position, target_pos);
+        if (isShaking)
+        {
+            // Shaking thì sao ?
+            iTween.MoveUpdate(gameObject, target_pos, 2.2f);
+        }
+        else
+        {
+            MoveSmooth(transform.position, target_pos);
+        }
+        FixTransForm();
+    }
+
+    void CheckStatus()
+    {
+        iTween[] iTweens = GetComponents<iTween>();
+        foreach (iTween iTween in iTweens)
+        {
+            if (iTween != null)
+            {
+                if (iTween.type == "shake" && iTween.isRunning)
+                {
+                    isShaking = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    void FixTransForm()
+    {
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, Xmin, Xmax);
+        pos.y = Mathf.Clamp(pos.y, Ymin, Ymax);
+        pos.z = -10;
+        transform.position = pos;
     }
     private void Shake(Vector3 delta, float time)
     {

@@ -4013,7 +4013,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.position;
 		if(physics){
 			//thisTransform.position=preUpdate;
-			GetComponent<Rigidbody>().MovePosition(postUpdate);
+			GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}
 	
@@ -4047,7 +4047,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.position;
 		if(physics){
 			//thisTransform.position=preUpdate;
-			GetComponent<Rigidbody>().MovePosition(postUpdate);
+			GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}	
 	
@@ -4089,7 +4089,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.position;
 		if(physics){
 			//thisTransform.position=preUpdate;
-			GetComponent<Rigidbody>().MovePosition(postUpdate);
+			GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}	
 	
@@ -4150,7 +4150,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.eulerAngles;
 		if(physics){
 			//thisTransform.eulerAngles=preUpdate;
-			GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(postUpdate));
+			GetComponent<Rigidbody2D>().MoveRotation(Quaternion.Euler(postUpdate));
 		}
 	}
 	
@@ -4172,7 +4172,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.eulerAngles;
 		if(physics){
 			//thisTransform.eulerAngles=preUpdate;
-			GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(postUpdate));
+			GetComponent<Rigidbody2D>().MoveRotation(Quaternion.Euler(postUpdate));
 		}		
 	}	
 	
@@ -4228,7 +4228,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.position;
 		if(physics){
 			//thisTransform.position=preUpdate;
-			GetComponent<Rigidbody>().MovePosition(postUpdate);
+			GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}	
 	
@@ -4275,7 +4275,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.eulerAngles;
 		if(physics){
 			//thisTransform.eulerAngles=preUpdate;
-			GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(postUpdate));
+			GetComponent<Rigidbody2D>().MoveRotation(Quaternion.Euler(postUpdate));
 		}
 	}		
 	
@@ -4329,7 +4329,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.position;
 		if(physics){
 			//thisTransform.position=preUpdate;
-			GetComponent<Rigidbody>().MovePosition(postUpdate);
+			GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}		
 	
@@ -4370,7 +4370,7 @@ public class iTween : MonoBehaviour
 		postUpdate=thisTransform.eulerAngles;
 		if(physics){
 			//thisTransform.eulerAngles=preUpdate;
-			GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(postUpdate));
+			GetComponent<Rigidbody2D>().MoveRotation(Quaternion.Euler(postUpdate));
 		}
 	}	
 	
@@ -4879,10 +4879,10 @@ public class iTween : MonoBehaviour
 		}
 		
 		//need physics?
-		if(target.GetComponent<Rigidbody>() != null){
+		if(target.GetComponent<Rigidbody2D>() != null){
 			Vector3 postUpdate=target.transform.eulerAngles;
-			//target.transform.eulerAngles=preUpdate;
-			target.GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(postUpdate));
+			target.transform.eulerAngles=preUpdate;
+			target.GetComponent<Rigidbody2D>().MoveRotation(Quaternion.Euler(postUpdate));
 		}
 	}
 		
@@ -5088,10 +5088,10 @@ public class iTween : MonoBehaviour
 		}	
 		
 		//need physics?
-		if(target.GetComponent<Rigidbody>() != null){
+		if(target.GetComponent<Rigidbody2D>() != null){
 			Vector3 postUpdate=target.transform.position;
 			//target.transform.position=preUpdate;
-			target.GetComponent<Rigidbody>().MovePosition(postUpdate);
+			target.GetComponent<Rigidbody2D>().MovePosition(postUpdate);
 		}
 	}
 
@@ -6512,8 +6512,8 @@ public class iTween : MonoBehaviour
 			time=Defaults.time;
 		}
 			
-		//do we need to use physics, is there a rigidbody?
-		if(GetComponent<Rigidbody>() != null){
+		//do we need to use physics, is there a rigidbody2D?
+		if(GetComponent<Rigidbody2D>() != null){
 			physics=true;
 		}
                
@@ -6811,10 +6811,10 @@ public class iTween : MonoBehaviour
 	
 	void EnableKinematic(){
 		/*
-		if(gameObject.GetComponent(typeof(Rigidbody))){
-			if(!rigidbody.isKinematic){
+		if(gameObject.GetComponent(typeof(Rigidbody2D))){
+			if(!rigidbody2D.isKinematic){
 				kinematic=true;
-				rigidbody.isKinematic=true;
+				rigidbody2D.isKinematic=true;
 			}
 		}
 		*/
@@ -6822,9 +6822,9 @@ public class iTween : MonoBehaviour
 	
 	void DisableKinematic(){
 		/*
-		if(kinematic && rigidbody.isKinematic==true){
+		if(kinematic && rigidbody2D.isKinematic==true){
 			kinematic=false;
-			rigidbody.isKinematic=false;
+			rigidbody2D.isKinematic=false;
 		}
 		*/
 	}

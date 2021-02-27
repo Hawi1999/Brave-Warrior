@@ -63,6 +63,7 @@ public class BoolAction
 
 public abstract class Entity : MonoBehaviour, ICameraTarget
 {
+
     public abstract int MaxHP
     {
         get;
@@ -99,6 +100,10 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return check.IsOK;
         }
     }
+    protected virtual SpriteRenderer render
+    {
+        get; set;
+    }
 
     [HideInInspector] public Vector3 Direction;
     // Được gọi khi HO thay đổi
@@ -115,6 +120,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     public UnityAction<BoolAction> OnCheckForMove;
     // Kiểm tra được phép tấn công hay không
     public UnityAction<BoolAction> OnCheckForAttack;
+    // Khi Enemy Ẩn 
+    public UnityAction<bool> OnHide;
     private Weapon weapon;
     public Weapon WeaponCurrent
     {
@@ -140,6 +147,14 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             }
         }
     }
+    protected virtual void Awake()
+    {
+        render = GetComponent<SpriteRenderer>();
+    }
+
+
+
+    protected Vector2[] limitMove;
     protected virtual void Start()
     {
         OnTakeDamage += XLD;
@@ -255,6 +270,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     {
         return transform.position;
     }
+
     public abstract Entity TargetFire
     {
         get; set;
@@ -270,6 +286,34 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             "time", 0.4f,
             "easeType", iTween.EaseType.easeOutExpo,
             "onupdate", "fixTransform"));
+    }
+    // CallBack from iTween
+    protected void fixTransform()
+    {
+        if (limitMove == null)
+        {
+            return;
+        }
+        Vector3 position = transform.position;
+        if (position.x < limitMove[0].x)
+        {
+            position.x = limitMove[0].x;
+        }
+        if (position.y < limitMove[0].y)
+        {
+            position.y = limitMove[0].y;
+        }
+        if (position.x > limitMove[1].x)
+        {
+            position.x = limitMove[1].x;
+        }
+        if (position.y > limitMove[1].y)
+        {
+            position.y = limitMove[1].y;
+        }
+        transform.position = position;
+
+
     }
     protected void CheckHP()
     {
@@ -302,14 +346,9 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return (WeaponCurrent != null);
         }
     }
-    public virtual Vector2 getSize()
-    {
-        return transform.localScale;
-    }
-    public virtual Vector2 getCenter()
-    {
-        return transform.position;
-    }
+    public virtual Vector2 size => transform.localScale;
+    public virtual Vector2 center => transform.position;
+    protected virtual Vector3 scaleDefault => Vector3.one;
     public virtual void OnEquipment(Weapon weapon)
     {
     }
@@ -324,8 +363,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         OnTakeDamage -= XLD;
         OnTookDamage -= BackForce;
     }
-
-
-
-
+    public void setLimitMove(Vector2[] vector2s)
+    {
+        limitMove = vector2s;
+    }
 }

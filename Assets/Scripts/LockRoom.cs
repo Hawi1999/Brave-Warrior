@@ -7,7 +7,7 @@ public class LockRoom : Door
     [SerializeField] SpriteRenderer render;
     [SerializeField] AnimationQ animate;
     [SerializeField] Collider2D col;
-    [SerializeField] BuiControl buicontrol;
+    [SerializeField] ParticleSystem VFX;
 
     private void Start()
     {
@@ -21,7 +21,6 @@ public class LockRoom : Door
         if (animate == null) animate = GetComponent<AnimationQ>();
         if (render == null) render = GetComponent<SpriteRenderer>();
         if (col == null) col = GetComponent<Collider2D>();
-        if (buicontrol == null) buicontrol = GetComponent<BuiControl>();
     }
     void AfterSetUpVarialbe()
     {
@@ -46,17 +45,13 @@ public class LockRoom : Door
                 render.sprite = null;
             if (col != null)
                 col.enabled = false;
-            if (buicontrol != null)
-            {
-                buicontrol.SpawnBui(25);
-            }
+            if (VFX != null)
+                VFX.Play();
         }
         if (animate.code == "Close")
         {
-            if (buicontrol != null)
-            {
-                buicontrol.SpawnBui(25);
-            }
+            if (VFX != null)
+                VFX.Play();
         }
     }
 

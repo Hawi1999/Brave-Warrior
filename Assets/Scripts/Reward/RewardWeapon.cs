@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(HienTenVuKhi))]
-[RequireComponent(typeof(Weapon))]
+[RequireComponent(typeof(ShowName))]
 public class RewardWeapon : Reward
 {
     Weapon weapon => GetComponent<Weapon>();
-    HienTenVuKhi hientenvukhi => GetComponent<HienTenVuKhi>();
-    public override bool WaitingForGet
+    ShowName showname => GetComponent<ShowName>();
+    public override bool WaitingForChoose
     {
         get
         {
-            return weapon.TrangThai == WeaponStatus.Free;
+            return weapon.TrangThai == WeaponStatus.Free && player.WeaponCurrent != weapon;
         }
     }
     public override string Name
@@ -27,31 +26,31 @@ public class RewardWeapon : Reward
     {
         if (player != null)
             {
-            if (isNearPlayer(1f) && player.WeaponCurrent != weapon)
+            if (isNearPlayer(1f) && WaitingForChoose)
             {
-                ChooseReward.Instance.Add(this);
+                ChooseMinapulation.Instance.Add(this);
             } else if (player != null)
             {
-                ChooseReward.Instance.Remove(this);
+                ChooseMinapulation.Instance.Remove(this);
             }
         }
     }
-    public override void Choose(Reward reward)
+    public override void OnChoose(IManipulation manipulation)
     {
-        if (this == reward)
+        if (manipulation == this)
         {
-            hientenvukhi.HienLen();
+            showname.Show();
         }
         else
         {
-            hientenvukhi.AnDi();
+            showname.Hide();
         }
     }
-    public override void TakeReward(PlayerController host)
+    public override void TakeManipulation(PlayerController host)
     {
         host.Equipment(weapon);
-        ChooseReward.Instance.Remove(this);
-        hientenvukhi.AnDi();
+        ChooseMinapulation.Instance.Remove(this);
+        showname.Hide();
     }
 
     public override void Appear()

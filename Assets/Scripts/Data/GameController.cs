@@ -122,4 +122,9 @@ public class GameController : MonoBehaviour
     {
         MoMan.SetActive(true);
     }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        
+    }
 }

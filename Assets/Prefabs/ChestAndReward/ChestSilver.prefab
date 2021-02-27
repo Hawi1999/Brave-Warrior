@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2440565044580462763}
   - component: {fileID: 6020498743146615537}
   - component: {fileID: 3457977285969754169}
-  - component: {fileID: 32471105955115433}
   m_Layer: 0
   m_Name: ChestSilver
   m_TagString: Untagged
@@ -29,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8536444814750867447}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.22, y: -1.87, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,7 +78,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -149,20 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   OffSetSpawnWard: {x: 0, y: 0.4}
---- !u!114 &32471105955115433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8536444814750867447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12a74214d90e253468e1f39acab626a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bui: {fileID: 5533233973321091005, guid: 48552eb0219157b479e42c01d85a8967, type: 3}
-  star: {fileID: 21300000, guid: 6f35c935174ca7340b0deb6ec8c49fcd, type: 3}
-  OffsetDirZ: {x: 0, y: 360}
-  RangeSpeed: {x: 1, y: 2}
-  RangeTimeSpawn: {x: 0.1, y: 0.2}
+  _flyupPrejab: {fileID: 5882623406884308738, guid: f5b901046c14d9342b361469f768d072,
+    type: 3}
+  _sinePrejab: {fileID: 547571894852200882, guid: 73fbdcf7c9fddd94b955135d757ccc96,
+    type: 3}

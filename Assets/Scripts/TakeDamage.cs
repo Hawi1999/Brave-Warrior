@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TakeDamage : MonoBehaviour, TakeHit
+public class TakeDamage : MonoBehaviour, ITakeHit
 {
     public Entity entity;
     public void TakeDamaged(DamageData dama)

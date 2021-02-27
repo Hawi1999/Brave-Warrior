@@ -24,15 +24,23 @@ public class ShowHPEnemy : MonoBehaviour
     {
         enemy.OnHPChanged += HPChanged;
         enemy.OnDeath += WhenEnemyDie;
+        enemy.OnHide += OnEnemyHide;
         if (enemy != null)
         {
             Vector2 a = Rtf.sizeDelta;
-            Rtf.sizeDelta = new Vector2(enemy.getSize().x, 0.1f);
+            Rtf.sizeDelta = new Vector2(enemy.size.x, 0.1f);
             HPChanged(0, enemy.Heath, enemy.MaxHP);
         } else
         {
             Debug.Log("Enemy is null");
         }
+    }
+
+
+    private void OnEnemyHide(bool a)
+    {
+        gameObject.SetActive(!a);
+        ParentShowBuff?.gameObject.SetActive(!a);
     }
 
     private void UpdateListBuff()
@@ -112,6 +120,7 @@ public class ShowHPEnemy : MonoBehaviour
     {
         enemy.OnHPChanged -= HPChanged;
         enemy.OnDeath -= WhenEnemyDie;
+        enemy.OnHide -= OnEnemyHide;
         gameObject.SetActive(false);
     }
 

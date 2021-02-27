@@ -26,14 +26,19 @@ public class TeleportScene : MonoBehaviour
         EventE.OnGoOut += GoOut;
     }
 
+    private void OnDestroy()
+    {
+        EventE.OnGoIn -= GoIn;
+        EventE.OnGoOut -= GoOut;
+    }
+
     private void Update()
     {
         if (inIn)
         {
-            if (Control.GetKey("X"))
+            if (Control.GetKeyDown("X"))
             {
                 MAPController.Instance.LoadScene(ConnectScene);
-                inIn = false;
             }
         }
     }
@@ -43,6 +48,7 @@ public class TeleportScene : MonoBehaviour
         inIn = true;
         Control.OnWaitToClick?.Invoke("X");
     }
+
 
     private void GoOut(Collider2D c)
     {

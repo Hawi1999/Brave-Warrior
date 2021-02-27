@@ -6,7 +6,7 @@ public class Ene_OcSen : Enemy
 {
     protected override void Attack()
     {
-        Vector2 dirAttack = getDirToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
+        Vector2 dirAttack = getRotationToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
         for (int i = -1; i <= 1; i++)
         {
             Vector2 NewDirection = ChangeDiretion(dirAttack, 45 * i);
@@ -26,11 +26,8 @@ public class Ene_OcSen : Enemy
 
     public override Vector3 getPosition()
     {
-        return tranSform.position + new Vector3(0, 0.15f, 0);
+        return transform.position + new Vector3(0, 0.15f, 0);
     }
 
-    public override Vector2 getCenter()
-    {
-        return tranSform.position + new Vector3(0, 0.255f);
-    }
+    public override Vector2 center => transform.position + new Vector3(0, 0.255f);
 }

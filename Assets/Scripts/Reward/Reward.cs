@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Reward: MonoBehaviour
+public abstract class Reward: MonoBehaviour, IManipulation
 {
 
     protected PlayerController player => PlayerController.PlayerCurrent;
@@ -10,8 +10,8 @@ public abstract class Reward: MonoBehaviour
     {
         get;
     }
-    public abstract bool WaitingForGet { get;}
-    public abstract void TakeReward(PlayerController host);
-    public abstract void Choose(Reward reward);
+    public abstract bool WaitingForChoose { get;}
+    public abstract void TakeManipulation(PlayerController host);
+    public abstract void OnChoose(IManipulation manipulation);
     public abstract void Appear();
 }

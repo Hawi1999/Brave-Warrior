@@ -20,11 +20,12 @@ public enum LevelWeapon
     Legendary,
 }
 [RequireComponent(typeof(RewardWeapon))]
-[RequireComponent(typeof(HienTenVuKhi))]
-public abstract class Weapon : MonoBehaviour
+[RequireComponent(typeof(ShowName))]
+public abstract class Weapon : MonoBehaviour, IShowName
 {
     // Không thể bắn khi nằm trong túi
     [SerializeField] Sprite Picture;
+    [SerializeField] protected SpriteRenderer _render;
     [SerializeField] protected string nameOfWeapon;
     [SerializeField] protected LevelWeapon type;
     [SerializeField] protected int _SatThuong;
@@ -38,16 +39,13 @@ public abstract class Weapon : MonoBehaviour
     [HideInInspector] public WeaponStatus TrangThai;
     [HideInInspector] public Entity Host;
     [HideInInspector] public Enemy Target;
-    public virtual SpriteRenderer render
-    {
-        get; set;
-    }
+    public virtual SpriteRenderer render => _render;
 
 
     public UnityAction OnAttacked;
 
     protected Reward reward => GetComponent<Reward>();
-    protected HienTenVuKhi hientenvukhi => GetComponent<HienTenVuKhi>();
+    protected ShowName showname => GetComponent<ShowName>();
     public abstract Vector3 PositionStartAttack
     {
         get;
@@ -56,13 +54,16 @@ public abstract class Weapon : MonoBehaviour
     {
         get;
     }
+    protected virtual void Awake()
+    {
 
+    }
     protected virtual void Start()
     {
-        render = Instantiate(new GameObject("Picture"), transform).AddComponent<SpriteRenderer>();
         render.sprite = Picture;
         render.sortingLayerName = "Skin";
         render.sortingOrder = 15;
+        showname.Hide();
     }
     public abstract bool Attack(DamageData damageData);
     public void ChangEQuip(Entity host, WeaponStatus trangthai)
@@ -83,7 +84,7 @@ public abstract class Weapon : MonoBehaviour
             }
             transform.parent = TransformInstanceOnLoad.getTransform();
             Host = null;
-            ChooseReward chooseReward = host.GetComponent<ChooseReward>();
+            ChooseMinapulation chooseReward = host.GetComponent<ChooseMinapulation>();
             if (chooseReward != null)
             {
                 chooseReward.Remove(reward);
@@ -152,6 +153,36 @@ public abstract class Weapon : MonoBehaviour
                 return new Color(1,0,1);
             default:
                 return Color.green;
+        }
+    }
+
+    public string GetName()
+    {
+        return nameOfWeapon;
+    }
+
+    public Color GetColorName()
+    {
+        return getColorByLevelWeapon(TypeOfWeapon);
+    }
+
+    public SpriteRenderer GetRender()
+    {
+        return render;
+    }
+
+    private void OnDrawGizmos()
+    {
+        
+    }
+
+    private void OnValidate()
+    {
+        if (render != null)
+        {
+            render.sprite = Picture;
+            render.sortingLayerName = "Skin";
+            render.sortingOrder = 15;
         }
     }
 }

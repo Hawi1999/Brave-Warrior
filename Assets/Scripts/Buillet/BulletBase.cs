@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
-public class BulletBase : MonoBehaviour
+public class BulletBase : PoolingBehaviour
 {
     [HideInInspector] protected DamageData damage;
     [SerializeField] protected float flySpeed;
     [SerializeField] private Transform dauDan;
     [SerializeField] protected LayerMask target;
-    [SerializeField] GameObject VFXDestroyed;
+    [SerializeField] ControlPartice VFXDestroyed;
 
     SpriteRenderer render => GetComponent<SpriteRenderer>();
 
@@ -27,11 +27,17 @@ public class BulletBase : MonoBehaviour
             }
         }
     }
-
-
     private float timeToDestroy = 5;
     private float timelife;
 
+    PoolingGameObject<ControlPartice> pooling_vfx;
+    private void Awake()
+    {
+        if (VFXDestroyed != null)
+        {
+            pooling_vfx = new PoolingGameObject<ControlPartice>(VFXDestroyed);
+        }
+    }
     protected virtual void Start()
     {
         timelife = Time.time;
@@ -42,13 +48,19 @@ public class BulletBase : MonoBehaviour
     {
         if (Time.time - timelife > timeToDestroy)
         {
-            Destroy(gameObject);
+            Rest();
         }
         if (transform.hasChanged)
         {
             render.sortingOrder = (int)(-10f * transform.position.y + 3);
         }
         Fly();
+    }
+
+    protected override void OnBegin()
+    {
+        base.OnBegin();
+        timelife = Time.time;
     }
 
     public virtual void StartUp(DamageData dam)
@@ -66,10 +78,10 @@ public class BulletBase : MonoBehaviour
             RaycastHit2D[] hits = Physics2D.RaycastAll(vitri_daudan, damage.Direction, Vector2.Distance(oldPos, newPos), target);
             foreach (RaycastHit2D hit in hits)
             {
-                if (hit.collider != null && hit.collider.GetComponent<TakeHit>() != null)
+                if (hit.collider != null && hit.collider.GetComponent<ITakeHit>() != null)
                 {
                     damage.PointHit = hit.point;
-                    OnHitTarget(hit.collider.GetComponent<TakeHit>(), damage.PointHit);
+                    OnHitTarget(hit.collider.GetComponent<ITakeHit>(), damage.PointHit);
                 }
             }
             transform.position = newPos;
@@ -77,7 +89,7 @@ public class BulletBase : MonoBehaviour
         }
     }
 
-    protected virtual void OnHitTarget(TakeHit take, Vector3 point)
+    protected virtual void OnHitTarget(ITakeHit take, Vector3 point)
     {
         take.TakeDamaged(damage.Clone);
         Destroyed(damage.PointHit);
@@ -89,9 +101,9 @@ public class BulletBase : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
         if (VFXDestroyed != null)
         {
-            Destroy(Instantiate(VFXDestroyed, position, rotation), 0.2f);
+            pooling_vfx.Spawn(position, rotation).Play();
         }
-        Destroy(gameObject);
+        Rest();
     }
 
     public void Destroyed()
@@ -99,8 +111,13 @@ public class BulletBase : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
         if (VFXDestroyed != null)
         {
-            Destroy(Instantiate(VFXDestroyed, transform.position, rotation), 0.2f);
+            pooling_vfx.Spawn(transform.position, rotation).Play();
         }
-        Destroy(gameObject);
+        Rest();
+    }
+
+    private void OnDestroy()
+    {
+        pooling_vfx?.DestroyAll();
     }
 }

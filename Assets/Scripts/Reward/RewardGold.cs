@@ -11,7 +11,7 @@ public class RewardGold : Reward
     public int Amount => amount;
     [SerializeField] TakeGoldFromMap Prejabs;
 
-    public override bool WaitingForGet => throw new System.NotImplementedException();
+    public override bool WaitingForChoose => true;
 
     public override void Appear()
     {
@@ -23,12 +23,12 @@ public class RewardGold : Reward
         }
     }
 
-    public override void Choose(Reward reward)
+    public override void OnChoose(IManipulation manipulation)
     {
         
     }
 
-    public override void TakeReward(PlayerController host)
+    public override void TakeManipulation(PlayerController host)
     {
         
     }

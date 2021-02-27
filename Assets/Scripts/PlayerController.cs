@@ -95,7 +95,7 @@ public class PlayerController : Entity
         {
             Entity old = targetfire;
             targetfire = value;
-            if (old != targetfire)
+            if (old != targetfire)    
             {
                 OnTargetFireChanged?.Invoke(targetfire as Enemy);
             }
@@ -119,6 +119,7 @@ public class PlayerController : Entity
     private void Awake()
     {
         gameObject.tag = "Player";
+        gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
     // Start is called before the first frame update
@@ -278,6 +279,7 @@ public class PlayerController : Entity
                 rig.velocity = Vector2.zero;
             SetAni("Idle"); 
         }
+        fixTransform();
     }
     public void SetAni(string code)
     {
@@ -326,17 +328,12 @@ public class PlayerController : Entity
         OnAttacked -= weapon.OnAttacked;
     }
 
-    public override Vector2 getSize()
-    {
-        return new Vector2(0.5f, 0.5f);
-    }
+    public override Vector2 size => new Vector2(0.5f, 0.5f);
 
-    public override Vector2 getCenter()
-    {
-        return (Vector2)transform.position + new Vector2(0, 0.2f);
-    }
+    public override Vector2 center => (Vector2)transform.position + new Vector2(0, 0.2f);
+    
 
-    public UnityAction<Enemy> OnTargetFireChanged;
+    public static UnityAction<Enemy> OnTargetFireChanged;
     public static UnityAction<int, int, int> OnShieldChanged;
     public static UnityAction<float, float, float, bool> OnHealPhyChanged;
     public static UnityAction<int, int, int> OnHeathChanged;
@@ -347,4 +344,9 @@ public class PlayerController : Entity
     public static UnityAction OnHit;
     // Gọi khi nhân dame nào đó
     public static UnityAction OnReceiveDamage;
+
+    void Reset()
+    {
+
+    }
 }

@@ -7,8 +7,6 @@ public class Freeze : ElementalBuffBad, ILockMove
     float Time_remaining = 0f;
 
     Entity target;
-
-    Sprite[] sprites => VFXManager.Instance.SpritesIce;
     SpriteRenderer sprite;
     SpriteRenderer spritePrefab = VFXManager.Instance.IcePrefab;
     public override void StartUp(Entity entity, float time)
@@ -27,7 +25,7 @@ public class Freeze : ElementalBuffBad, ILockMove
         {
             EndUp();
         } 
-        sprite.transform.localScale = new Vector3(target.getSize().x, target.getSize().y);
+        sprite.transform.localScale = new Vector3(target.size.x, target.size.y);
         Time_remaining -= Time.deltaTime;
     }
 
@@ -43,21 +41,7 @@ public class Freeze : ElementalBuffBad, ILockMove
 
     private void SpawnIce()
     {
-        if (sprites == null || sprites.Length == 0 || spritePrefab == null)
-        {
-            Debug.Log("Không có Data VFX Ice");
-            return;
-        }
-        if (sprite != null)
-        {
-            Destroy(sprite.gameObject);
-        }
-        Vector3 pos = target.getPosition();
-        Vector3 scale = target.getSize();
-        sprite = Instantiate(spritePrefab, target.transform);
-        sprite.sprite = sprites[Random.Range(0, sprites.Length)];
-        sprite.transform.position = pos;
-        sprite.transform.localScale = scale;
+
     }
 
     public void AddTime(float time)

@@ -91,7 +91,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1401174c88b3f4f4994f7f5cb6622b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rewards: []
 --- !u!1 &3724882520997723638
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf96c9a7799910247951992277e00b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpritesBui:
+  SpritesDust:
   - {fileID: -8146567449231776712, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: -4810880500100480513, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: 6792890935879907250, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
@@ -145,12 +144,20 @@ MonoBehaviour:
   - {fileID: -3168006201750929627, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: 1314303969709066963, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: -2378080120084053672, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
-  SpritesIce:
-  - {fileID: -1690246731366145616, guid: 6935921522bd858448c856c4a4b08254, type: 3}
-  - {fileID: -8966536705411101775, guid: 6935921522bd858448c856c4a4b08254, type: 3}
-  IcePrefab: {fileID: 5135953727074062605, guid: e92bc7d3e8882ff44a4d32b8ffa62f12,
-    type: 3}
+  SpriteFire:
+  - {fileID: 3804239905063800832, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: -7965777512120597438, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: -5836019419243652291, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: 6658603581272297237, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: 2032681095238767129, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: 7172376623760875906, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: 1805584388477963256, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
+  - {fileID: 6950553089422972153, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
   DustPrefab: {fileID: 5533233973321091005, guid: 48552eb0219157b479e42c01d85a8967,
+    type: 3}
+  FirePrefab: {fileID: -6445726033876550724, guid: 30560586f0ce48c4f8e85eea89ddd01a,
+    type: 3}
+  IcePrefab: {fileID: 5135953727074062605, guid: e92bc7d3e8882ff44a4d32b8ffa62f12,
     type: 3}
   giatDien: {fileID: 2366182260101870943, guid: 68f3bf974323c7542a6be6f450a016a8,
     type: 3}
@@ -1123,6 +1130,9 @@ MonoBehaviour:
   - Level: 3
     Enemy: {fileID: 1428810476333719215, guid: 9a83a5dea82eb36428c74823df564739, type: 3}
     UuTien: 3
+  - Level: 2
+    Enemy: {fileID: 8044857623500323863, guid: d08f03ce11f42314d9c2ecb1b36be653, type: 3}
+    UuTien: 10
   _TilesData:
   - color: {r: 0.6666667, g: 0.33333334, b: 0, a: 1}
     tile:

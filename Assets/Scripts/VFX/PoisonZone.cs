@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class PoisonZone : MonoBehaviour, TakeHit
+public class PoisonZone : MonoBehaviour, ITakeHit
 {
     public float _Time = 2;
     public SpriteRenderer renderZone;
@@ -18,11 +18,19 @@ public class PoisonZone : MonoBehaviour, TakeHit
     private float timePoi;
     private bool p;
     private bool poisoning = false;
+    private void Awake()
+    {
+        if (renderZone != null)
+        {
+            renderZone.gameObject.SetActive(false);
+            renderZone.sortingLayerName = "LaneMAP";
+        }
+        vfx?.Stop();
+    }
 
     private void Start()
     {
-        renderZone?.gameObject.SetActive(false);
-        vfx?.Stop();
+
     }
     public void TakeDamaged(DamageData data)
     {
@@ -88,7 +96,7 @@ public class PoisonZone : MonoBehaviour, TakeHit
         foreach (Collider2D collider2D in collider2Ds)
         {
             DamageData damage = damageData.Clone;
-            TakeHit take = collider2D.gameObject.GetComponent<TakeHit>();
+            ITakeHit take = collider2D.gameObject.GetComponent<ITakeHit>();
             if (take != null && Vector2.Distance(transform.position, take.GetCollider().bounds.center) < 2f)
             {
                 damage.BackForce = 0;

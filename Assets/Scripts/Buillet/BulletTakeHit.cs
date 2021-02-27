@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletTakeHit : MonoBehaviour, TakeHit
+public class BulletTakeHit : MonoBehaviour, ITakeHit
 {
     public Collider2D GetCollider()
     {

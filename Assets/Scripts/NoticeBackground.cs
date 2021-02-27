@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class NoticeBackground : MonoBehaviour
 {
-    public int TimeRun = 4;
+    public int TimeRun = 2;
     public int TimeDelay = 2;
     public Slider sli;
     public Text ghi;

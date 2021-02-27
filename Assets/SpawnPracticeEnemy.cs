@@ -38,6 +38,7 @@ public class SpawnPracticeEnemy : MonoBehaviour
         Vector3 position = getPosition();
         Enemy enemy = EnemyManager.Instance.Spawn(EnemyPrefab, position, PREnemy, getLimit());
         list.Add(enemy);
+        enemy.gameObject.AddComponent<LockAttack>();
         enemy.OnDeath += (Entity) => list.Remove(enemy);
     }
 

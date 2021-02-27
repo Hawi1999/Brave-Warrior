@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallTakeHit : MonoBehaviour, TakeHit
+public class WallTakeHit : MonoBehaviour, ITakeHit
 {
     public void TakeDamaged(DamageData data)
     {

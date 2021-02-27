@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorTakeHit : MonoBehaviour, TakeHit
+public class DoorTakeHit : MonoBehaviour, ITakeHit
 {
     public void TakeDamaged(DamageData data)
     {

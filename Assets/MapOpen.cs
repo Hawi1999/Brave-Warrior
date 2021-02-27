@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class MapOpen : MAPController
 {
-
-    [SerializeField]
-    private ShowHPPlayer TT;
     protected override PlayerController CreatePlayer()
     {
         if (ParentGamePlay.Instance != null)
@@ -16,12 +13,6 @@ public class MapOpen : MAPController
         Instantiate(new GameObject("ParentGamePlay")).AddComponent<ParentGamePlay>();
         PlayerController player = base.CreatePlayer();
         player.transform.parent = ParentGamePlay.Instance;
-        if (TT == null)
-        {
-            Debug.Log("Không có Prefab hiển thị máu Player");
-        }
-        else
-            Instantiate(TT, GameController.CanvasMain.transform);
         return player;
     }
 
@@ -30,7 +21,13 @@ public class MapOpen : MAPController
         
         if (scene == "TrangTrai")
         {
-            GameController.Instance.LoadScene(scene);
+            if (PlayerController.PlayerCurrent.WeaponCurrent != null)
+            {
+                Notification.AreYouSure("Bạn sẽ <color=red>mất vũ khí hiện tại</color> nếu quay về Trang Trại!", () => GameController.Instance.LoadScene(scene));
+            } else
+            {
+                GameController.Instance.LoadScene(scene);
+            }
         }
         else if(PlayerController.PlayerCurrent.HasWeapon)
         {

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8736601379358990171}
   - component: {fileID: 681864945508542383}
   - component: {fileID: 2973515170834646463}
-  - component: {fileID: 1863710980346304840}
+  - component: {fileID: 41132977442203865}
   m_Layer: 5
   m_Name: ControlX
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1863710980346304840
+--- !u!114 &41132977442203865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 22845517884151576}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 840377221df17ac4895a7a65e88882cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 29077b56b3d91d342943cc652ba79c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IDCODE: X
@@ -93,3 +93,5 @@ MonoBehaviour:
     type: 3}
   SpriteUp: {fileID: -8124715314209161734, guid: 7c0e93fdfa0d9584a8a2d315a98b5f6c,
     type: 3}
+  rotationDefault: {x: 0, y: 0, z: 90}
+  rotationSpeed: 1440

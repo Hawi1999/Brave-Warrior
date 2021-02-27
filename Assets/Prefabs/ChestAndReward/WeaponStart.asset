@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WeaponStart
   m_EditorClassIdentifier: 
   Prefabs: {fileID: 3457977285969754169, guid: 2b017a25339d8a642af3e7393109188b, type: 3}
-  UuTien: 64000000c8000000
+  UuTien: 6400000001000000
   NameOfRewards:
   - Reward Gun K1
   - Reward Melee Sword of Light

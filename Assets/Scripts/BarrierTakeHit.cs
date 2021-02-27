@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarrierTakeHit : MonoBehaviour, TakeHit
+public class BarrierTakeHit : MonoBehaviour, ITakeHit
 {
     [SerializeField] private int shield = 5;
     [SerializeField] VFXSpawnDestroyed VFX;

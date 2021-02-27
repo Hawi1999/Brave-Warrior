@@ -12,6 +12,7 @@ public class GunBase : Weapon
 
     [HideInInspector] public bool isLeftDir;
 
+    protected PoolingGameObject<BulletBase> poolling_bullet;
 
     protected float CriticalRate => _criticalRate;
     protected float distanceShoot
@@ -42,6 +43,12 @@ public class GunBase : Weapon
         return "Gun " + nameOfWeapon;
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -70,7 +77,7 @@ public class GunBase : Weapon
     public virtual void Shoot(DamageData damageData)
     {
         Vector3 DirShoot = GiatSung(Host.DirectFire);
-        BulletBase bull = Instantiate(VienDan, PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot));
+        BulletBase bull = poolling_bullet.Spawn(PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot));
         SetUpDamageData(damageData, DirShoot);
         bull.StartUp(damageData);
     }

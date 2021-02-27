@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 
 public enum DamageElement
 {
@@ -30,6 +24,8 @@ public class EnemyData
     public Transform PositionRaDan;
     public BulletEnemy BulletPrefabs;
 }
+
+[RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : Entity
 {
 
@@ -40,14 +36,12 @@ public class Enemy : Entity
     public Transform PR_HP;
     public Transform PR_HPsub;
     public Collider2D colliderTakeDamage;
-    [SerializeField] LayerMask layerTargetFire;
-    [SerializeField] SpriteRenderer Selecting;
+    [SerializeField] protected LayerMask layerTargetFire;
     [SerializeField] float speedMove = 5;
 
-    private Vector2[] limitMove;
-
     #endregion
-
+    [SerializeField]
+    private Vector3 a;
     #region EditorInvisible
     [HideInInspector] public DamageData LastDamageData;
     private DamageData _CurrentDamageData;
@@ -84,7 +78,9 @@ public class Enemy : Entity
             }
         }
     }
-    public override Entity TargetFire { get ; set; }
+    public override Entity TargetFire
+    {get;set;
+    }
     public override int MaxHP
     {
         get
@@ -96,28 +92,22 @@ public class Enemy : Entity
     {
         get
         {
-            return PlayerController.PlayerCurrent;
+            return TargetFire as PlayerController;
         }
     }
-    private bool HasPlayerNear
+    protected bool HasTargetNear
     {
         get
         {
-            return targetAttack != null;
+            if (targetAttack == null)
+            {
+                return false;
+            }
+            return Vector2.Distance(targetAttack.getPosition(), center) <= 6f;
         }
     }
-    private SpriteRenderer render => GetComponent<SpriteRenderer>();
     private AnimationQ anim => GetComponent<AnimationQ>();
-    private Rigidbody2D rig => GetComponent<Rigidbody2D>();
-    private RoundBase round => RoundBase.RoundCurrent;
-    private BuiControl buicontrol => GetComponent<BuiControl>();
-    private PlayerController player
-    {
-        get
-        {
-            return PlayerController.PlayerCurrent;
-        }
-    }
+    protected Rigidbody2D rig => GetComponent<Rigidbody2D>();
     // Di chuyển
     private bool isMoving = false;
     private Vector2 dirMove = new Vector2(0,0);
@@ -141,30 +131,32 @@ public class Enemy : Entity
             
         }
     }
+    public override Vector2 size => new Vector2(scaleDefault.x * ED.Size.x, scaleDefault.y * ED.Size.y);
+    public override Vector2 center => transform.position + new Vector3(0, 0.1f) * transform.localScale.y;
 
     public override Vector3 PositionSpawnWeapon => vitriradan;
-    public Transform tranSform => transform;
     protected override bool PermitAttack
     {
         get
         {
             BoolAction check = new BoolAction(true);
             OnCheckForAttack?.Invoke(check);
-            return check.IsOK 
-                && Time.time - time_start_attack > time_delay_attack 
-                && targetAttack != null 
-                && Vector2.Distance(targetAttack.ColliderTakeDamaged.bounds.center, vitriradan) <= 6f; ;
+            return check.IsOK;
         }
     }
 
+    PoolingGameObject<BulletEnemy> pool_bullet;
     #endregion
-    private void Awake()
+    protected override void Awake()
     {
-        gameObject.tag = "Enemy";
-    }
-    protected override void Start()
-    {
-        base.Start();
+        base.Awake();
+        gameObject.tag = "Enemy"; 
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+        if (ED != null && ED.BulletPrefabs != null)
+        {
+            pool_bullet = new PoolingGameObject<BulletEnemy>(ED.BulletPrefabs);
+            OnDeath += (Enemy) => pool_bullet.DestroyAll();
+        }
         if (EnemyManager.Instance != null)
         {
             EnemyManager.Instance.ShowHP(this);
@@ -176,27 +168,31 @@ public class Enemy : Entity
         OnTookDamage += VFXDamageTook;
         OnCheckForAttack += checkAttack;
         OnDeath += onDeath;
+        PlayerController.OnTargetFireChanged += OnSelected;
+    }
+    protected override void Start()
+    {
+        base.Start();
 
-        Selecting?.gameObject.SetActive(false);
+        ShowOutLine(false);
+        render.sortingLayerName = "Current";
         Heath = MaxHP;
         isMoving = false;
         time_start_idle = Random.Range(Time.time - Random.Range(ED.time_range_idle.x, ED.time_range_idle.y), Time.time);
         time_start_attack = Time.time;
         time_idle = Random.Range(ED.time_range_idle.x, ED.time_range_idle.y);
         time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
-        player.OnTargetFireChanged += OnSelected;
     }
     protected override void Death()
     {
         Died = true;
-        if (buicontrol)
-            buicontrol.SpawnBui(20, (int)MathQ.DirectionToRotation(CurrentDamageData.Direction).z, 45);
         OnDeath?.Invoke(this);
         Destroy(this.gameObject);
     }
 
-    private void onDeath(Entity enitty)
+    protected void onDeath(Entity enitty)
     {
+        PlayerController.OnTargetFireChanged -= OnSelected;
     }
 
     protected override void OnDestroy()
@@ -212,49 +208,54 @@ public class Enemy : Entity
 
     private void VFXDamageTook(DamageData damadata)
     {
-        if (buicontrol != null)
-            buicontrol.SpawnBui(damadata.Damage / 2, (int)MathQ.DirectionToRotation(CurrentDamageData.Direction).z, 45);
+
     }
     public override void TakeDamage(DamageData dama)
     {
         CurrentDamageData = dama;
         base.TakeDamage(dama);
     }
-
     protected override void XLDNormal(DamageData damadata)
     {
         base.XLDNormal(damadata);
         damadata.Decrease(ED.Shield);
     }
     #endregion
-
-    private void Update()
+    protected virtual void Update()
     {
         setSorting();
+        UpdateTargetFire();
         CheckForAttack();
     }
-
-    private void setSorting()
+    protected void UpdateTargetFire()
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(center, 8f, layerTargetFire);
+        if (collider2Ds == null || collider2Ds.Length == 0)
+        {
+            TargetFire = null;
+        } else
+        {
+            int d = 0;
+            float minDistance = Vector2.Distance(collider2Ds[0].bounds.center, center);
+            for (int i = 1; i < collider2Ds.Length; i++)
+            {
+                float distance = Vector2.Distance(collider2Ds[i].bounds.center, center);
+                if (distance < minDistance && collider2Ds[i].gameObject.GetComponent<PlayerController>() != null)
+                {
+                    d = i;
+                }
+            }
+            TargetFire = collider2Ds[d].GetComponent<PlayerController>();
+        }
+    }
+    protected void setSorting()
     {
         if(transform.hasChanged && render != null)
         {
             render.sortingOrder = (int)(transform.position.y * -10);
         }
-        if(Selecting != null)
-        {
-            Selecting.sortingOrder = (int)(transform.position.y * -10) - 1;
-        }
     }
-
-    private void OnSelected(Enemy enemy)
-    {
-        if (Selecting != null)
-        {
-            Selecting.gameObject.SetActive(enemy == this);
-        }
-    }
-
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (PermitMove)
         {
@@ -271,7 +272,7 @@ public class Enemy : Entity
 
     #region Di chuyển và tấn công
 
-    protected virtual void CheckForAttack()
+    protected void CheckForAttack()
     {
         if (PermitAttack)
         {
@@ -280,21 +281,17 @@ public class Enemy : Entity
             time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
         }
     }
-
-    private void checkAttack(BoolAction permit)
+    protected virtual void checkAttack(BoolAction permit)
     {
-        permit.IsOK = Time.time - time_start_attack > time_delay_attack && targetAttack != null && Vector2.Distance(targetAttack.ColliderTakeDamaged.bounds.center, vitriradan) <= 6f;
+        permit.IsOK = Time.time - time_start_attack > time_delay_attack && targetAttack != null && HasTargetNear && ED.BulletPrefabs != null;
     }
-
     protected virtual void Attack()
     {
-        Vector2 dirAttack = getDirToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
-        BulletEnemy bullet = Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(dirAttack));
+        Vector2 dirAttack = getRotationToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
+        BulletEnemy bullet = pool_bullet.Spawn(vitriradan, MathQ.DirectionToQuaternion(dirAttack));
         DamageData dam = setUpDamageData(dirAttack);
         bullet.StartUp(dam);
     }
-
-
     protected DamageData setUpDamageData(Vector3 NewDirection)
     {
         int SatThuong = Damage;
@@ -304,54 +301,11 @@ public class Enemy : Entity
         damageData.From = this;
         return damageData;
     }
-
-    protected Vector2 getDirToPlayer(Vector2 dir)
+    protected Vector2 getRotationToPlayer(Vector2 dir)
     {
         Vector3 Do = MathQ.DirectionToRotation(dir);
         Do += new Vector3(0, 0, Random.Range(-30, 30));
         return MathQ.RotationToDirection(Do.z).normalized;
-    }
-
-    public override Vector2 getSize()
-    {
-        return transform.localScale * ED.Size;
-    }
-    public override Vector2 getCenter()
-    {
-        return transform.position + new Vector3(0, 0.1f) * transform.localScale.y;
-    }
-
-    public void setLimitMove(Vector2[] vector2s)
-    {
-        limitMove = vector2s;
-    }
-
-    private void fixTransform()
-    {
-        if (limitMove == null)
-        {
-            return;
-        }
-        Vector3 position = tranSform.position;
-        if (position.x < limitMove[0].x)
-        {
-            position.x = limitMove[0].x;
-        }
-        if (position.y < limitMove[0].y)
-        {
-            position.y = limitMove[0].y;
-        }
-        if (position.x > limitMove[1].x)
-        {
-            position.x = limitMove[1].x;
-        }
-        if (position.y > limitMove[1].y)
-        {
-            position.y = limitMove[1].y;
-        }
-        transform.position = position;
-
-
     }
     private void Move()
     {
@@ -383,16 +337,16 @@ public class Enemy : Entity
                 time_move = Random.Range(ED.time_range_move.x, ED.time_range_move.y);
             } else
             {
-                if (HasPlayerNear)
+                if (HasTargetNear)
                 {
                     float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) render.flipX = false ;
-                    else if (dirFireX > 0) render.flipX = true;
+                    if (dirFireX < 0) transform.localScale = scaleDefault;
+                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
                 }
                 else
                 {
-                    if (dirMove.x < 0) render.flipX = false;
-                    else if (dirMove.x > 0) render.flipX = true;
+                    if (dirMove.x < 0) transform.localScale = scaleDefault;
+                    else if (dirMove.x > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
                 }
                 rig.velocity = Vector2.zero;
                 SetAni("Idle");
@@ -414,38 +368,64 @@ public class Enemy : Entity
                 {
                     SetAni("Idle");
                 }
-                if (HasPlayerNear)
+                if (HasTargetNear)
                 {
                     float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) render.flipX = false;
-                    else if (dirFireX > 0) render.flipX = true;
+                    if (dirFireX < 0) transform.localScale = scaleDefault;
+                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
                 }
             }
         }
     }
-
     bool CanSeePosition(Vector3 from, Vector3 to)
     {
         RaycastHit2D hit;
         hit = Physics2D.Raycast(from, (to - from).normalized, Vector2.Distance(from, to), EnemyManager.Instance.WallAndBarrier);
         return (hit.collider == null);
     }
-
     void SetAni(string code)
     {
         anim.setAnimation(code);
     }
-
+    #endregion
     public override void OnEquipment(Weapon weapon)
     {
         
     }
+    private void OnSelected(Enemy enemy)
+    {
+        if (enemy != null)
+        {
+            ShowOutLine(enemy == this);
+        } else
+        {
+            ShowOutLine(false);
+        }
+    }
 
+    private void ShowOutLine(bool a)
+    {
+        if (render != null)
+        {
+            if (a)
+            {
+                render.material.SetInt("show_outline", 1);
+            } else
+            {
+                render.material.SetInt("show_outline", 0);
+            }
+        }
+    }
     public override void OnUnEquipment(Weapon weapon)
     {
         
     }
 
-    #endregion
-
+    private void OnDrawGizmosSelected()
+    {
+        Vector3 pos = render.bounds.ClosestPoint(a);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, pos);
+        Gizmos.DrawLine(pos, a);
+    }
 }

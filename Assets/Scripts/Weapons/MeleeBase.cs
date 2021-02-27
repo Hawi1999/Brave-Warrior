@@ -4,13 +4,10 @@ using UnityEngine.Events;
 
 public class MeleeBase : Weapon
 {
-    [SerializeField] SpriteRenderer _render;
     [SerializeField] ColliderMeleeAttack colliderAttack;
     [SerializeField] float SpeedAttack = 3f;
     [SerializeField] float TimeShit = 0.3f;
     [SerializeField] Vector2 AngleAttack = new Vector2(10f, 80f);
-
-    public override SpriteRenderer render { get => _render; }
     private bool isLeftDir
     {
         get
@@ -68,9 +65,7 @@ public class MeleeBase : Weapon
 
     protected override void Start()
     {
-        render = Instantiate(new GameObject("Picture"), transform).AddComponent<SpriteRenderer>();
-        render.sortingLayerName = "Skin";
-        render.sortingOrder = 15;
+        base.Start();
 
         OnCutBegin += OnAttackBegin;
         OnCutComplete += OnAttackEnd;
@@ -217,7 +212,7 @@ public class MeleeBase : Weapon
         damageData.FromMeleeWeapon = true;
     }
     
-    protected virtual void OnTakeHit(TakeHit takeHit, DamageData damage)
+    protected virtual void OnTakeHit(ITakeHit takeHit, DamageData damage)
     {
         damage.Direction = Host.DirectFire;
         takeHit.TakeDamaged(damage);
@@ -227,8 +222,11 @@ public class MeleeBase : Weapon
     public UnityAction OnCutComplete;
 
 
+
+
     protected virtual void OnAttackBegin()
     {
+
     }
 
     protected virtual void OnAttackEnd()

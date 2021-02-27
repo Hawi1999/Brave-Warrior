@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,10 +10,28 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    private static Control Instance;
     public string IDCODE;
     public Sprite SpriteDown;
     public Sprite SpriteUp;
     private static List<string> listKey = new List<string>();
+    private static List<string> listKeyDown = new List<string>();
+
+    private static List<string> listKeyDownNew = new List<string>();
+    private static List<string> listKeyDownOld = new List<string>();
+
+    private static List<string> listKeyUp = new List<string>();
+
+    private static List<string> listKeyUpNew = new List<string>();
+    private static List<string> listKeyUpOld = new List<string>();
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     Image image => GetComponent<Image>();
     public void OnPointerDown(PointerEventData eventData)
@@ -20,17 +39,58 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Add(IDCODE);
         image.sprite = SpriteDown;
     }
-
     public void OnPointerUp(PointerEventData eventData)
     {
         Remove(IDCODE);
         image.sprite = SpriteUp;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         OnWaitToClick += WaitToClick;
         OnEndWaitToClick += EndWaitToClick;
+    }
+    protected virtual void Update()
+    {
+        if (Instance == this)
+        {
+            UpdateKeyDown();
+            UpdateKeyUp();
+        }
+    }
+    protected virtual void FixedUpdate()
+    {
+        
+    }
+    
+    private static void UpdateKeyDown()
+    {
+        listKeyDown = new List<string>();
+        for (int i = 0; i < listKeyDownNew.Count; i++)
+        {
+            if (!listKeyDownOld.Contains(listKeyDownNew[i]))
+            {
+                listKeyDown.Add(listKeyDownNew[i]);
+            }
+        }
+        listKeyDownOld.Clear();
+        listKeyDownOld.AddRange(listKeyDownNew);
+        listKeyDownNew.Clear();
+    }
+
+    private static void UpdateKeyUp()
+    {
+        listKeyUp = new List<string>();
+        for (int i = 0; i < listKeyUpNew.Count; i++)
+        {
+            if (!listKeyUpOld.Contains(listKeyUpNew[i]))
+            {
+                listKeyUp.Add(listKeyUpNew[i]);
+            }
+        }
+        listKeyUpOld.Clear();
+        listKeyUpOld.AddRange(listKeyUpNew);
+        listKeyUpNew.Clear();
     }
 
     private void OnDestroy()
@@ -41,10 +101,19 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
 
-
     public static bool GetKey(string a)
     {
         return listKey.Contains(a);
+    }
+
+    public static bool GetKeyDown(string a)
+    {
+        return listKeyDown.Contains(a);
+    }
+
+    public static bool GetKetUp(string a)
+    {
+        return listKeyUp.Contains(a);
     }
 
     private static void Remove(string a)
@@ -52,7 +121,11 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (listKey.Contains(a))
         {
             listKey.Remove(a);
-        } 
+        }
+        if (!listKeyUpNew.Contains(a))
+        {
+            listKeyUpNew.Add(a);
+        }
     }
 
     private static void Add(string a)
@@ -60,16 +133,17 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (!listKey.Contains(a))
         {
             listKey.Add(a);
-        }else
+        }
+        if (!listKeyDownNew.Contains(a))
         {
-            Debug.Log("Đã tồn tại Code " + a);
+            listKeyDownNew.Add(a);
         }
     }
 
     public static UnityAction<string> OnWaitToClick;
     public static UnityAction<string> OnEndWaitToClick;
 
-    public void WaitToClick(string x)
+    public virtual void WaitToClick(string x)
     {
         if (x == IDCODE)
         {
@@ -77,7 +151,7 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
-    public void EndWaitToClick(string x)
+    public virtual void EndWaitToClick(string x)
     {
         if (x == IDCODE)
         {

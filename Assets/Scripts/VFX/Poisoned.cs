@@ -14,8 +14,6 @@ public class Poisoned : ElementalBuffBad
 
     private float timedelaySpawn = 0.05f;
     private float timedelaycurrent = 0;
-    private Sprite[] Sprites => VFXManager.Instance.SpritesBui;
-    private Dust bui => VFXManager.Instance.DustPrefab;
     private bool start;
 
     public static int MinDamage = 4;
@@ -31,10 +29,14 @@ public class Poisoned : ElementalBuffBad
             lastTime = Time.time;
         }
         timedelaycurrent += Time.deltaTime;
+        int i = 0;
         while (timedelaycurrent >= timedelaySpawn)
         {
-            Spawn();
             timedelaycurrent -= timedelaySpawn;
+            if (i++ == 1000)
+            {
+                break;
+            }
         }
         Debug.Log(ThoiGianConLai);
         ThoiGianConLai -= Time.deltaTime;
@@ -50,7 +52,7 @@ public class Poisoned : ElementalBuffBad
         this.target = target;
         lastTime = Time.time - DelayTime;
         ThoiGianConLai = time;
-        timedelaySpawn = 1 / (CON * target.getSize().x * target.getSize().y);
+        timedelaySpawn = 1 / (CON * target.size.x * target.size.y);
         target.OnBuffsChanged?.Invoke(DamageElement.Poison, true);
     }
 
@@ -77,27 +79,14 @@ public class Poisoned : ElementalBuffBad
 
     public static void NhiemDoc(Entity target, float Time)
     {
-        Poisoned poison = target.gameObject.GetComponent<Poisoned>();
-        if (poison == null)
+        Poisoned poison;
+        if (target.TryGetComponent(out poison))
+        {
+            poison.AddTime(Time);
+        } else
         {
             poison = target.gameObject.AddComponent<Poisoned>();
             poison.StartUp(target, Time);
         }
-        else
-        {
-            poison.AddTime(Time);
-        }
-    }
-    private void Spawn()
-    {
-        if (Sprites == null || Sprites.Length == 0)
-            return;
-        Vector3 Center = target.getCenter();
-        Vector3 Size = target.getSize();
-        Vector3 position = new Vector3(Random.Range(-Size.x / 2, Size.x / 2), Random.Range(-Size.y / 2, Size.y / 2)) + Center;
-        Quaternion rotation = MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360f)));
-        Sprite sprite = Sprites[Random.Range(0, Sprites.Length)];
-        Dust bui = Instantiate(this.bui, position, rotation);
-        bui.SetUp(sprite, 0.7f, Vector3.up, 1f, 1f, Color.green);
     }
 }
