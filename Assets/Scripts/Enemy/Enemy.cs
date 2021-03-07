@@ -37,11 +37,9 @@ public class Enemy : Entity
     public Transform PR_HPsub;
     public Collider2D colliderTakeDamage;
     [SerializeField] protected LayerMask layerTargetFire;
-    [SerializeField] float speedMove = 5;
-
+    [SerializeField] protected float speedMove = 5;
+    [SerializeField] Transform OffsetCenter;
     #endregion
-    [SerializeField]
-    private Vector3 a;
     #region EditorInvisible
     [HideInInspector] public DamageData LastDamageData;
     private DamageData _CurrentDamageData;
@@ -79,7 +77,13 @@ public class Enemy : Entity
         }
     }
     public override Entity TargetFire
-    {get;set;
+    {
+        get
+        {
+            return PlayerController.PlayerCurrent;
+        }
+        set { 
+        }
     }
     public override int MaxHP
     {
@@ -108,16 +112,17 @@ public class Enemy : Entity
     }
     private AnimationQ anim => GetComponent<AnimationQ>();
     protected Rigidbody2D rig => GetComponent<Rigidbody2D>();
+    protected SelectingEnemy selecting;
     // Di chuyển
-    private bool isMoving = false;
-    private Vector2 dirMove = new Vector2(0,0);
-    private float time_start_move;
-    private float time_start_idle;
-    private float time_move;
-    private float time_idle;
+    protected bool isMoving = false;
+    protected Vector2 dirMove = new Vector2(0,0);
+    protected float time_start_move;
+    protected float time_start_idle;
+    protected float time_move;
+    protected float time_idle;
     // Tấn công
-    private float time_start_attack;
-    private float time_delay_attack;
+    protected float time_start_attack;
+    protected float time_delay_attack;
     protected Vector2 vitriradan
     {
         get
@@ -131,8 +136,8 @@ public class Enemy : Entity
             
         }
     }
-    public override Vector2 size => new Vector2(scaleDefault.x * ED.Size.x, scaleDefault.y * ED.Size.y);
-    public override Vector2 center => transform.position + new Vector3(0, 0.1f) * transform.localScale.y;
+    public override Vector2 size => new Vector2(ED.Size.x, ED.Size.y) * scaleDefault;
+    public override Vector2 center => (OffsetCenter == null) ? transform.position : OffsetCenter.localPosition * scaleDefault + transform.position;
 
     public override Vector3 PositionSpawnWeapon => vitriradan;
     protected override bool PermitAttack
@@ -145,7 +150,7 @@ public class Enemy : Entity
         }
     }
 
-    PoolingGameObject<BulletEnemy> pool_bullet;
+    protected PoolingGameObject<BulletEnemy> pool_bullet;
     #endregion
     protected override void Awake()
     {
@@ -165,17 +170,18 @@ public class Enemy : Entity
         { 
             Debug.Log("Instance cho EnemyManager không tồn tại");
         }
+        selecting = Instantiate(VFXManager.Instance.SelectingEnemyPrefab, transform);
+        selecting.StartUp(this);
+        selecting.gameObject.SetActive(false);
         OnTookDamage += VFXDamageTook;
         OnCheckForAttack += checkAttack;
         OnDeath += onDeath;
         PlayerController.OnTargetFireChanged += OnSelected;
+        render.sortingLayerName = "Current";
     }
     protected override void Start()
     {
         base.Start();
-
-        ShowOutLine(false);
-        render.sortingLayerName = "Current";
         Heath = MaxHP;
         isMoving = false;
         time_start_idle = Random.Range(Time.time - Random.Range(ED.time_range_idle.x, ED.time_range_idle.y), Time.time);
@@ -189,19 +195,9 @@ public class Enemy : Entity
         OnDeath?.Invoke(this);
         Destroy(this.gameObject);
     }
-
     protected void onDeath(Entity enitty)
     {
         PlayerController.OnTargetFireChanged -= OnSelected;
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        OnTookDamage -= EnemyManager.Instance.ShowHPSub;
-        OnTookDamage -= VFXDamageTook;
-        OnCheckForAttack -= checkAttack;
-        OnDeath -= onDeath;
     }
 
     #region Xử lý sát thương
@@ -220,33 +216,18 @@ public class Enemy : Entity
         base.XLDNormal(damadata);
         damadata.Decrease(ED.Shield);
     }
+    private void OnSelected(Enemy enemy)
+    {
+        selecting.gameObject.SetActive(enemy == this);
+    }
+
     #endregion
+
+    #region Cật Nhật
     protected virtual void Update()
     {
         setSorting();
-        UpdateTargetFire();
         CheckForAttack();
-    }
-    protected void UpdateTargetFire()
-    {
-        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(center, 8f, layerTargetFire);
-        if (collider2Ds == null || collider2Ds.Length == 0)
-        {
-            TargetFire = null;
-        } else
-        {
-            int d = 0;
-            float minDistance = Vector2.Distance(collider2Ds[0].bounds.center, center);
-            for (int i = 1; i < collider2Ds.Length; i++)
-            {
-                float distance = Vector2.Distance(collider2Ds[i].bounds.center, center);
-                if (distance < minDistance && collider2Ds[i].gameObject.GetComponent<PlayerController>() != null)
-                {
-                    d = i;
-                }
-            }
-            TargetFire = collider2Ds[d].GetComponent<PlayerController>();
-        }
     }
     protected void setSorting()
     {
@@ -265,14 +246,25 @@ public class Enemy : Entity
             rig.velocity = Vector2.zero;
         }
     }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        OnTookDamage -= EnemyManager.Instance.ShowHPSub;
+        OnTookDamage -= VFXDamageTook;
+        OnCheckForAttack -= checkAttack;
+        OnDeath -= onDeath;
+        PlayerController.OnTargetFireChanged -= OnSelected;
+    }
     public override Vector3 getPosition()
     {
         return transform.position + new Vector3(0, 0.1f, 0);
     }
 
-    #region Di chuyển và tấn công
+    #endregion
 
-    protected void CheckForAttack()
+    #region Tấn công
+
+    protected virtual void CheckForAttack()
     {
         if (PermitAttack)
         {
@@ -301,13 +293,16 @@ public class Enemy : Entity
         damageData.From = this;
         return damageData;
     }
+    #endregion
+
+    #region Di Chuyen
     protected Vector2 getRotationToPlayer(Vector2 dir)
     {
         Vector3 Do = MathQ.DirectionToRotation(dir);
         Do += new Vector3(0, 0, Random.Range(-30, 30));
         return MathQ.RotationToDirection(Do.z).normalized;
     }
-    private void Move()
+    protected virtual void Move()
     {
         if (limitMove == null || limitMove.Length == 1)
         {
@@ -329,7 +324,7 @@ public class Enemy : Entity
                     {
                         pos = new Vector3(Random.Range(limitMove[0].x, limitMove[1].x), Random.Range(limitMove[0].y, limitMove[1].y), 0);
                         test++;
-                    } while (!CanSeePosition(transform.position, pos) && test < 10);
+                    } while (!CanMoveTo(transform.position, pos) && test < 10);
                     dirMove = (pos - transform.position).normalized;
                 }
                 isMoving = true;
@@ -340,13 +335,13 @@ public class Enemy : Entity
                 if (HasTargetNear)
                 {
                     float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) transform.localScale = scaleDefault;
-                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
+                    if (dirFireX < 0) transform.localScale = scaleDefault * Vector2.one;
+                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
                 }
                 else
                 {
-                    if (dirMove.x < 0) transform.localScale = scaleDefault;
-                    else if (dirMove.x > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
+                    if (dirMove.x < 0) transform.localScale = scaleDefault * Vector2.one;
+                    else if (dirMove.x > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
                 }
                 rig.velocity = Vector2.zero;
                 SetAni("Idle");
@@ -371,13 +366,13 @@ public class Enemy : Entity
                 if (HasTargetNear)
                 {
                     float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) transform.localScale = scaleDefault;
-                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
+                    if (dirFireX < 0) transform.localScale = scaleDefault * Vector2.one;
+                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
                 }
             }
         }
     }
-    bool CanSeePosition(Vector3 from, Vector3 to)
+    bool CanMoveTo(Vector3 from, Vector3 to)
     {
         RaycastHit2D hit;
         hit = Physics2D.Raycast(from, (to - from).normalized, Vector2.Distance(from, to), EnemyManager.Instance.WallAndBarrier);
@@ -387,45 +382,35 @@ public class Enemy : Entity
     {
         anim.setAnimation(code);
     }
+
     #endregion
+
+    #region Trang Bi
     public override void OnEquipment(Weapon weapon)
     {
         
-    }
-    private void OnSelected(Enemy enemy)
-    {
-        if (enemy != null)
-        {
-            ShowOutLine(enemy == this);
-        } else
-        {
-            ShowOutLine(false);
-        }
-    }
-
-    private void ShowOutLine(bool a)
-    {
-        if (render != null)
-        {
-            if (a)
-            {
-                render.material.SetInt("show_outline", 1);
-            } else
-            {
-                render.material.SetInt("show_outline", 0);
-            }
-        }
     }
     public override void OnUnEquipment(Weapon weapon)
     {
         
     }
 
-    private void OnDrawGizmosSelected()
+    #endregion
+
+    #region Show in Editor
+    protected virtual void OnValidate()
     {
-        Vector3 pos = render.bounds.ClosestPoint(a);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, pos);
-        Gizmos.DrawLine(pos, a);
+
     }
+
+    protected virtual void OnDrawGizmos()
+    {
+        if (render == null)
+            return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(center, size);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(center, Mathf.Max(size.x, size.y) * 1.2f);
+    }
+    #endregion
 }

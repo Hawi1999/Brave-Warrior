@@ -5,8 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(ShowName))]
 public class RewardWeapon : Reward
 {
-    Weapon weapon => GetComponent<Weapon>();
-    ShowName showname => GetComponent<ShowName>();
+    public Weapon weapon;
+    public ShowName showname;
+    public string _Name;
     public override bool WaitingForChoose
     {
         get
@@ -18,7 +19,7 @@ public class RewardWeapon : Reward
     {
         get
         {
-            return "Reward " + weapon.GetNameOfWeapon();
+            return _Name;
         }
     }
 
@@ -65,5 +66,12 @@ public class RewardWeapon : Reward
         if (player == null)
             return false;
         return Vector2.Distance(transform.position, player.getPosition()) <= Distance;
+    }
+
+    private void OnValidate()
+    {
+        weapon = GetComponent<Weapon>();
+        showname = GetComponent<ShowName>();
+        _Name = "Reward " + weapon.GetNameOfWeapon();
     }
 }

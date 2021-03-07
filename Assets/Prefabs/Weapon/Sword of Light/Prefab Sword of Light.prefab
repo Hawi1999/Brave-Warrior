@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: {fileID: 21300000, guid: 4bd93b51841ef9a4eaac4c5b61f25b11, type: 3}
   MT: {fileID: 21300000, guid: 97fbb62e69f9b914983e859fa6e29971, type: 3}
+  nameSkin: {fileID: 0}
   LocalPositionMT: {x: 0, y: 0.8, z: 0}
   LocalPositionName: {x: 0, y: 0.2, z: 0}
 --- !u!114 &1871398524974568193
@@ -62,6 +63,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18170ff808be22e44aef5c3e29b31ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 7528595775401800302}
+  showname: {fileID: 1871398524974568192}
 --- !u!114 &7528595775401800302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,10 +80,11 @@ MonoBehaviour:
   Picture: {fileID: 21300000, guid: cedf643aac8b6804c91ab25627e76cea, type: 3}
   _render: {fileID: 1871398526175695418}
   nameOfWeapon: Sword of Light
-  type: 1
+  type: 2
   _SatThuong: 7
   TrangThai: 0
   Host: {fileID: 0}
+  lastHost: {fileID: 0}
   Target: {fileID: 0}
   colliderAttack: {fileID: 4781140057119146426}
   SpeedAttack: 4
@@ -139,7 +143,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -157,7 +161,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1115661183
+  m_SortingLayerID: -886489761
   m_SortingLayer: 4
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: cedf643aac8b6804c91ab25627e76cea, type: 3}
@@ -4929,7 +4933,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1115661183
+  m_SortingLayerID: -886489761
   m_SortingLayer: 4
   m_SortingOrder: 15
   m_RenderMode: 5

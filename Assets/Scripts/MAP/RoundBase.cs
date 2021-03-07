@@ -169,34 +169,7 @@ public class RoundBase : MonoBehaviour
     }
 
     private bool HasCollisionInRound(Vector3 pos)
-    {/*
-        if (tilemap != null)
-        {
-            Vector3Int newPos = new Vector3Int(Mathf.CeilToInt(pos.x) - 1, Mathf.CeilToInt(pos.y) - 1, 0);
-            GameObject ins = tilemap.GetInstantiatedObject(newPos);
-            if (ins != null)
-            {
-                BoxCollider2D col = ins.GetComponent<BoxCollider2D>();
-                if (col != null && !col.isTrigger)
-                {
-                    if (col.bounds.Contains(pos))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }*/
-
-        /*Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos, new Vector2(0.5f, 0.5f),
-            LayerMask.NameToLayer("Wall") | 
-            LayerMask.NameToLayer("Barrier") | 
-            LayerMask.NameToLayer("River"));
-        if (collider2Ds != null && collider2Ds.Length != 0)
-        {
-            return false;
-        }
-        return true;*/
-
+    {
         if (tilemap == null)
             return false;
         else

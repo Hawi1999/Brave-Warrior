@@ -55,6 +55,9 @@ TagManager:
   - name: Current
     uniqueID: 716515781
     locked: 0
-  - name: Skin
-    uniqueID: 1115661183
+  - name: Fly
+    uniqueID: 3491651253
+    locked: 0
+  - name: Effect
+    uniqueID: 3408477535
     locked: 0

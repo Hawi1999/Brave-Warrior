@@ -71,7 +71,6 @@ public class PlayerController : Entity
                 OnHealPhyChanged?.Invoke(o, value, MaxHealphy, Tied);
         }
     }
-    SpriteRenderer Render => GetComponent<SpriteRenderer>();
     AnimationQ anim => GetComponent<AnimationQ>();
     Rigidbody2D rig => GetComponent<Rigidbody2D>();
     private bool Tied;
@@ -116,12 +115,13 @@ public class PlayerController : Entity
             return TargetFire.IsALive;
         }
     }
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         gameObject.tag = "Player";
         gameObject.layer = LayerMask.NameToLayer("Player");
+        OnAttacked += TakeTied;
     }
-
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -147,12 +147,12 @@ public class PlayerController : Entity
             return;
         if (transform.hasChanged)
         {
-            if (Render != null)
-                Render.sortingOrder = (int)(-10 * transform.position.y);
+            if (render != null)
+                render.sortingOrder = (int)(-10 * transform.position.y);
             if (RenderSelected != null)
                 RenderSelected.sortingOrder = (int)(-10 * transform.position.y) - 1;
         }
-        TargetFire = FindEnemy.FindEnemyNearest(transform.position, 8f, layerTargetFind);
+        FindTargetFire();
         CheckDistanceWithTargetFire();
         setDirecFire();
         CheckShield();
@@ -166,8 +166,28 @@ public class PlayerController : Entity
             {
                 Debug.Log("Chưa trang vị vũ khí");
             }
+            else
+            {
+                OnNotAttack?.Invoke();
+            }
         }
 
+    }
+
+    float timeToFind = 0;
+    void FindTargetFire()
+    {
+        timeToFind += Time.deltaTime;
+        if (timeToFind >= 0.5f)
+        {
+            Find();
+        }
+    }
+
+    void Find()
+    {
+        TargetFire = FindEnemy.FindEnemyNearest(transform.position, 8f, layerTargetFind);
+        timeToFind = 0;
     }
     void CheckDistanceWithTargetFire()
     {
@@ -219,12 +239,19 @@ public class PlayerController : Entity
         if (PermitAttack)
         {
             DamageData damageData = new DamageData();
+            damageData.From = this;
             damageData.Decrease(UnityEngine.Random.Range(-1, 2));
             OnSetUpDamageToAttack?.Invoke(damageData);
             if (WeaponCurrent.Attack(damageData.Clone))
             {
                 OnAttacked?.Invoke();
+            } else
+            {
+                OnNotAttack?.Invoke();
             }
+        } else
+        {
+            OnNotAttack?.Invoke();
         }
     }
     protected override void XLDFireNotFireFrom(DamageData damageData)
@@ -262,13 +289,13 @@ public class PlayerController : Entity
         {
             if (HasEnemyAliveNear)
             {
-                if (DirectFire.x < 0) Render.flipX = true;
-                else Render.flipX = false;
+                if (DirectFire.x < 0) render.flipX = true;
+                else render.flipX = false;
             }
             else
                 {
-                    if (a.x < 0) Render.flipX = true;
-                    else Render.flipX = false;
+                    if (a.x < 0) render.flipX = true;
+                    else render.flipX = false;
                 }
             if (rig != null)
                 rig.velocity = a.normalized * speed;
@@ -328,6 +355,14 @@ public class PlayerController : Entity
         OnAttacked -= weapon.OnAttacked;
     }
 
+    protected virtual void TakeTied()
+    {
+        if (WeaponCurrent != null)
+        {
+            UseHealPhy(WeaponCurrent.TakeTied);
+        }
+    }
+
     public override Vector2 size => new Vector2(0.5f, 0.5f);
 
     public override Vector2 center => (Vector2)transform.position + new Vector2(0, 0.2f);
@@ -338,8 +373,6 @@ public class PlayerController : Entity
     public static UnityAction<float, float, float, bool> OnHealPhyChanged;
     public static UnityAction<int, int, int> OnHeathChanged;
     public static UnityAction<DamageData> OnSetUpDamageToAttack;
-    // Gọi khi tấn công
-    public static UnityAction OnAttacked;
     //
     public static UnityAction OnHit;
     // Gọi khi nhân dame nào đó

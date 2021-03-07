@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class BulletTakeHit : MonoBehaviour, ITakeHit
 {
+    BulletBase bullet;
+
+    private void Awake()
+    {
+        bullet = GetComponent<BulletBase>();
+    }
+
     public Collider2D GetCollider()
     {
         return GetComponent<Collider2D>();
@@ -11,6 +18,9 @@ public class BulletTakeHit : MonoBehaviour, ITakeHit
 
     public virtual void TakeDamaged(DamageData damage)
     {
-
+        if (bullet != null && bullet.isEnable)
+        {
+            bullet.Destroyed();
+        }
     }
 }

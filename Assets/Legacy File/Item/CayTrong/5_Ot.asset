@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 5_Ot
   m_EditorClassIdentifier: 
   Pic: {fileID: 21300000, guid: a48783134a7f2374984d2d3b89f01c4e, type: 3}
-  Name: "\u1EDAt"
+  _Name: Ot
   CODE: ITEM_TREE_OT
   TypeSlot: 1
   QuaTrinhLon:

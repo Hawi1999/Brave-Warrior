@@ -100,10 +100,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return check.IsOK;
         }
     }
-    protected virtual SpriteRenderer render
-    {
-        get; set;
-    }
+    [SerializeField]
+    protected SpriteRenderer render;
 
     [HideInInspector] public Vector3 Direction;
     // Được gọi khi HO thay đổi
@@ -120,8 +118,20 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     public UnityAction<BoolAction> OnCheckForMove;
     // Kiểm tra được phép tấn công hay không
     public UnityAction<BoolAction> OnCheckForAttack;
-    // Khi Enemy Ẩn 
-    public UnityAction<bool> OnHide;
+    [Tooltip("được gọi khi chui xuống đất")]
+    public UnityAction OnIntoTheGound;
+    [Tooltip("được gọi khi chui xuống đất")]
+    public UnityAction OnOuttoTheGound;
+
+    [Tooltip("được gọi mỗi Frame khi tấn công")]
+    public UnityAction OnAttacked;
+    [Tooltip("được gọi mỗi Frame khi không tấn công")]
+    public UnityAction OnNotAttack;
+    [Tooltip("được gọi khi biến mất")]
+    public UnityAction OnHide;
+    [Tooltip("được gọi khi biến mất")]
+    public UnityAction OnAppear;
+    protected Weapon LastWeapon;
     private Weapon weapon;
     public Weapon WeaponCurrent
     {
@@ -133,6 +143,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         {
             if (value != weapon)
             {
+                LastWeapon = weapon;
                 if (weapon != null )
                 {
                     weapon.ChangEQuip(this, WeaponStatus.Free);
@@ -149,10 +160,20 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     }
     protected virtual void Awake()
     {
-        render = GetComponent<SpriteRenderer>();
+        OnIntoTheGound += InvokeHide;
+        OnOuttoTheGound += InvokeAppear;
+    }
+    #region Invoke UnityAction
+    protected void InvokeHide()
+    {
+        OnHide?.Invoke();
     }
 
-
+    protected void InvokeAppear()
+    {
+        OnAppear?.Invoke();
+    }
+    #endregion
 
     protected Vector2[] limitMove;
     protected virtual void Start()
@@ -230,10 +251,9 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             Burnt.Chay(this, damageData.FireTime);
         }
     }
-
     protected virtual void XLDFireFireFrom(DamageData damageData)
     {
-        damageData.Damage = (int)Mathf.Clamp(Burnt.Tile * MaxHP, Burnt.MinDamage, Burnt.MaxDamage);
+        damageData.Damage = (int)Mathf.Clamp(Burnt.TILE * MaxHP, Burnt.MIN_DAMAGE, Burnt.MAX_DAMAGE);
     }
     protected virtual void XLDPoison(DamageData damageData)
     {
@@ -246,7 +266,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         }
         else
         {
-            damageData.Damage = (int)Mathf.Clamp(Poisoned.Tile * MaxHP, Poisoned.MinDamage, Poisoned.MaxDamage);
+            damageData.Damage = (int)Mathf.Clamp(Poisoned.TILE * MaxHP, Poisoned.MIN_DAMAGE, Poisoned.MAX_DAMAGE);
         }
     }
     protected virtual void XLDIce(DamageData damaData)
@@ -348,7 +368,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     }
     public virtual Vector2 size => transform.localScale;
     public virtual Vector2 center => transform.position;
-    protected virtual Vector3 scaleDefault => Vector3.one;
+    protected virtual float scaleDefault => 1;
     public virtual void OnEquipment(Weapon weapon)
     {
     }
@@ -363,7 +383,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         OnTakeDamage -= XLD;
         OnTookDamage -= BackForce;
     }
-    public void setLimitMove(Vector2[] vector2s)
+    public virtual void setLimitMove(Vector2[] vector2s)
     {
         limitMove = vector2s;
     }

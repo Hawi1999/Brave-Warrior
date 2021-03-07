@@ -163,11 +163,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            Notification.NoticeBelow("Bạn nhận được <color=yellow>$" + a.ToString() + "</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " <color=yellow>$" + a.ToString() + "</color>. ");
         }
         else
         {
-            Notification.NoticeBelow("Bạn bị trừ <color=yellow>$" + (-a).ToString() + "</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=yellow>$" + (-a).ToString() + "</color>. ");
         }
     }
     private void ThongBaoDiaChanged(int o, int n)
@@ -176,11 +176,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            Notification.NoticeBelow("Bạn nhận được <color=blue>" + a.ToString() + " Kim Cương Xanh</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " < color =blue>" + a.ToString() + " " + Languages.getString("KimCuongXanh", a > 1) + "</color>. ");
         }
         else
         {
-            Notification.NoticeBelow("Bạn bị trừ <color=blue>" + (-a).ToString() + " Kim Cương Xanh</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=blue>" + (-a).ToString() + " " + Languages.getString("KimCuongXanh", a > 1) + "</color>. ");
         }
     }
     private void ThongBaoTLChanged(int o, int n)
@@ -188,11 +188,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            Notification.NoticeBelow("Bạn nhận được <color=orange>" + a.ToString() + " Thể Lực</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " <color=orange>" + a.ToString() + " " + Languages.getString("TheLuc", a > 1) + "</color>. ");
         }
         else
         {
-            Notification.NoticeBelow("Bạn bị trừ <color=orange>" + (-a).ToString() + " Thể Lực</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=orange>" + (-a).ToString() + " " + Languages.getString("TheLuc", a > 1) + "</color>. ");
         }
     }
     private void ThongBaoDKNChanged(int o, int n)
@@ -200,11 +200,11 @@ public class Personal : MonoBehaviour
         int a = n - o;
         if (a >= 0)
         {
-            Notification.NoticeBelow("Bạn nhận được <color=cyan>" + a.ToString() + " Exp</color>. ");
+            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " <color=cyan>" + a.ToString() + " Exp</color>. ");
         }
         else
         {
-            Notification.NoticeBelow("Bạn bị trừ <color=cyan>" + a.ToString() + " Exp</color>.");
+            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=cyan>" + a.ToString() + " Exp</color>.");
         }
     }
 

@@ -4,107 +4,111 @@ using UnityEngine;
 
 public class Burnt : ElementalBuffBad
 {
+    private ControlPartice VFXBurnt;
 
-    private float ThoiGianConLai;
-    private float maxTime = 4f;
-
-    private float lastTime;
-    private float DelayTime = 0.5f;
-
+    private float timeDelay = 0;
+    private float timeRemaining = 0;
     private Entity target;
+    public static float TILE = 0.02f;
+    public static int MIN_DAMAGE = 2;
+    public static int MAX_DAMAGE = 100000;
+    public static float TIME_DELAY = 0.3f;
 
-    private float timedelay = 0.05f;
-    private float timedelaycurrent = 0;
-    private Sprite[] Sprites => VFXManager.Instance.SpritesDust;
-    private Dust bui => VFXManager.Instance.DustPrefab;
-    private bool start;
 
-    public static int MaxDamage = 10000000;
-    public static int MinDamage = 2;
-    public static float Tile = 0.004f;
-    private static float CON = 100;
     private void Update()
     {
-        if (!start) return;
-        if (Time.time - lastTime >= DelayTime)
+        if (timeRemaining > 0)
         {
-            SatThuong();
-            lastTime = Time.time;
-        }
-        timedelaycurrent += Time.deltaTime;
-        int i = 0;
-        while (timedelaycurrent >= timedelay)
-        {
-            Spawn();
-            timedelaycurrent -= timedelay;
-            if (i++ == 100)
-                break;
-        }
-        ThoiGianConLai -= Time.deltaTime;
-        if (ThoiGianConLai <= 0)
+            timeRemaining -= Time.deltaTime;
+            timeDelay += Time.deltaTime;
+            if (timeDelay >= TIME_DELAY)
+            {
+                DamageData damageData = new DamageData();
+                SetUpDamageData(damageData);
+                target.TakeDamage(damageData);
+                timeDelay -= TIME_DELAY;
+            }
+            VFXBurnt.transform.position = target.center;
+        } else
         {
             EndUp();
         }
     }
 
-    public override void StartUp(Entity target, float time)
+    private void SetUpDamageData(DamageData damage)
     {
-        start = true;
-        this.target = target;
-        lastTime = Time.time - DelayTime;
-        ThoiGianConLai = time;
-        timedelay = 1 / (CON * target.size.x * target.size.y);
+        damage.BackForce = 0;
+        damage.Direction = Vector3.up;
+        damage.FireFrom = true;
+        damage.Type = DamageElement.Fire;
+    }
+
+    private void PauseVFX()
+    {
+        VFXBurnt.gameObject.SetActive(false);
+    }
+
+    private void ResumeVFX()
+    {
+        VFXBurnt.gameObject.SetActive(true);
+    }
+
+    public override void StartUp(Entity entity, float time)
+    {
+        VFXBurnt = VFXManager.PoolingFire.Spawn(entity.transform.position, Quaternion.identity);
+        VFXBurnt.Play();
+        target = entity;
+        VFXBurnt.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);
+        VFXBurnt.transform.position = target.center;
         target.OnBuffsChanged?.Invoke(DamageElement.Fire, true);
-        target.OnHide += (a) =>
-        {
-            if (a)
-            {
-                EndUp();
-            }
-        };
-        }
-
-    public void AddTime(float time)
-    {
-        ThoiGianConLai = Mathf.Clamp(ThoiGianConLai + time, 0, maxTime);
+        SetLissener(true);
+        AddTime(time);
     }
 
-    private void SatThuong()
+    public void AddTime(float  time)
     {
-        if (target != null)
-        {
-            DamageData dam = new DamageData();
-            dam.Type = DamageElement.Fire;
-            dam.FireFrom = true;
-            dam.BackForce = 0f;
-            target.TakeDamage(dam);
-        }
+        timeRemaining += time;
     }
-    private void OnDestroy()
+
+    public override void EndUp()
     {
+        SetLissener(false);
+        VFXBurnt.Stop();
         target.OnBuffsChanged?.Invoke(DamageElement.Fire, false);
+        base.EndUp();
     }
-    public static void Chay(Entity target, float Time)
+
+    public static void Chay(Entity entity, float time)
     {
-        Burnt elec;
-        if (target.TryGetComponent(out elec))
+        if (entity.TryGetComponent(out Burnt b))
         {
-            elec.AddTime(Time);
+            b.AddTime(time);
         } else
         {
-            elec = target.gameObject.AddComponent<Burnt>();
-            elec.StartUp(target, Time);
+            entity.gameObject.AddComponent<Burnt>().StartUp(entity, time);
         }
     }
-    private void Spawn()
+
+    private void EntityDead()
     {
-        if (Sprites == null || Sprites.Length == 0)
-            return;
-        Vector3 Center = target.center;
-        Vector3 Size = target.size * 2/3;
-        Vector3 position = new Vector3(Random.Range(-Size.x / 2, Size.x / 2), Random.Range(-Size.y / 2, Size.y / 2)) + Center;
-        Quaternion rotation = MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360f)));
-        Fire fire = VFXManager.PoolingFire.Spawn(position, rotation);
-        fire.SetUp(0.7f, Vector3.up, 1f, 1f, Color.white);
+        EndUp();
     }
+
+    private void SetLissener(bool a)
+    {
+        if (a)
+        {
+            target.OnDeath += (Enemy) => EntityDead();
+            target.OnIntoTheGound += () => EndUp();
+            target.OnHide += PauseVFX;
+            target.OnAppear += ResumeVFX;
+        } else
+        {
+            target.OnDeath -= (Enemy) => EntityDead();
+            target.OnIntoTheGound -= () => EndUp();
+            target.OnHide -= PauseVFX;
+            target.OnAppear -= ResumeVFX;
+        }
+    }
+    
 }

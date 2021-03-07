@@ -60,19 +60,7 @@ public class ColliderMeleeAttack : MonoBehaviour
 
     private void CheckCollider(Collider2D collision)
     {
-        if(TargetLayerAttack == (TargetLayerAttack | 1 << collision.gameObject.layer))
-        {
-            ITakeHit takeHit = collision.gameObject.GetComponent<ITakeHit>();
-            if (takeHit != null && !isExits(takeHit, listTH))
-            {
-                TakeHit(damageData, takeHit);
-            }
-        }
-    }
-
-    private void CheckCollider(Collision collision)
-    {
-        if (TargetLayerAttack == (TargetLayerAttack | 1 << collision.gameObject.layer))
+        if(GameController.isLayerIn(collision.gameObject, TargetLayerAttack))
         {
             ITakeHit takeHit = collision.gameObject.GetComponent<ITakeHit>();
             if (takeHit != null && !isExits(takeHit, listTH))

@@ -6,8 +6,10 @@ using UnityEngine;
 public class ControlPartice : PoolingBehaviour
 {
     public ParticleSystem par;
+    public bool AutoDeactive = true;
     public float timeToDeactive = 1;
-    bool playing;
+    [HideInInspector]
+    public bool IsPlaying;
     float time;
     void Awake()
     {
@@ -15,32 +17,42 @@ public class ControlPartice : PoolingBehaviour
         {
             par = GetComponent<ParticleSystem>();
         }
+        Stop();
     }
 
     private void Update()
     {
-        if (playing)
+        if (IsPlaying)
         {
-            time += Time.deltaTime;
-            if (time >= timeToDeactive)
+            if (AutoDeactive)
             {
-                Rest();
-                playing = false;
+                time += Time.deltaTime;
+                if (time >= timeToDeactive)
+                {
+                    Rest();
+                    IsPlaying = false;
+                }
             }
         }
     }
 
+    public void SetStartColor(Color c)
+    {
+        par.startColor = c;
+    }
+
     public void Play()
     {
+        gameObject.SetActive(true);
         par.Play();
-        playing = true;
+        IsPlaying = true;
         time = 0;
     }
 
     public void Stop()
     {
         par.Stop();
-        playing = false;
+        IsPlaying = false;
         Rest();
     }
 

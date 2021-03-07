@@ -30,7 +30,7 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
 
     public virtual void TakeManipulation(PlayerController host)
     {
-        Debug.Log("Takemanipulation");
+        Notification.NoticeBelow("Bấm vào làm gì chưa có gì đâu");
         geting = false;
     }
 

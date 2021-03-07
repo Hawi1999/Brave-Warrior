@@ -7,7 +7,7 @@ public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager Instance;
 
-    public List<Weapon> Weapons;
+    public Weapons AllWeapons;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class WeaponManager : MonoBehaviour
     {
         if (Instance == null)
             return null;
-        List <Weapon> Weapons = Instance.Weapons;
+        List <Weapon> Weapons = Instance.AllWeapons.weapons;
         return Array.Find(Weapons.ToArray(), e => e.GetNameOfWeapon() == Name);
     }
 

@@ -4,89 +4,115 @@ using UnityEngine;
 
 public class Poisoned : ElementalBuffBad
 {
-    private float ThoiGianConLai;
-    private float maxTime = 6f;
+    private ControlPartice VFXPoison;
 
-    private float lastTime;
-    private float DelayTime = 2f;
-
+    private float timeDelay = 0;
+    private float timeRemaining = 0;
     private Entity target;
+    public static float TILE = 0.02f;
+    public static int MIN_DAMAGE = 4;
+    public static int MAX_DAMAGE = 100000;
+    public static float TIME_DELAY = 0.7f;
 
-    private float timedelaySpawn = 0.05f;
-    private float timedelaycurrent = 0;
-    private bool start;
 
-    public static int MinDamage = 4;
-    public static int MaxDamage = 1000000;
-    public static float Tile = 0.01f;
-    private static int CON = 60;
     private void Update()
     {
-        if (!start) return;
-        if (Time.time - lastTime >= DelayTime)
+        if (timeRemaining > 0)
         {
-            SatThuong();
-            lastTime = Time.time;
-        }
-        timedelaycurrent += Time.deltaTime;
-        int i = 0;
-        while (timedelaycurrent >= timedelaySpawn)
-        {
-            timedelaycurrent -= timedelaySpawn;
-            if (i++ == 1000)
+            timeRemaining -= Time.deltaTime;
+            timeDelay += Time.deltaTime;
+            if (timeDelay >= TIME_DELAY)
             {
-                break;
+                DamageData damageData = new DamageData();
+                SetUpDamageData(damageData);
+                target.TakeDamage(damageData);
+                timeDelay -= TIME_DELAY;
             }
         }
-        Debug.Log(ThoiGianConLai);
-        ThoiGianConLai -= Time.deltaTime;
-        if (ThoiGianConLai <= 0)
+        else
         {
             EndUp();
         }
     }
 
-    public override void StartUp(Entity target, float time)
+    private void LateUpdate()
     {
-        start = true;
-        this.target = target;
-        lastTime = Time.time - DelayTime;
-        ThoiGianConLai = time;
-        timedelaySpawn = 1 / (CON * target.size.x * target.size.y);
-        target.OnBuffsChanged?.Invoke(DamageElement.Poison, true);
+        VFXPoison.transform.position = target.transform.position;
     }
 
-    private void OnDestroy()
+    private void SetUpDamageData(DamageData damage)
     {
-        target.OnBuffsChanged?.Invoke(DamageElement.Poison, false);
+        damage.BackForce = 0;
+        damage.Direction = Vector3.up;
+        damage.PoisonFrom = true;
+        damage.Type = DamageElement.Poison;
     }
 
+    private void PauseVFX()
+    {
+        VFXPoison.gameObject.SetActive(false);
+    }
+
+    private void ResumeVFX()
+    {
+        VFXPoison.gameObject.SetActive(true);
+    }
+
+    public override void StartUp(Entity entity, float time)
+    {
+        VFXPoison = VFXManager.PoolingPoison.Spawn(entity.center, Quaternion.identity);
+        VFXPoison.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);
+        VFXPoison.Play();
+        target = entity;
+        SetLissener(true);
+        AddTime(time);
+    }
+
+    private void SetLissener(bool a)
+    {
+        if (a)
+        {
+            target.OnDeath += (Enemy) => EntityDead();
+            target.OnIntoTheGound += () => EndUp();
+            target.OnOuttoTheGound += ResumeVFX;
+            target.OnHide += PauseVFX;
+            target.OnAppear += ResumeVFX;
+        }
+        else
+        {
+            target.OnOuttoTheGound -= ResumeVFX;
+            target.OnDeath -= (Enemy) => EntityDead();
+            target.OnIntoTheGound -= () => EndUp();
+            target.OnHide -= PauseVFX;
+            target.OnAppear -= ResumeVFX;
+        }
+    }
     public void AddTime(float time)
     {
-        ThoiGianConLai = Mathf.Clamp(ThoiGianConLai + time, 0, maxTime);
+        timeRemaining += time;
     }
 
-    private void SatThuong()
+    public override void EndUp()
     {
-        if (target != null)
+        SetLissener(false);
+        VFXPoison.Stop();
+        base.EndUp();
+    }
+
+    public static void NhiemDoc(Entity entity, float time)
+    {
+        if (entity.TryGetComponent(out Poisoned b))
         {
-            DamageData dam = new DamageData();
-            dam.Type = DamageElement.Poison;
-            dam.PoisonFrom = true;
-            target.TakeDamage(dam);
+            b.AddTime(time);
+        }
+        else
+        {
+            entity.gameObject.AddComponent<Poisoned>().StartUp(entity, time);
         }
     }
 
-    public static void NhiemDoc(Entity target, float Time)
+    private void EntityDead()
     {
-        Poisoned poison;
-        if (target.TryGetComponent(out poison))
-        {
-            poison.AddTime(Time);
-        } else
-        {
-            poison = target.gameObject.AddComponent<Poisoned>();
-            poison.StartUp(target, Time);
-        }
+        EndUp();
     }
 }

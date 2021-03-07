@@ -24,9 +24,14 @@ public class A3 {
     public Text SL;
     public Text ST;
     public Button MainTT;
+
+    public Text BanKho;
+    public Text MuaNongSan;
+    public Text Empty;
+    public Text Name;
 }
 
-public class QuayHang : Bag
+public class QuayHang : Bag, IUpdateLanguage
 {
     [SerializeField]
     private KhoNongSan Kho;
@@ -56,7 +61,7 @@ public class QuayHang : Bag
         {
             QuayHang_TGD oldTGD = _TGD;
             _TGD = value;
-            if (oldTGD != _TGD || oldTGD == null)
+            if (oldTGD != _TGD)
             {
                 onTGDChanged();
             }
@@ -130,7 +135,7 @@ public class QuayHang : Bag
             Kho = FindObjectOfType<KhoNongSan>();
         }
         AnBT();
-        BT.AddButton(0, "Mở Quầy");
+        BT.AddButton(0, Languages.getString("MoQuay"));
         BT.AddListener(0, Open);
         BT_HUY.onClick.AddListener(onClickHuy);
         BT_Ban.onClick.AddListener(() => onClickBan_Mua(QuayHang_TGD.Ban));
@@ -142,6 +147,14 @@ public class QuayHang : Bag
         Info.MainTT.onClick.AddListener(onClickMainTT);
         EventExpected.OnGoIn += onGoIn;
         EventExpected.OnGoOut += onGoOut;
+    }
+
+    public void OnUpdateLanguage()
+    {
+        Info.BanKho.text = Languages.getString("BanVatPham");
+        Info.MuaNongSan.text = Languages.getString("MuaVatPham");
+        Info.Name.text = Languages.getString("QuayHang");
+        Info.Empty.text = Languages.getString("BanKhongCoVatPham");
     }
     protected override void Open()
     {
@@ -264,7 +277,7 @@ public class QuayHang : Bag
             if (slotCurrent == null)
             {
                 Info.Pic_Selected.gameObject.SetActive(false);
-                Info.name_Selected.text = "Chọn vật phẩm";
+                Info.name_Selected.text = Languages.getString("ChonVatPham");
                 Info.ST.text = 0.ToString();
                 Info.SL.text = 0.ToString();
             }
@@ -284,7 +297,7 @@ public class QuayHang : Bag
             Item item = slotCurrent.item;
             Info.Pic_Selected.gameObject.SetActive(true);
             Info.Pic_Selected.sprite = item.Pic;
-            Info.name_Selected.text = "Mầm " + item.Name;
+            Info.name_Selected.text = Languages.getString("Mam") + " " + item.Name;
             Info.SL.text = aMountCurrent.ToString();
             Info.ST.text = (aMountCurrent * item.getGiaMua()).ToString();
         }
@@ -310,11 +323,11 @@ public class QuayHang : Bag
         if (!slotCurrent) return;
         if (TGD == QuayHang_TGD.Ban)
         {
-            Notification.AreYouSure("Bạn có chắc muốn bán vật phẩm với giá <color=yellow>$" + (slotCurrent.item.getGiaBan() * aMountCurrent).ToString() + "</color>?", Sell);
+            Notification.AreYouSure(Languages.getString("BanVatPhamVoiGia") + " <color=yellow>$" + (slotCurrent.item.getGiaBan() * aMountCurrent).ToString() + "</color>?", Sell);
         }
         if (TGD == QuayHang_TGD.Mua)
         {
-            Notification.ReMind("Mầm sẽ được mua tự động khi bạn trồng");
+            Notification.ReMind(Languages.getString("MamSeDuocMuaTuDongKhiBanTrong"));
         }
     }
     public void onClickBan_Mua(QuayHang_TGD a)
@@ -363,11 +376,11 @@ public class QuayHang : Bag
     {
         if (TGD == QuayHang_TGD.Ban)
         {
-            Info.MainTT.transform.GetComponentInChildren<Text>().text = "Bán";
+            Info.MainTT.transform.GetComponentInChildren<Text>().text = Languages.getString("Ban");
         }
         if (TGD == QuayHang_TGD.Mua)
         {
-            Info.MainTT.transform.GetComponentInChildren<Text>().text = "Mua";
+            Info.MainTT.transform.GetComponentInChildren<Text>().text = Languages.getString("Mua");
         }
     }
 }

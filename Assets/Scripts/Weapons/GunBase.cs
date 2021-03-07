@@ -1,15 +1,16 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 [RequireComponent(typeof(GunJerky))]
 public class GunBase : Weapon
 {
     [SerializeField] private float _criticalRate = 0.2f;
     [SerializeField] protected BulletBase VienDan;
+    [SerializeField] protected ParticleSystem VFXShoot;
     [SerializeField] protected float SpeedShoot;
+    [Range(0, 90)]
     [SerializeField] protected float DoGiat = 10;
-
+    [SerializeField] protected Transform HeadGun;
     [HideInInspector] public bool isLeftDir;
 
     protected PoolingGameObject<BulletBase> poolling_bullet;
@@ -27,7 +28,13 @@ public class GunBase : Weapon
     {
         get
         {
-            return transform.position;
+            if (HeadGun != null)
+            {
+                return HeadGun.position;
+            } else
+            {
+                return transform.position;
+            }
         }
     }
     protected override bool ReadyToAttack
@@ -43,17 +50,10 @@ public class GunBase : Weapon
         return "Gun " + nameOfWeapon;
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
-    }
-
     protected override void Start()
     {
         base.Start();
         lastShoot = -distanceShoot;
-        OnAttacked += OverLoadShooting;
     }
     protected virtual void Update()
     {
@@ -67,10 +67,13 @@ public class GunBase : Weapon
     {
         if (!ReadyToAttack)
         {
+            OnNotAttacked?.Invoke();
             return false;
         }
         Shoot(damageData);
+        ShowVFXAttack();
         lastShoot = Time.time;
+        OnAttacked?.Invoke();
         return true;
         
     }
@@ -89,19 +92,11 @@ public class GunBase : Weapon
         if (isCritical) SatThuong = (int)(this.SatThuong * (this.CriticalRate + 1));
         damageData.Damage = SatThuong;
         damageData.Direction = Direction;
-        damageData.From = Host;
         damageData.FromGunWeapon = true;
         damageData.IsCritical = isCritical;
     }
 
-    protected virtual void OverLoadShooting()
-    {
-        if (Host is PlayerController)
-        {
-            PlayerController player = Host as PlayerController;
-            player.UseHealPhy(0.45f/ SpeedShoot);
-        }
-    }
+    public override float TakeTied => 0.5f / SpeedShoot;
 
 
     // Được gọi mỗi lần Update
@@ -121,8 +116,42 @@ public class GunBase : Weapon
         return MathQ.RotationToDirection(Do.z).normalized;
     }
 
-    private void OnDestroy()
+    protected virtual void ShowVFXAttack(){
+        if (VFXShoot != null){
+            VFXShoot.Play();
+        }
+    }
+
+    public override void OnEquip()
     {
-        OnAttacked -=  OverLoadShooting;
+        base.OnEquip();
+        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
+    }
+
+    public override void OnTuDo()
+    {
+        base.OnTuDo();
+        if (poolling_bullet != null)
+        {
+            poolling_bullet.DestroyAll();
+        }
+    }
+
+    protected virtual void OnLevelWasLoaded(int level)
+    {
+        poolling_bullet?.DestroyAll();
+        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
+    }
+
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+    }
+
+    protected virtual void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z + DoGiat/2) * 10f);
+        Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z - DoGiat/2) * 10f);
     }
 }

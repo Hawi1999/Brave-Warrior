@@ -22,6 +22,7 @@ public class CameraMove : MonoBehaviour
     float Xmin, Xmax, Ymin, Ymax;
 
     bool isShaking = false;
+    float timeShaking = 0;
     private void Awake()
     {
         if (Instance == null)
@@ -31,7 +32,7 @@ public class CameraMove : MonoBehaviour
     }
     private void Start()
     {
-        PlayerController.OnReceiveDamage += Shake;
+        PlayerController.OnReceiveDamage += StartShake;
     }
 
     // Update is called once per frame
@@ -42,35 +43,19 @@ public class CameraMove : MonoBehaviour
             Debug.LogWarning("Khong tim thay Player");
             return;
         }
-        isShaking = false;
-        CheckStatus();
         Vector3 target_pos = targetMove();
+        MoveSmooth(transform.position, target_pos);
         if (isShaking)
         {
             // Shaking thì sao ?
-            iTween.MoveUpdate(gameObject, target_pos, 2.2f);
-        }
-        else
-        {
-            MoveSmooth(transform.position, target_pos);
-        }
-        FixTransForm();
-    }
-
-    void CheckStatus()
-    {
-        iTween[] iTweens = GetComponents<iTween>();
-        foreach (iTween iTween in iTweens)
-        {
-            if (iTween != null)
+            Shake();
+            timeShaking += Time.deltaTime;
+            if (timeShaking > 0.2f)
             {
-                if (iTween.type == "shake" && iTween.isRunning)
-                {
-                    isShaking = true;
-                    break;
-                }
+                isShaking = false;
             }
         }
+        FixTransForm();
     }
 
     void FixTransForm()
@@ -81,14 +66,15 @@ public class CameraMove : MonoBehaviour
         pos.z = -10;
         transform.position = pos;
     }
-    private void Shake(Vector3 delta, float time)
+    private void StartShake()
     {
-        iTween.ShakePosition(gameObject, delta, time);
+        isShaking = true;
+        timeShaking = 0;
     }
 
     private void Shake()
     {
-        Shake(new Vector3(0.1f, 0.1f), 0.2f);
+        transform.position = transform.position + new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0);
     }
 
     void MoveSmooth(Vector3 oldPosition, Vector3 target)

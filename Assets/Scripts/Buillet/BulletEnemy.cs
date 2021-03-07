@@ -6,10 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class BulletEnemy : BulletBase
 {
-
     public void TakeDamage(DamageData damage)
     {
-        if (damage.FromMeleeWeapon)
+        if (damage.CanDestroyBullet)
         {
             Destroyed();
         }

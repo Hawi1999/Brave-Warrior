@@ -24,7 +24,8 @@ public class ShowHPEnemy : MonoBehaviour
     {
         enemy.OnHPChanged += HPChanged;
         enemy.OnDeath += WhenEnemyDie;
-        enemy.OnHide += OnEnemyHide;
+        enemy.OnHide += () => OnEnemyHide(true);
+        enemy.OnAppear += () => OnEnemyHide(false);
         if (enemy != null)
         {
             Vector2 a = Rtf.sizeDelta;
@@ -120,7 +121,8 @@ public class ShowHPEnemy : MonoBehaviour
     {
         enemy.OnHPChanged -= HPChanged;
         enemy.OnDeath -= WhenEnemyDie;
-        enemy.OnHide -= OnEnemyHide;
+        enemy.OnHide -= () => OnEnemyHide(true);
+        enemy.OnAppear -= () => OnEnemyHide(false);
         gameObject.SetActive(false);
     }
 

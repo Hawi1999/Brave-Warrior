@@ -5,7 +5,8 @@ using UnityEngine;
 public class Item : ScriptableObject
 {
     public Sprite Pic;
-    public string Name;
+    public string _Name;
+    public string Name => Languages.getString(_Name);
     public string CODE;
     public TypeSlot TypeSlot;
 

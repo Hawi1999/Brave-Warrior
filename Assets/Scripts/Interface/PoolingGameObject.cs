@@ -22,20 +22,22 @@ public class PoolingGameObject<T> where T: PoolingBehaviour
     public T Spawn(Transform transform)
     {
         T t = null;
-        for (int i = 0; i < pooledGobjects.Count; i++)
+        if (pooledGobjects != null && pooledGobjects.Count != 0)
         {
-            if (pooledGobjects[i] == null)
+            foreach (T pool in pooledGobjects)
             {
-                pooledGobjects.Remove(pooledGobjects[i]);
-                continue;
+                if (pool == null)
+                {
+                    pooledGobjects.Remove(pool);
+                    continue;
+                }
+                if (pool.isReady)
+                {
+                    t = pool;
+                    pool.Begin();
+                    break;
+                }
             }
-            if (pooledGobjects[i].isReady)
-            {
-                t = pooledGobjects[i];
-                pooledGobjects[i].Begin();
-                break;
-            }
-            
         }
         if (t == null)
         {
@@ -92,8 +94,8 @@ public class PoolingGameObject<T> where T: PoolingBehaviour
                 continue;
             }
             GameObject a = pooledGobjects[i].gameObject;
+            pooledGobjects[i].DestroyWhenDone = true;
             pooledGobjects.Remove(pooledGobjects[i]);
-            GameObject.Destroy(a);
         }
     }
 

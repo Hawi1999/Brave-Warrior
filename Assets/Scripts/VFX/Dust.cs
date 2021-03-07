@@ -8,10 +8,10 @@ public class Dust : PoolingBehaviour
     float timeToDestroy;
     Vector3 dir;
     float speed;
+    Color color;
     float size;
     float startTime;
     Sprite sprite;
-    Color color;
     protected virtual Sprite[] sprites => VFXManager.Instance.SpritesDust;
     public class ClassReset
     {
@@ -52,8 +52,8 @@ public class Dust : PoolingBehaviour
         this.timeToDestroy = timeToDestroy;
         this.speed = speed;
         this.size = size;
-        this.dir = dir;
         this.color = color;
+        this.dir = dir;
         StartUp();
     }
 

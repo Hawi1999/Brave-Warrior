@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2160991795384028160}
   - component: {fileID: 2319417804952575083}
   m_Layer: 0
-  m_Name: GunManager
+  m_Name: WeaponsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,11 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1350f5d71c22a464fab32e4c5d1b3904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Weapons:
-  - {fileID: 3926912634069160330, guid: 26aef3c758329ff4b86736fa86d1e6ed, type: 3}
-  - {fileID: -9117119968488463280, guid: 9a022f42bfde0254eaf487949c019cfa, type: 3}
-  - {fileID: 6345011354230488653, guid: 34066e30200eafe40b47bb3ed42b8f06, type: 3}
-  - {fileID: 7528595775401800302, guid: a248b84039715314ba3e98b0f0e5401a, type: 3}
+  AllWeapons: {fileID: 11400000, guid: 6329fde05a382ef4690b264f4bbc85d1, type: 2}
 --- !u!1 &1846964734872324740
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,18 +140,13 @@ MonoBehaviour:
   - {fileID: -3168006201750929627, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: 1314303969709066963, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
   - {fileID: -2378080120084053672, guid: 842a4191a1b93624cabcff60e5c6fdbd, type: 3}
-  SpriteFire:
-  - {fileID: 3804239905063800832, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: -7965777512120597438, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: -5836019419243652291, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: 6658603581272297237, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: 2032681095238767129, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: 7172376623760875906, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: 1805584388477963256, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
-  - {fileID: 6950553089422972153, guid: ef9f93cd34015e446ab22034f338caf7, type: 3}
   DustPrefab: {fileID: 5533233973321091005, guid: 48552eb0219157b479e42c01d85a8967,
     type: 3}
-  FirePrefab: {fileID: -6445726033876550724, guid: 30560586f0ce48c4f8e85eea89ddd01a,
+  FirePrefab: {fileID: 7219881803670716014, guid: bf55922c531184c4cbca5119148a4f50,
+    type: 3}
+  PoisonPrefab: {fileID: 7777092061296999868, guid: 8d618091a7aff9048a18f52c4dfa9be9,
+    type: 3}
+  SelectingEnemyPrefab: {fileID: 1400938972144626364, guid: 8903ba984bd78cf49b39e0e9a155cf6a,
     type: 3}
   IcePrefab: {fileID: 5135953727074062605, guid: e92bc7d3e8882ff44a4d32b8ffa62f12,
     type: 3}
@@ -338,13 +329,6 @@ MonoBehaviour:
   LoadingMain: {fileID: 2874713787371752406}
   sli_loading: {fileID: 2874713787629610480}
   MoMan: {fileID: 4922330264740798191}
-  TB:
-    Prefabs_ChacChanKhong: {fileID: 2069605073317909137, guid: bd2bd4989e5c4a745a79143938bfdd65,
-      type: 3}
-    Prefabs_NhacNho: {fileID: 6364246619193368893, guid: fb73a8c7661dc6143b6e6d4692ced9ea,
-      type: 3}
-    Prefabs_Nen: {fileID: 6178642306913199923, guid: a74f2670b42f06b4098e3ca62dc1d645,
-      type: 3}
 --- !u!1 &4922330264217935894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,15 +1010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebbbb8f9a3f44bc41869bab7f86fae9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponRewards:
-  - {fileID: -8808814182322680711, guid: 26aef3c758329ff4b86736fa86d1e6ed, type: 3}
-  - {fileID: -8808814182322680711, guid: 9a022f42bfde0254eaf487949c019cfa, type: 3}
-  - {fileID: 6345011354230488655, guid: 34066e30200eafe40b47bb3ed42b8f06, type: 3}
-  - {fileID: 1871398524974568193, guid: a248b84039715314ba3e98b0f0e5401a, type: 3}
-  GoldRewards:
-  - {fileID: 1379741184104274330, guid: b8304be3819f90047a5c13e133202d96, type: 3}
-  - {fileID: 1379741184104274330, guid: af88f33fc8e1f974da6d7ae1322a2e1b, type: 3}
-  - {fileID: 1379741184104274330, guid: 3d346655a6d3431478002a6b09d41793, type: 3}
+  AllRewards: {fileID: 11400000, guid: 5749047e997a8004f980be00bcdc1ecf, type: 2}
 --- !u!1 &7961138957206069140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,13 +1102,16 @@ MonoBehaviour:
   _LevelEnemys:
   - Level: 1
     Enemy: {fileID: 5871979508074976810, guid: 1998f37681724d542925af964cb200be, type: 3}
-    UuTien: 5
+    UuTien: 2
   - Level: 3
     Enemy: {fileID: 1428810476333719215, guid: 9a83a5dea82eb36428c74823df564739, type: 3}
-    UuTien: 3
+    UuTien: 2
   - Level: 2
+    Enemy: {fileID: 2179755933600766571, guid: 4421783d62b501a46b7d45018392ee57, type: 3}
+    UuTien: 2
+  - Level: 3
     Enemy: {fileID: 8044857623500323863, guid: d08f03ce11f42314d9c2ecb1b36be653, type: 3}
-    UuTien: 10
+    UuTien: 2
   _TilesData:
   - color: {r: 0.6666667, g: 0.33333334, b: 0, a: 1}
     tile:

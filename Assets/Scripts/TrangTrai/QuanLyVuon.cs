@@ -100,7 +100,6 @@ public class QuanLyVuon : MonoBehaviour
     }
     public void StartSystem()
     {
-        Debug.Log("Starting Game ...");
         dats = new List<DatTrong>() ;
         for (int i = 1; i <= 6; i++)
         {
@@ -118,34 +117,34 @@ public class QuanLyVuon : MonoBehaviour
     {
         if (dat_current == null)
         {
-            BT_ThaoTac.ChangeText(0, "Mua Đất");
+            BT_ThaoTac.ChangeText(0, Languages.getString("MuaDat"));
         }
         else
         {
             switch (dat_current.cachChon)
             {
                 case (CachChon.Cuoc):
-                    BT_ThaoTac.ChangeText(0, "Cuốc Đất");
+                    BT_ThaoTac.ChangeText(0, Languages.getString("CuocDat"));
                     break;
                 case (CachChon.DangCuoc):
-                    BT_ThaoTac.ChangeText(0, "Chờ...");
+                    BT_ThaoTac.ChangeText(0, Languages.getString("Cho"));
                     break;
                 case (CachChon.Trong):
                     switch (dat_current.cachChonTrong)
                     {
                         case (CachChonTrong.Empty):
-                            BT_ThaoTac.ChangeText(0, "Trồng");
+                            BT_ThaoTac.ChangeText(0, Languages.getString("Trong"));
                             break;
                         case (CachChonTrong.XacNhan):
-                            BT_ThaoTac.ChangeText(0, "Xác Nhận");
+                            BT_ThaoTac.ChangeText(0, Languages.getString("XacNhan"));
                             break;
                     }
                     break;
                 case (CachChon.ChoChin):
-                    BT_ThaoTac.ChangeText(0, "Chờ...");
+                    BT_ThaoTac.ChangeText(0, Languages.getString("Cho"));
                     break;
                 case (CachChon.Thu):
-                    BT_ThaoTac.ChangeText(0, "Thu Hoạch");
+                    BT_ThaoTac.ChangeText(0, Languages.getString("ThuHoach"));
                     break;
             }
         }
@@ -195,7 +194,7 @@ public class QuanLyVuon : MonoBehaviour
         if (dat_current == null)
         {
             int gia = (int)((5000 + (dats.Count - 6) * 5000)*Buffer.Neft_DOLA);
-            Notification.AreYouSure("Bạn có chắc muốn mua mãnh đất này với giá <color=yellow>$" + gia.ToString() + "</color>?", () => MuaDat(gia));
+            Notification.AreYouSure(Languages.getString("MuaManhDatVoiGia") + " <color=yellow>$" + gia.ToString() + "</color>?", () => MuaDat(gia));
         }
         else
         {
@@ -258,7 +257,7 @@ public class QuanLyVuon : MonoBehaviour
     {
         if (Personal.DOLA < gia)
         {
-            Notification.ReMind("Bạn không đủ tiền để thực hiện hành động");
+            Notification.ReMind(Languages.getString("MuaThatBai"));
             return;
         } else
         {
@@ -284,7 +283,7 @@ public class QuanLyVuon : MonoBehaviour
             SaveGame();
         } else
         {
-            Notification.ReMind("Tiền của ban không đủ để thực hiện hành động");
+            Notification.ReMind(Languages.getString("MuaThatBai"));
         }
 
 

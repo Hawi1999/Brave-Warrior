@@ -60,13 +60,12 @@ public class MeleeBase : Weapon
     private float distanceAttack => 1 / SpeedAttack;
     private bool Attacking;
     protected override bool ReadyToAttack => (Time.time - lastTimeCut >= distanceAttack && TrangThai == WeaponStatus.Equiping && Host != null);
-
+    public override float TakeTied => 0.5f / SpeedAttack;
     public override Vector3 PositionStartAttack => transform.position;
 
     protected override void Start()
     {
         base.Start();
-
         OnCutBegin += OnAttackBegin;
         OnCutComplete += OnAttackEnd;
     }
@@ -77,6 +76,7 @@ public class MeleeBase : Weapon
         {
             Cut(damageData);
             Attacking = true;
+            OnAttacked?.Invoke();
             lastTimeCut = Time.time;
             return true;
         }else
@@ -135,7 +135,6 @@ public class MeleeBase : Weapon
         SetUpDamageData(damageData);
         colliderAttack.StartDamage(damageData.Clone);
         AnimaCut();
-        OnAttacked?.Invoke();
     }
 
     protected virtual void AnimaCut()
@@ -206,7 +205,6 @@ public class MeleeBase : Weapon
 
     protected virtual void SetUpDamageData(DamageData damageData)
     {
-        damageData.From = Host;
         damageData.Damage = SatThuong;
         damageData.BackForce = 0.5f;
         damageData.FromMeleeWeapon = true;
@@ -222,7 +220,19 @@ public class MeleeBase : Weapon
     public UnityAction OnCutComplete;
 
 
-
+    public override void reset()
+    {
+        base.reset();
+        if (GetComponent<iTween>() != null)
+        {
+            iTween[] it = GetComponents<iTween>();
+            foreach (iTween iTween in it)
+            {
+                Destroy(iTween);
+            }
+        }
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+    }
 
     protected virtual void OnAttackBegin()
     {

@@ -6,11 +6,7 @@ using UnityEngine;
 public class RewardManager : MonoBehaviour
 {
     public static RewardManager Instance;
-
-    public List<RewardWeapon> WeaponRewards;
-    public List<RewardGold> GoldRewards;
-
-
+    public Rewards AllRewards;
     private void Awake()
     {
         if (Instance == null)
@@ -22,14 +18,28 @@ public class RewardManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (Instance == this)
+        {
+            LoadRewards();
+        }
+    }
+
+
+    private void LoadRewards()
+    {
+
+    }
+
     public static Reward GetRewardByName(string Name)
     {
         if (Instance == null)
             return null;
         List <Reward> Rewards = new List<Reward>();
         // Thêm danh dách Reward
-        Rewards.AddRange(Instance.WeaponRewards);
-        Rewards.AddRange(Instance.GoldRewards);
+        Rewards.AddRange(Instance.AllRewards.rewardWeapons);
+        Rewards.AddRange(Instance.AllRewards.rewardGolds);
         return Array.Find(Rewards.ToArray(), e => e.Name == Name);
 
     }

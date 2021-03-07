@@ -10,18 +10,20 @@ public class VFXManager : MonoBehaviour
     }
     [Header("Sprites VFX")]
     public Sprite[] SpritesDust;
-    public Sprite[] SpriteFire;
     [Space]
     [Header("Prefab VFX")]
     public Dust DustPrefab;
-    public Fire FirePrefab;
+    public ControlPartice FirePrefab;
+    public ControlPartice PoisonPrefab;
+    public SelectingEnemy SelectingEnemyPrefab;
     [Space]
     [Header("Orther VFX")]
     public SpriteRenderer IcePrefab;
     public AnimationQ giatDien;
 
     public static PoolingGameObject<Dust> PoolingDust;
-    public static PoolingGameObject<Fire> PoolingFire;
+    public static PoolingGameObject<ControlPartice> PoolingFire;
+    public static PoolingGameObject<ControlPartice> PoolingPoison;
     public static Transform PoolingParrent;
     private void Awake()
     {
@@ -58,9 +60,9 @@ public class VFXManager : MonoBehaviour
     private void OnLevelWasLoaded(int level)
     {
         PoolingParrent = Instantiate(new GameObject("PoolingParrent")).transform;
-
         PoolingDust = new PoolingGameObject<Dust>(DustPrefab);
-        PoolingFire = new PoolingGameObject<Fire>(FirePrefab);
+        PoolingFire = new PoolingGameObject<ControlPartice>(FirePrefab);
+        PoolingPoison = new PoolingGameObject<ControlPartice>(PoisonPrefab);
 
     }
 }

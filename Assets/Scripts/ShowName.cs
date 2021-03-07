@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ShowName : MonoBehaviour
 {
     public Sprite Name;
-    public Sprite MT;
+    public Material nameSkin;
     public Vector3 LocalPositionMT;
     public Vector3 LocalPositionName;
 
@@ -40,11 +40,12 @@ public class ShowName : MonoBehaviour
     {
         SetPositionInfo();
         Gizmos.color = Color.red;
-        if (renderMT == null || MT == null)
+
+        if (renderMT == null)
         {
             Gizmos.DrawCube(thongtinMT + new Vector3(0, SizeMT.y/2), SizeMT);
         }
-        if (renderName == null || Name == null)
+        if (renderName == null)
         {
             Gizmos.DrawLine(thongtinName - Vector3.left, thongtinName + Vector3.left);
         }
@@ -54,10 +55,6 @@ public class ShowName : MonoBehaviour
     {
         thongtinMT = transform.position + LocalPositionMT - new Vector3(0, 0.07f , 0);
         thongtinName = thongtinMT + LocalPositionName;
-    }
-    private void OnValidate()
-    {
-
     }
     private void SetUp()
     {
@@ -73,16 +70,20 @@ public class ShowName : MonoBehaviour
         {
             renderName = Instantiate(new GameObject("renderName"), Info.transform).AddComponent<SpriteRenderer>();
         }
+        if (nameSkin != null)
+        {
+            renderName.material = nameSkin;
+        }
         renderName.sprite = Name;
-        renderMT.sprite = MT;
+        renderMT.sprite = Resources.Load<Sprite>("Image/MT");
         SetPositionInfo();
         renderName.transform.position = thongtinName;
         renderMT.transform.position = thongtinMT;
-        renderName.sortingLayerName = "Skin";
+        renderName.sortingLayerName = "Effect";
         renderName.sortingOrder = 15;
         renderName.color = ishowname.GetColorName();
 
-        renderMT.sortingLayerName = "Skin";
+        renderMT.sortingLayerName = "Effect";
         renderMT.sortingOrder = 15;
     }
 

@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[RequireComponent(typeof(GunBase))]
 public class GunJerky : MonoBehaviour
 {
     [SerializeField] float speedRotationBF = 1080;

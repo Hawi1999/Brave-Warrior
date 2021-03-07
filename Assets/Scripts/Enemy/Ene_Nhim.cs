@@ -36,16 +36,6 @@ public class Ene_Nhim : Enemy
         Attacking,
         EndAttack,
     }
-    public class TimeToTakeHit 
-    {
-        public ITakeHit takeHit;
-        public float time;
-        public TimeToTakeHit(ITakeHit takeHit, float time)
-        {
-            this.takeHit = takeHit;
-            this.time = time;
-        }
-    }
     
 
 
@@ -63,7 +53,7 @@ public class Ene_Nhim : Enemy
                 foreach (Collider2D col in cols)
                 {
                     ITakeHit take = col.GetComponent<ITakeHit>();
-                    if (take != null && !isExist(take))
+                    if (ReadyToDamaged(take))
                     {
                         DamageData damage = setUpDamageData(DirectFire);
                         take.TakeDamaged(damage);
@@ -73,25 +63,27 @@ public class Ene_Nhim : Enemy
             }
         }
     }
-    
-    bool isExist(ITakeHit take)
+    protected virtual bool ReadyToDamaged(ITakeHit take)
     {
-        if (takehits == null || takehits.Count == 0)
+
+        if (take == null)
         {
             return false;
         }
-        return Array.Find(takehits.ToArray(), e => e.takeHit == take) != null;
-    }
-    private void UpdateListTakeHit()
-    {
-        if (takehits == null || takehits.Count == 0)
-            return;
-        for (int i = 0; i <  takehits.Count; i++)
+        TimeToTakeHit tt = Array.Find(takehits.ToArray(), e => e.takeHit == take);
+        if (tt == null)
         {
-            if (Time.time - takehits[i].time > distanceTakeDamage)
-            {
-                takehits.Remove(takehits[i]);
-            }
+            takehits.Add(new TimeToTakeHit(take, Time.time));
+            return true;
+        }
+        if (Time.time - tt.time > distanceTakeDamage)
+        {
+            tt.time = Time.time;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     protected override void Attack()
@@ -138,7 +130,7 @@ public class Ene_Nhim : Enemy
 
     protected override void checkAttack(BoolAction permit)
     {
-        // Không cần chỉnh sửa thêm gì cả ok ?
+        // Không cần chỉnh sửa thêm gì cả ok ? ok
     }
 
     #endregion 
@@ -155,7 +147,6 @@ public class Ene_Nhim : Enemy
     {
         setSorting();
         UpdateStatus();
-        UpdateListTakeHit();
     }
     // Bỏ trống để enemy ko di chuyển
     protected override void FixedUpdate()
@@ -183,7 +174,6 @@ public class Ene_Nhim : Enemy
                     }
                 } else
                 {
-                    UpdateTargetFire();
                     UpdateDirection();
                 }
                 break;
@@ -213,10 +203,10 @@ public class Ene_Nhim : Enemy
             Vector2 DirectFire = ((Vector2)targetAttack.getPosition() - center).normalized;
             if (DirectFire.x >= 0)
             {
-                gameObject.transform.localScale = new Vector3(-scaleDefault.x, scaleDefault.y, scaleDefault.z);
+                gameObject.transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
             } else
             {
-                gameObject.transform.localScale = scaleDefault; 
+                gameObject.transform.localScale = scaleDefault * Vector2.one; 
             }
         }
     }
@@ -255,7 +245,13 @@ public class Ene_Nhim : Enemy
         render.enabled = !a;
         colliderTakeDamage.enabled = !a;
         colliderMove.enabled = !a;
-        OnHide?.Invoke(a);
+        if (a)
+        {
+            OnIntoTheGound?.Invoke();
+        } else
+        {
+            OnOuttoTheGound?.Invoke();
+        }
     }
 
     // Call by Animator
@@ -272,8 +268,6 @@ public class Ene_Nhim : Enemy
         timeDelayAction = UnityEngine.Random.Range(a.x, a.y);
         lastTimeAction = Time.time;
     }
-
-    public override Vector2 center => transform.position + new Vector3(0, 0.12f * transform.localScale.y, 0);
 
 
 

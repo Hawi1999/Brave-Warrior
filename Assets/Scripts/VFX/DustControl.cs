@@ -5,16 +5,18 @@ using UnityEngine;
 public class DustControl : MonoBehaviour
 {
     protected Sprite[] sprites => VFXManager.Instance.SpritesDust;
-    public Dust BuiPF => VFXManager.Instance.DustPrefab;
+    public Dust BuiPF;
     public Color color;
 
-
+    protected PoolingGameObject<Dust> pooling_dust;
     public bool ShowGizmos = true;
 
     protected virtual void Awake()
     {
         FixToSwap(ref RangeSpeed);
         FixToSwap(ref RangeSize);
+        if (BuiPF != null)
+        pooling_dust = new PoolingGameObject<Dust>(BuiPF);
     }
 
     protected void FixToSwap(ref Vector2 vector2)
@@ -39,27 +41,33 @@ public class DustControl : MonoBehaviour
 
     public void SpawnBui(int Amount)
     {
-        if (VFXManager.PoolingDust == null)
+
+        if (pooling_dust == null)
         {
-            Debug.Log("VFXManagerPoolingDust does not found");
+            Debug.Log("Dust need Prefab");
             return;
         }
         for (int i = 0; i < Amount; i++)
         {
             Vector3 pos = new Vector3(Random.Range(-RangeSpawn.x, RangeSpawn.x), Random.Range(-RangeSpawn.y, RangeSpawn.y), 0) + (Vector3)Center + Offset;
             Vector3 dir = (pos - (Vector3)Center).normalized;
-            VFXManager.PoolingDust.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0,0,Random.Range(0,360))))
+            pooling_dust.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0,0,Random.Range(0,360))))
                 .SetUp(1, dir, Random.Range(RangeSpeed.x, RangeSpeed.y), Random.Range(RangeSize.x, RangeSize.y), color);
         }
     }
 
     public virtual void SpawnBui(int Amount, int DirZ, int Off)
     {
+        if (pooling_dust == null)
+        {
+            Debug.Log("Dust need Prefab");
+            return;
+        }
         for (int i = 0; i < Amount; i++)
         {
             Vector3 pos = new Vector3(Random.Range(-RangeSpawn.x, RangeSpawn.x), Random.Range(-RangeSpawn.y, RangeSpawn.y), 0) + (Vector3)Center + Offset;
             Vector3 dir = MathQ.RotationToDirection(DirZ + Random.Range(-Off, Off));
-            VFXManager.PoolingDust.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360))))
+            pooling_dust?.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360))))
                 .SetUp(1, dir, Random.Range(RangeSpeed.x, RangeSpeed.y), Random.Range(RangeSize.x, RangeSize.y), color);
         }
     }
@@ -81,8 +89,8 @@ public class DustControl : MonoBehaviour
         Gizmos.DrawWireSphere((Vector3)Center + Offset, RangeSpeed.y);
     }
 
-    protected virtual void OnValidate()
+    private void OnDestroy()
     {
-
+        pooling_dust?.DestroyAll();
     }
 }

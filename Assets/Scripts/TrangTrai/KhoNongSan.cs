@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KhoNongSan : Bag
+public class KhoNongSan : Bag, IUpdateLanguage
 {
     public Button BT_HUY;
+
+    public Text Name;
+    public Text Empty;
     [SerializeField]
     GoTo EventE;
     bool SanSangMo;
@@ -19,17 +22,23 @@ public class KhoNongSan : Bag
     protected override void StartUp()
     {
         base.StartUp();
-        BT.AddButton(0, "Mở Kho");
+        BT.AddButton(0, Languages.getString("Mo"));
         BT.SetListener(0, Open);
         AnBT();
         BT_HUY.onClick.AddListener(() => Close()); ;
         EventE.OnGoIn += onGoIn;
         EventE.OnGoOut += onGoOut;
     }
+
+    public void OnUpdateLanguage()
+    {
+        Name.text = Languages.getString("NhaKho");
+        Empty.text = Languages.getString("BanKhongCoVatPham");
+    }
     protected override void Close()
     {
         base.Close();
-        BT.ChangeText(0, "Mở Kho");
+        BT.ChangeText(0, "Mo");
         BT.SetListener(0, Open);
         HienBT();
         PlayerController.PlayerCurrent.OnCheckForMove -= LockMove;
@@ -37,7 +46,7 @@ public class KhoNongSan : Bag
     protected override void Open()
     {
         base.Open();
-        BT.ChangeText(0, "Sắp Xếp");
+        BT.ChangeText(0, Languages.getString("SapXep"));
         BT.SetListener(0, SapXep);
         UpdateList();
         PlayerController.PlayerCurrent.OnCheckForMove += LockMove;
@@ -133,7 +142,7 @@ public class KhoNongSan : Bag
     }
     private void onGoIn(Collider2D c)
     {
-        if (c.gameObject.tag == "Player")
+        if (c.gameObject.CompareTag("Player"))
         {
             SanSangMo = true;
             HienBT();
@@ -141,7 +150,7 @@ public class KhoNongSan : Bag
     }
     private void onGoOut(Collider2D c)
     {
-        if (c.gameObject.tag == "Player")
+        if (c.gameObject.CompareTag("Player"))
         {
             SanSangMo = false;
             AnBT();

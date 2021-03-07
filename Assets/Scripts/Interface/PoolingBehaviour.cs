@@ -6,6 +6,7 @@ public abstract class PoolingBehaviour : MonoBehaviour
 {
     bool ready = true;
     public bool isReady => ready;
+    public bool DestroyWhenDone;
 
     public virtual void Begin()
     {
@@ -21,6 +22,10 @@ public abstract class PoolingBehaviour : MonoBehaviour
     public virtual void Rest()
     {
         ready = true;
+        if (DestroyWhenDone)
+        {
+            Destroy(gameObject);
+        }
         OnRest();
     }
 

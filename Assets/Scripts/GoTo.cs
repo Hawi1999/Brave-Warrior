@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class GoTo : MonoBehaviour
+public class GoTo : MonoBehaviour, IUpdateLanguage
 {
     [SerializeField]
     private Canvas CV;
     [SerializeField]
     private SpriteRenderer sprite;
+    public string CODEText;
     public Text vanBan;
     private Vector3 position;
     private void Start()
@@ -23,6 +24,7 @@ public class GoTo : MonoBehaviour
     public UnityAction<Collider2D> OnGoIn;
     public UnityAction<Collider2D> OnGoOut;
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         OnGoIn?.Invoke(collision);
@@ -33,5 +35,8 @@ public class GoTo : MonoBehaviour
         OnGoOut?.Invoke(collision);
     }
 
-
+    public void OnUpdateLanguage()
+    {
+        vanBan.text = Languages.getString(CODEText);
+    }
 }

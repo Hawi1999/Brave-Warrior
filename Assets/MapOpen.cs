@@ -23,7 +23,8 @@ public class MapOpen : MAPController
         {
             if (PlayerController.PlayerCurrent.WeaponCurrent != null)
             {
-                Notification.AreYouSure("Bạn sẽ <color=red>mất vũ khí hiện tại</color> nếu quay về Trang Trại!", () => GameController.Instance.LoadScene(scene));
+                Notification.AreYouSure(Languages.getString("BanSe") +" <color=red> " + Languages.getString("MatVuKhiHienTai") + "</color> " + Languages.getString("NeuQuayVeTrangTrai") + "!", () => GameController.Instance.LoadScene(scene));
+
             } else
             {
                 GameController.Instance.LoadScene(scene);
@@ -34,7 +35,7 @@ public class MapOpen : MAPController
             GameController.Instance.LoadScene(scene);
         } else
         {
-            Notification.ReMind("Bạn cần vũ khí để đi tiếp");
+            Notification.ReMind(Languages.getString("BanCanVuKhiDeDiTiep"));
         }
     }
 }

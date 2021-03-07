@@ -20,7 +20,7 @@ public class HienThiThongTinCayDangTrong : MonoBehaviour
         // Ten
         Name.text = dat.Tree.Name;
         // So Luong
-        SoLuong.text = "Số lượng: " + dat.Tree.SoLuong.ToString();
+        SoLuong.text = Languages.getString("SoLuong") + ": " + dat.Tree.SoLuong.ToString();
         // Timeleft va slider
         long timedatrong = (long)(DateTime.Now - dat.getThoiGianTrong()).TotalMilliseconds;
         long tongthoigian = (long)dat.Tree.ThoiGianLon * 60 * 1000;
@@ -32,7 +32,7 @@ public class HienThiThongTinCayDangTrong : MonoBehaviour
             sliderTime.value = (float)timedatrong / tongthoigian;
         } else
         {
-            TimeLeft.text = "Có thể thu hoạch";
+            TimeLeft.text = Languages.getString("CoTheThuHoach");
             sliderTime.value = 1;
         }
 

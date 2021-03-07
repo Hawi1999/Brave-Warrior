@@ -116,14 +116,14 @@ public class VungChonCayDeTrong : MonoBehaviour
     private string MinuteToHour(int Minutes)
     {
         if (Minutes <= 0) return "";
-        if (Minutes < 60) return Minutes.ToString() + " Phút";
+        if (Minutes < 60) return Minutes.ToString() + " " + Languages.getString("Phut", Minutes > 1);
         int hour = Minutes / 60;
         Minutes = Minutes % 60;
-        string a = hour.ToString() + "Giờ";
+        string a = hour.ToString() +" " + Languages.getString("Gio", hour > 1);
         if (Minutes != 0)
         {
             a += " ";
-            a += Minutes + "Phút";
+            a += Minutes + " " + Languages.getString("Phut", Minutes > 1);
         }
         return a;
     }

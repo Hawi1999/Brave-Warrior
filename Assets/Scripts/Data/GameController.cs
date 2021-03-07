@@ -33,15 +33,14 @@ public class GameController : MonoBehaviour
     private Slider sli_loading;
     [SerializeField]
     private GameObject MoMan;
-    public HienThiThongBao TB;
     public static string LastScene = "Loading";
     public static Vector3 LastPos = new Vector3(0, 0, 0);
     private void Start()
     {
         LoadingMain.SetActive(false);
         MoMan.SetActive(false);
+        LoadData();
         LoadScene("TrangTrai");
-        
     }
     private void Awake()
     {
@@ -55,6 +54,13 @@ public class GameController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void LoadData()
+    {
+        Languages.LanguageCurrent = Languages.Nation.EngLish;
+        Languages.LoadData();
+    }
+
     public static string getStringTimeBySeconds(long Giay)
     {
 
@@ -93,17 +99,12 @@ public class GameController : MonoBehaviour
         LoadingMain.SetActive(false);
         moMan();
     }
-
-    #region Notification
-    [Serializable] 
-    public class HienThiThongBao
+    public static bool isLayerIn(GameObject game, LayerMask layers)
     {
-        public Notification Prefabs_ChacChanKhong;
-        public Notification Prefabs_NhacNho;
-        public NoticeBackground Prefabs_Nen;
-    }
 
-    #endregion
+
+        return (layers | 1 << game.layer) == layers;
+    }
 
     public void LoadScene(string scene)
     {
@@ -125,6 +126,6 @@ public class GameController : MonoBehaviour
 
     private void OnLevelWasLoaded(int level)
     {
-        
+        Languages.UpdateLanguageInScene();
     }
 }

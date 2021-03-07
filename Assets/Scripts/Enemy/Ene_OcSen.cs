@@ -10,7 +10,7 @@ public class Ene_OcSen : Enemy
         for (int i = -1; i <= 1; i++)
         {
             Vector2 NewDirection = ChangeDiretion(dirAttack, 45 * i);
-            BulletBase bull = Instantiate(ED.BulletPrefabs, vitriradan, MathQ.DirectionToQuaternion(NewDirection));
+            BulletBase bull = pool_bullet.Spawn(vitriradan, MathQ.DirectionToQuaternion(NewDirection));
             DamageData dam = setUpDamageData(NewDirection);
             bull.StartUp(dam);
         }
@@ -28,6 +28,4 @@ public class Ene_OcSen : Enemy
     {
         return transform.position + new Vector3(0, 0.15f, 0);
     }
-
-    public override Vector2 center => transform.position + new Vector3(0, 0.255f);
 }

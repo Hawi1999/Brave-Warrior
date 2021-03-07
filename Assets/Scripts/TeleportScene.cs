@@ -58,6 +58,7 @@ public class TeleportScene : MonoBehaviour
 
     public void SetUp(Teleporttion tele)
     {
+        EventE.CODEText = tele.Name_Scene;
         ConnectScene = tele.ConnectScene;
         EventE.vanBan.text = tele.Name_Scene;
         gameObject.transform.position = tele.PositionGo;

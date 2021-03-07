@@ -34,10 +34,10 @@ public class MAPController : MonoBehaviour
             Destroy(Instance.gameObject);
             Instance = this;
         }
+        setTeleporter();
     }
     private void Start()
     {
-        setTeleporter();
         CreatePlayer();
         setLimitForCamera();
         setLimitForPlayerMove();

@@ -16,7 +16,7 @@ public class TakeGoldFromMap : MonoBehaviour
     float a = 10f;
     private void Start()
     {
-        render.sortingLayerName = "Skin";
+        render.sortingLayerName = "Effect";
         render.sortingOrder = 10;
         col.isTrigger = true;
     }
@@ -57,7 +57,6 @@ public class TakeGoldFromMap : MonoBehaviour
     {
         if (isNearPlayer(0.3f))
         {
-            Debug.Log("Bạn nhân được 1 vàng");
             Destroy(gameObject);
         }
     }

@@ -83,7 +83,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +102,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1115661183
-  m_SortingLayer: 4
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 781625835db3ccb4a8a9663b109d8fb8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -132,7 +132,7 @@ MonoBehaviour:
   target:
     serializedVersion: 2
     m_Bits: 208896
-  VFXDestroyed: {fileID: 6293260704155100968, guid: 655bb888c9d232541bf2274db56dda08,
+  VFXDestroyed: {fileID: 5717094431799067712, guid: 20ba6989766e1fb4899061aaf5236659,
     type: 3}
 --- !u!61 &1639003967475383371
 BoxCollider2D:

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 4_Mia
   m_EditorClassIdentifier: 
   Pic: {fileID: 21300000, guid: d2fbf03db304775438723cc31cb95a31, type: 3}
-  Name: "M\xEDa \u0110\u01B0\u1EDDng"
+  _Name: Mia
   CODE: ITEM_TREE_MIA
   TypeSlot: 1
   QuaTrinhLon:

@@ -6,12 +6,14 @@ using UnityEngine;
 public class BulletBase : PoolingBehaviour
 {
     [HideInInspector] protected DamageData damage;
-    [SerializeField] protected float flySpeed;
+    [SerializeField] protected float flySpeed = 15;
     [SerializeField] private Transform dauDan;
     [SerializeField] protected LayerMask target;
-    [SerializeField] ControlPartice VFXDestroyed;
+    [SerializeField] private float timeToDestroy = 5;
+    [SerializeField] protected ControlPartice VFXDestroyed;
 
-    SpriteRenderer render => GetComponent<SpriteRenderer>();
+    protected SpriteRenderer render;
+    [HideInInspector] public bool isEnable = true;
 
     protected Vector3 vitri_daudan
     {
@@ -19,7 +21,6 @@ public class BulletBase : PoolingBehaviour
         {
             if (dauDan == null)
             {
-                Debug.Log("Chưa hiết lập vị trí đầu đạn, vị trí mặc định là vị trí của viên đạn");
                 return transform.position;
             } else
             {
@@ -27,39 +28,42 @@ public class BulletBase : PoolingBehaviour
             }
         }
     }
-    private float timeToDestroy = 5;
     private float timelife;
 
-    PoolingGameObject<ControlPartice> pooling_vfx;
-    private void Awake()
+    private PoolingGameObject<ControlPartice> pooling_vfx;
+    protected virtual void Awake()
     {
         if (VFXDestroyed != null)
         {
             pooling_vfx = new PoolingGameObject<ControlPartice>(VFXDestroyed);
-        }
+        }render = GetComponent<SpriteRenderer>();
+        render.sortingLayerName = "Current";
+        gameObject.layer = LayerMask.NameToLayer("Bullet");
     }
     protected virtual void Start()
     {
         timelife = Time.time;
-        render.sortingLayerName = "Current";
     }
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
+        if (!isEnable)
+            return;
         if (Time.time - timelife > timeToDestroy)
         {
-            Rest();
+            Destroyed();
         }
         if (transform.hasChanged)
         {
             render.sortingOrder = (int)(-10f * transform.position.y + 3);
         }
-        Fly();
+        FlyAndCheckColloder();
     }
 
     protected override void OnBegin()
     {
         base.OnBegin();
+        isEnable = true;
         timelife = Time.time;
     }
 
@@ -69,7 +73,7 @@ public class BulletBase : PoolingBehaviour
     }
 
 
-    protected virtual void Fly()
+    protected virtual void FlyAndCheckColloder()
     {
         if (damage.Direction != Vector3.zero)
         {
@@ -80,8 +84,7 @@ public class BulletBase : PoolingBehaviour
             {
                 if (hit.collider != null && hit.collider.GetComponent<ITakeHit>() != null)
                 {
-                    damage.PointHit = hit.point;
-                    OnHitTarget(hit.collider.GetComponent<ITakeHit>(), damage.PointHit);
+                    OnHitTarget(hit.collider.GetComponent<ITakeHit>(), hit.point);
                 }
             }
             transform.position = newPos;
@@ -91,33 +94,52 @@ public class BulletBase : PoolingBehaviour
 
     protected virtual void OnHitTarget(ITakeHit take, Vector3 point)
     {
-        take.TakeDamaged(damage.Clone);
-        Destroyed(damage.PointHit);
+        DamageData da = damage.Clone;
+        da.PointHit = point;
+        take.TakeDamaged(da);
+        Destroyed(point);
     }
 
 
     public void Destroyed(Vector3 position)
     {
-        Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
         if (VFXDestroyed != null)
         {
-            pooling_vfx.Spawn(position, rotation).Play();
+            Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
+            OnDestroyed(pooling_vfx.Spawn(position, rotation));
         }
-        Rest();
+        isEnable = false;
+        OnAfterDestroyed();
     }
 
     public void Destroyed()
     {
-        Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
         if (VFXDestroyed != null)
         {
-            pooling_vfx.Spawn(transform.position, rotation).Play();
+            Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360f)));
+            OnDestroyed(pooling_vfx.Spawn(transform.position, rotation));
         }
+        isEnable = false;
+        OnAfterDestroyed();
+    }
+
+    protected virtual void OnAfterDestroyed()
+    {
         Rest();
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroyed(ControlPartice VFX)
+    {
+        VFX.Play();
+    }
+
+    protected virtual void OnDestroy()
     {
         pooling_vfx?.DestroyAll();
+    }
+
+    protected virtual void OnDrawGizmos()
+    {
+
     }
 }

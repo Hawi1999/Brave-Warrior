@@ -23,6 +23,7 @@ public enum LevelWeapon
 [RequireComponent(typeof(ShowName))]
 public abstract class Weapon : MonoBehaviour, IShowName
 {
+    #region Editor In Inpector
     // Không thể bắn khi nằm trong túi
     [SerializeField] Sprite Picture;
     [SerializeField] protected SpriteRenderer _render;
@@ -30,7 +31,7 @@ public abstract class Weapon : MonoBehaviour, IShowName
     [SerializeField] protected LevelWeapon type;
     [SerializeField] protected int _SatThuong;
 
-
+    #endregion
     public LevelWeapon TypeOfWeapon => type;
 
     public abstract string GetNameOfWeapon();
@@ -38,11 +39,13 @@ public abstract class Weapon : MonoBehaviour, IShowName
     [HideInInspector] public virtual int SatThuong => _SatThuong;
     [HideInInspector] public WeaponStatus TrangThai;
     [HideInInspector] public Entity Host;
+    [HideInInspector] public Entity lastHost;
     [HideInInspector] public Enemy Target;
     public virtual SpriteRenderer render => _render;
 
 
     public UnityAction OnAttacked;
+    public UnityAction OnNotAttacked;
 
     protected Reward reward => GetComponent<Reward>();
     protected ShowName showname => GetComponent<ShowName>();
@@ -54,6 +57,7 @@ public abstract class Weapon : MonoBehaviour, IShowName
     {
         get;
     }
+    public virtual float TakeTied => 0;
     protected virtual void Awake()
     {
 
@@ -61,7 +65,7 @@ public abstract class Weapon : MonoBehaviour, IShowName
     protected virtual void Start()
     {
         render.sprite = Picture;
-        render.sortingLayerName = "Skin";
+        render.sortingLayerName = "Effect";
         render.sortingOrder = 15;
         showname.Hide();
     }
@@ -75,20 +79,7 @@ public abstract class Weapon : MonoBehaviour, IShowName
         }
         if (trangthai == WeaponStatus.Free)
         {
-            if (Host != null)
-            {
-                transform.position = Host.transform.position;
-                transform.rotation = Quaternion.identity;
-                render.flipX = false;
-                render.flipY = false;
-            }
-            transform.parent = TransformInstanceOnLoad.getTransform();
-            Host = null;
-            ChooseMinapulation chooseReward = host.GetComponent<ChooseMinapulation>();
-            if (chooseReward != null)
-            {
-                chooseReward.Remove(reward);
-            }
+            reset();
             OnTuDo();
         }
         if (trangthai == WeaponStatus.Equiping)
@@ -96,14 +87,20 @@ public abstract class Weapon : MonoBehaviour, IShowName
             Host = host;
             transform.parent = host.transform;
             transform.position = host.PositionSpawnWeapon;
+
             if (GetComponent<PositionControl>() != null)
             {
                 Destroy(GetComponent<PositionControl>());
             }
-            Notification.NoticeBelow("Đã trang bị " + "<color=" + getColorNameByLevelWeapon(TypeOfWeapon) + ">" + nameOfWeapon + "</color>");
+            Notification.NoticeBelow(Languages.getString("DaTrangBi") + " <color=" + getColorNameByLevelWeapon(TypeOfWeapon) + ">" + nameOfWeapon + "</color>");
             OnEquip();
         }
         TrangThai = trangthai;
+    }
+
+    public virtual void OverLoadAttacked()
+    {
+
     }
     public virtual void OnBoVaoTui()
     {
@@ -116,6 +113,21 @@ public abstract class Weapon : MonoBehaviour, IShowName
     public virtual void OnEquip()
     {
 
+    }
+
+    public virtual void reset()
+    {
+        lastHost = Host;
+        Host = null;
+        if (lastHost != null)
+        {
+            transform.position = lastHost.transform.position;
+        }
+        transform.rotation = Quaternion.identity;
+        render.flipX = false;
+        render.flipY = false;
+        transform.parent = TransformInstanceOnLoad.getTransform();
+        ChooseMinapulation.Instance.Remove(reward);
     }
 
     public static string getColorNameByLevelWeapon(LevelWeapon type)
@@ -171,17 +183,12 @@ public abstract class Weapon : MonoBehaviour, IShowName
         return render;
     }
 
-    private void OnDrawGizmos()
-    {
-        
-    }
-
-    private void OnValidate()
+    protected virtual void OnValidate()
     {
         if (render != null)
         {
             render.sprite = Picture;
-            render.sortingLayerName = "Skin";
+            render.sortingLayerName = "Effect";
             render.sortingOrder = 15;
         }
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 0_Lua
   m_EditorClassIdentifier: 
   Pic: {fileID: 21300000, guid: 28f73a63636ed314ea7d8d667b7099cb, type: 3}
-  Name: "L\xFAa"
+  _Name: Lua
   CODE: ITEM_TREE_LUA
   TypeSlot: 1
   QuaTrinhLon:

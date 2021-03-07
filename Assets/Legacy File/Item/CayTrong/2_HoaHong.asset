@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 2_HoaHong
   m_EditorClassIdentifier: 
   Pic: {fileID: 21300000, guid: 653ce72fa61c93247b604666fb2c1c23, type: 3}
-  Name: "Hoa H\u1ED3ng"
+  _Name: HoaHong
   CODE: ITEM_TREE_HOAHONG
   TypeSlot: 1
   QuaTrinhLon:

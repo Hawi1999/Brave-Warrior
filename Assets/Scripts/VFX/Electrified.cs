@@ -16,6 +16,8 @@ public class Electrified : ElementalBuffBad
 
     private bool start;
     private Entity target;
+
+    bool avalableRender = true;
     private void Start()
     {
         lastTime = -DelayTime;
@@ -32,7 +34,10 @@ public class Electrified : ElementalBuffBad
                 isInElectricShock = true;
                 target.OnCheckForAttack += LockAttack;
                 target.OnCheckForMove += LockMove;
-                Shockwave();
+                if (avalableRender)
+                {
+                    ShockWave();
+                }
                 lastTimeGiat = Time.time;
             }
         } else
@@ -70,6 +75,10 @@ public class Electrified : ElementalBuffBad
         isInElectricShock = false;
         lastTimeGiat = Time.time - timeGiat;
         target.OnBuffsChanged?.Invoke(DamageElement.Electric, true);
+        target.OnHide += () => Setavalible(true);
+        target.OnAppear += () => Setavalible(false);
+        target.OnIntoTheGound += () => Setavalible(true);
+        target.OnOuttoTheGound += () => Setavalible(false);
     }
 
     public void AddTime(float time)
@@ -77,7 +86,7 @@ public class Electrified : ElementalBuffBad
         ThoiGianConLai = Mathf.Clamp(ThoiGianConLai + time, 0, maxTime);
     }
 
-    private void Shockwave()
+    private void ShockWave()
     {
         VFXManager.GiatDien(target.transform,target.getPosition(), timeGiat);
     }
@@ -98,6 +107,28 @@ public class Electrified : ElementalBuffBad
 
     private void OnDestroy()
     {
-        target.OnBuffsChanged?.Invoke(DamageElement.Electric, false);
+        if (target != null)
+        {
+            target.OnBuffsChanged?.Invoke(DamageElement.Electric, false);
+        }
+    }
+
+    private void Setavalible(bool a)
+    {
+        avalableRender = !a;
+    }
+
+    public override void EndUp()
+    {
+        base.EndUp();
+        if (target != null)
+        {
+            target.OnHide -= () => Setavalible(true);
+            target.OnAppear -= () => Setavalible(false);
+            target.OnIntoTheGound -= () => Setavalible(true);
+            target.OnOuttoTheGound -= () => Setavalible(false);
+            target.OnCheckForAttack -= LockAttack;
+            target.OnCheckForMove -= LockMove;
+        }
     }
 }
