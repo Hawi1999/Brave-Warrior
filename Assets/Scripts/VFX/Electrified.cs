@@ -88,7 +88,7 @@ public class Electrified : ElementalBuffBad
 
     private void ShockWave()
     {
-        VFXManager.GiatDien(target.transform,target.getPosition(), timeGiat);
+        VFXManager.GiatDien(target.transform,target.GetPosition(), timeGiat);
     }
 
     public static void Shockwave(Entity target, float Time)

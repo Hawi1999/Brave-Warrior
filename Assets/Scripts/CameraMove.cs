@@ -9,6 +9,7 @@ public class CameraMove : MonoBehaviour
         get; private set;
     }
     private Vector2 currentVelocity;
+    private Vector3 currentVelocity3;
     [SerializeField] private float smoothTime = 0.05f;
     [SerializeField] private float MaxSpeed = 4;
     private PlayerController Player
@@ -50,7 +51,7 @@ public class CameraMove : MonoBehaviour
             // Shaking thì sao ?
             Shake();
             timeShaking += Time.deltaTime;
-            if (timeShaking > 0.2f)
+            if (timeShaking > 0.1f)
             {
                 isShaking = false;
             }
@@ -80,17 +81,17 @@ public class CameraMove : MonoBehaviour
     void MoveSmooth(Vector3 oldPosition, Vector3 target)
     {
         Vector3 new_pos;
-        new_pos.x = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.x, target.x, ref currentVelocity.x, smoothTime, MaxSpeed), Xmin, Xmax);
-        new_pos.y = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.y, target.y, ref currentVelocity.y, smoothTime, MaxSpeed), Ymin, Ymax);
-        new_pos.z = -10;
-        transform.position = new_pos;
+        transform.position = Vector3.SmoothDamp(oldPosition, target, ref currentVelocity3, smoothTime);
+        //new_pos.x = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.x, target.x, ref currentVelocity.x, smoothTime, MaxSpeed), Xmin, Xmax);
+        //new_pos.y = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.y, target.y, ref currentVelocity.y, smoothTime, MaxSpeed), Ymin, Ymax);
+        //new_pos.z = -10;
     }
 
     Vector3 targetMove()
     {
         if (!Player.HasEnemyAliveNear)
-            return Player.getPosition();
-        return (Player.TargetFire.PositionColliderTakeDamage + Player.getPosition())/2;
+            return Player.center;
+        return (Player.TargetFire.center + Player.center)/2;
     }
 
     private void OnDestroy()

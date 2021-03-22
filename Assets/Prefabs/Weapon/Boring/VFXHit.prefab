@@ -4730,7 +4730,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -4769,6 +4769,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DestroyWhenDone: 0
   par: {fileID: 6523172056589599917}
-  AutoDeactive: 0
+  AutoDeactive: 1
   timeToDeactive: 1
   IsPlaying: 0

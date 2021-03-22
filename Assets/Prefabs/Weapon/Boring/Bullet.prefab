@@ -135,6 +135,6 @@ MonoBehaviour:
   VFXDestroyed: {fileID: 4718404354013318329, guid: bfecdb4588ea19649b50e2d54c5e4f6d,
     type: 3}
   isEnable: 1
-  bulletExtra: {fileID: 197450785861078703, guid: f942719d3d18343488764174740ceab3,
+  bulletExtra: {fileID: -889365834268770789, guid: f942719d3d18343488764174740ceab3,
     type: 3}
   AmountBulletExtra: 5

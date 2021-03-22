@@ -168,6 +168,10 @@ public abstract class Weapon : MonoBehaviour, IShowName
         }
     }
 
+    protected virtual void OnDestroy()
+    {
+    }
+
     public string GetName()
     {
         return nameOfWeapon;

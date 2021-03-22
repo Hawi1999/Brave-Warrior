@@ -2,81 +2,116 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class Ene_Qua : Enemy
+public class Ene_Qua : EnemySky
 {
     [SerializeField] BoomDrop Boom;
     [SerializeField] float RadiusDropNear = 3;
-
+    [SerializeField] float RatioDodge = 0.5f;
+    private float timeAttack = 1f;
     private float l => RadiusDropNear;
-    private bool attacking = false;
-    private bool readyattack = false;
     protected override void Awake()
     {
         base.Awake();
         render.sortingLayerName = "Fly";
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
-        rig.velocity = Vector3.zero;
-        UpdateRender();
-    }
-
-    void UpdateRender()
-    {
-        if (!attacking)
+        base.FixedUpdate();
+        if (CurrentAction.Equals(Action.ReadyAttack))
         {
-            Vector3 dir = (targetAttack.getPosition() - (Vector3)center).normalized;
-            if (dir.x > 0)
+            if (PermitMove)
             {
-                transform.localScale = scaleDefault * Vector3.one;
-            } else
-            {
-                transform.localScale = scaleDefault * new Vector3(-1, 1, 1);
+                ReadyAttacking();
             }
         }
     }
 
-    void ReadyToAttack()
+    protected override void UpdateScaleRender()
     {
-        Vector3 center = targetAttack.transform.position;
-        Vector3 positionDrop = GetPositionToDrop(center + new Vector3(Random.Range(-l, l), Random.Range(-l, l), 0));
-        Vector3 targetMove = Boom.GetPositionToDrop(positionDrop);
-        float timefly = Vector3.Distance(transform.position, targetMove) / speedMove;
-        iTween.MoveTo(gameObject, iTween.Hash(
-            "position", targetMove,
-            "time", timefly,
-            "easetype", iTween.EaseType.linear,
-            "oncomplete", "OnCompleteReadyAttack"));
-    }
-    protected override void Attack()
-    {
-        DamageData damage = new DamageData();
-        damage.From = this;
-        Instantiate(Boom, transform.position + Boom.GetLocalPositionDrop(), Quaternion.identity).StartDrop(damage);
-        OnAttacked?.Invoke();
-    }
-
-    protected override void checkAttack(BoolAction permit)
-    {
-        permit.IsOK = Time.time - time_start_attack > time_delay_attack && HasTargetNear;
-    }
-
-    protected override void CheckForAttack()
-    {
-        if (!attacking)
+        if (CurrentAction != Action.Idle)
+            return;
+        if (HasTargetNear)
         {
-            if (PermitAttack)
+            Vector2 dir = (TargetFire.center - center).normalized;
+            if (dir.x > 0)
             {
-                ReadyToAttack();
-                attacking = true;
+                transform.localScale = scaleCurrent * Vector3.one;
             }
-            OnNotAttack?.Invoke();
-        } 
+            else
+            {
+                transform.localScale = scaleCurrent * new Vector3(-1, 1, 1);
+            }
+        }
     }
 
-    Vector3 GetPositionToDrop(Vector3 positionToDrop)
+
+
+    #region ReadyAttack 
+    protected override void UpdateReadyAttack()
+    {
+        if (WaitToChooseNextAction)
+        {
+            SetNewAction(Action.Attack);
+            OnBeginAttack();
+        } else
+        {
+            CheckTimeToNextAction();
+        }
+    }
+
+    private void ReadyAttacking()
+    {
+        SetPosition((Vector2)transform.position + dirMove * SpeedMove * Time.fixedDeltaTime);
+    }
+
+    private void OnBeginReadyAttack()
+    {
+        Vector3 center = TargetFire.center;
+        Vector3 positionDrop = FixPositionToDrop(center + new Vector3(Random.Range(-l, l), Random.Range(-l, l), 0));
+        Vector3 targetMove = Boom.GetPositionToDrop(positionDrop);
+        time_action = Vector3.Distance(transform.position, targetMove) / SpeedMove;
+        dirMove = ((Vector2)targetMove - (Vector2)transform.position).normalized;
+        SetTimeToNextAction(time_action);
+    }
+
+    #endregion
+
+    #region Attack
+
+    bool attacked;
+    protected override void UpdateAttack()
+    {
+        if (WaitToChooseNextAction)
+        {
+            SetNewAction(Action.Move);
+            OnBeginMove();
+        } else
+        {
+            Attacking();
+            CheckTimeToNextAction();
+        }
+    }
+
+    private void Attacking()
+    {
+        if (Time.time - time_start_action >= timeAttack /2 && !attacked)
+        {
+            DamageData damage = new DamageData();
+            SetUpDamageData(damage);
+            Instantiate(Boom, transform.position + Boom.GetLocalPositionDrop(), Quaternion.identity).StartDrop(damage);
+            attacked = true;
+        }
+    }
+
+    private void OnBeginAttack()
+    {
+        attacked = false;
+        SetTimeToNextAction(timeAttack);
+    }
+
+    #endregion
+    Vector3 FixPositionToDrop(Vector3 positionToDrop)
     {
         Vector3 position = positionToDrop;
         if (position.x < limitMove[0].x)
@@ -96,79 +131,37 @@ public class Ene_Qua : Enemy
             position.y = limitMove[1].y;
         }
         return position;
-
     }
 
-
-    protected override void Move()
+    int attacklt = 0;
+    protected override void ChooseNextAction()
     {
-        if (limitMove == null || limitMove.Length == 1)
+        if (CurrentAction == Action.Idle)
         {
-            Debug.Log("Chưa có giới hạn di chuyển");
-        }
-        if (!attacking)
-        {
-            if (!isMoving)
+            if (attacklt < 2 && PermitMove && PermitAttack)
             {
-                if (Time.time - time_start_idle > time_idle)
-                {
-                    MoveToNewPosition();
-                }
+                OnEndIdle();
+                SetNewAction(Action.ReadyAttack);
+                attacklt++;
+                OnBeginReadyAttack();
+            } else
+            {
+                OnEndIdle();
+                SetNewAction(Action.Move);
+                attacklt = 0;
+                OnBeginMove();
             }
         }
     }
 
-    private void MoveToNewPosition()
+    public override void TakeDamage(DamageData dama)
     {
-        Vector3 pos;
-        if (limitMove == null || limitMove.Length == 1)
+        float a = Random.Range(0, 1f);
+        if (a < RatioDodge && dama.CanDodge)
         {
-            pos = transform.position +  new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
+            dama.Dodged = true;
+            dama.Damage = 0;
         }
-        else
-        {
-            pos = new Vector3(Random.Range(limitMove[0].x, limitMove[1].x), Random.Range(limitMove[0].y, limitMove[1].y), 0);
-        }
-        float time = Vector3.Distance(pos, transform.position)/speedMove;
-        iTween.MoveTo(gameObject, iTween.Hash(
-            "position", pos,
-            "time", time,
-            "easetype", iTween.EaseType.linear,
-            "oncomplete", "OnMoveDone"));
-        isMoving = true;
+        base.TakeDamage(dama);
     }
-    #region Call By iTween
-    private void OnCompleteReadyAttack()
-    {
-        readyattack = true;
-        iTween.ValueTo(gameObject, iTween.Hash("" +
-            "from", 0,
-            "to", 0.8f,
-            "easetype", iTween.EaseType.linear,
-            "onupdate", "CheckToAttack",
-            "oncomplete", "OnCompleteAttack"));
-    }
-    private void CheckToAttack(float a)
-    {
-        if (a > 0.4f && readyattack)
-        {
-            Attack();
-            readyattack = false;
-        }
-    }
-    private void OnCompleteAttack()
-    {
-        attacking = false;
-        isMoving = false;
-        time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
-        time_start_attack = Time.time;
-    }
-    private void OnMoveDone()
-    {
-        isMoving = false;
-        time_start_idle = Time.time;
-        time_idle = Random.Range(ED.time_range_idle.x, ED.time_range_idle.y);
-    }
-
-    #endregion
 }

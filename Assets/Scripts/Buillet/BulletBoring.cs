@@ -4,16 +4,34 @@ using UnityEngine;
 
 public class BulletBoring : BulletBase
 {
-    [SerializeField] private BulletBase bulletExtra;
+    [SerializeField] private BulletExtraBoring bulletExtra;
     [SerializeField] private int AmountBulletExtra = 5;
-    protected PoolingGameObject<BulletBase> pooling;
+    protected PoolingGameObject pooling => PoolingGameObject.PoolingMain;
+    protected int id_pooling;
+
+    private Entity targetHit;
     protected override void Awake()
     {
         base.Awake();
         if (bulletExtra != null)
         {
-            pooling = new PoolingGameObject<BulletBase>(bulletExtra);
+            id_pooling = pooling.AddPrefab(bulletExtra);
         }
+    }
+
+    protected override void OnHitTarget(ITakeHit take, Vector3 point)
+    {
+        if (take is TakeDamage)
+        {
+            targetHit = ((TakeDamage)take).entity;
+        }
+        base.OnHitTarget(take, point);
+    }
+
+    protected override void OnBegin()
+    {
+        targetHit = null;
+        base.OnBegin();
     }
 
     protected override void OnAfterDestroyed()
@@ -37,8 +55,9 @@ public class BulletBoring : BulletBase
             }
             Vector3 dir = MathQ.RotationToDirection(angle);
             damage.Direction = dir;
-            BulletBase bull = pooling.Spawn(transform.position, Quaternion.identity);
+            BulletExtraBoring bull =  pooling.Spawn(id_pooling, transform.position, Quaternion.identity) as BulletExtraBoring;
             bull.StartUp(damage);
+            bull.skipGameobject = targetHit;
         }
     }
 
@@ -61,6 +80,6 @@ public class BulletBoring : BulletBase
 
     protected override void OnDestroy()
     {
-        pooling?.DestroyAll();
+        pooling.RemovePrefab(id_pooling);
     }
 }

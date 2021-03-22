@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LockRoom : Door
+public class LockRoom : Door, IBattle
 {
     [SerializeField] SpriteRenderer render;
     [SerializeField] AnimationQ animate;
@@ -13,7 +13,6 @@ public class LockRoom : Door
     {
         SetUpVariable();
         AfterSetUpVarialbe();
-        Open();
     }
 
     void SetUpVariable()
@@ -72,5 +71,15 @@ public class LockRoom : Door
         {
             render.sortingOrder = (int)(-10f * transform.position.y);
         }
+    }
+
+    public void OnGameStarted()
+    {
+        Open();
+    }
+
+    public void OnGameEnded()
+    {
+        
     }
 }

@@ -17,7 +17,9 @@ public class MoMan : MonoBehaviour
         Up.value = Mathf.Clamp01(1 - time / TimeIntoOpen);
         if (time >= TimeIntoOpen)
         {
+            MAP_GamePlay.StartGame();
             gameObject.SetActive(false);
+
         }
     }
     private void OnDisable()

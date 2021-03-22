@@ -6,11 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Chest : MonoBehaviour
 {
+    [HideInInspector]
+    public ChestData Data;
     protected SpriteRenderer render => GetComponent<SpriteRenderer>();
     protected AnimationQ ani => GetComponent<AnimationQ>();
     protected BoxCollider2D col;
+    public ColorChest colorChest;
+    [HideInInspector]
     public TypeChest type;
-    ChestData chestData;
     public Vector2 OffSetSpawnWard;
     [SerializeField] ParticleSystem _flyupPrejab;
     [SerializeField] ParticleSystem _sinePrejab;
@@ -25,24 +28,29 @@ public class Chest : MonoBehaviour
         if (_flyupPrejab != null)
         {
             flyup = Instantiate(_flyupPrejab, transform);
-            flyup.startColor = GetColorByType(type);
+            flyup.startColor = GetColorByType(colorChest);
             flyup.Stop();
         }
         if (_sinePrejab != null)
         {
             sine = Instantiate(_sinePrejab, transform);
-            sine.startColor = GetColorByType(type);
+            sine.startColor = GetColorByType(colorChest);
         }
     }
 
-    public static Color GetColorByType(TypeChest type)
+    public void SetUpData(ChestData Data)
+    {
+        this.Data = Data;
+        type = Data.Type;
+    }
+
+    public static Color GetColorByType(ColorChest type)
     {
         switch (type)
         {
-            case TypeChest.Copper: return Color.green;
-            case TypeChest.Silver: return Color.yellow;
-            case TypeChest.Gold: return Color.red;
-            case TypeChest.Start: return Color.white;
+            case ColorChest.Copper: return Color.green;
+            case ColorChest.Silver: return Color.yellow;
+            case ColorChest.Gold: return Color.red;
         }
         return Color.cyan;
     }
@@ -58,17 +66,17 @@ public class Chest : MonoBehaviour
 
     public void setUp(ChestData chestData)
     {
-        this.chestData = chestData;
+        this.Data = chestData;
     }
     public void OpenChest()
     {
         ani.setAnimation("OpenChest");
-        if (chestData.NameOfRewards == null || chestData.NameOfRewards.Length == 0)
+        if (Data.NameOfRewards == null || Data.NameOfRewards.Length == 0)
         {
             Debug.Log("Danh sach phần thưởng trống");
             return;
         }
-        Reward reward = RewardManager.GetRewardByName(chestData.getRandomReward());
+        Reward reward = RewardManager.GetRewardByName(Data.getRandomReward());
         reward = Instantiate(reward, transform.position, Quaternion.identity);
         reward.Appear();
         if (flyup != null)

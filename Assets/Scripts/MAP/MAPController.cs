@@ -18,13 +18,22 @@ public class MAPController : MonoBehaviour
     public Vector3[] LimitMoveMap;
     protected Transform PRLimitMoveMap;
     [SerializeField]
-    protected Transform PosDefault;
+    private Transform PosDefault;
     protected Transform PRTeleporter;
     [SerializeField]
     private TeleportScene TeleporterPrefabs;
     [SerializeField]
     protected Teleporttion[] LTeleportion;
-    private void Awake()
+
+    protected Vector2Int PositionPlayerStart
+    {
+        get
+        {
+            Vector3 p = PosDefault.position;
+            return new Vector2Int(Mathf.RoundToInt(p.x), Mathf.RoundToInt(p.y));
+        }
+    }
+    protected virtual void Awake()
     {
         if (Instance == null)
         {
@@ -36,14 +45,14 @@ public class MAPController : MonoBehaviour
         }
         setTeleporter();
     }
-    private void Start()
+    protected virtual void Start()
     {
         CreatePlayer();
         setLimitForCamera();
         setLimitForPlayerMove();
         SetPlayerPositionInMap();
         if (PlayerController.PlayerCurrent != null)
-            CameraMove.Instance.transform.position = PlayerController.PlayerCurrent.getPosition();
+            CameraMove.Instance.transform.position = PlayerController.PlayerCurrent.GetPosition();
     }
 
     protected virtual PlayerController CreatePlayer()

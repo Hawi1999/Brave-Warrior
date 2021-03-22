@@ -14,7 +14,7 @@ public class BulletExtraViling : BulletBase
     private float RadiusCollider => _RadiusColldier * transform.localScale.x;
     private Color colorCurrent;
 
-    protected override void FlyAndCheckColloder()
+    protected override void UpdateCollision()
     {
         CheckCollider();
     }
@@ -24,6 +24,11 @@ public class BulletExtraViling : BulletBase
         base.StartUp(dam);
         float speed = Random.Range(RangeSpeed.x, RangeSpeed.y);
         iTween.MoveAdd(gameObject, new Vector3(dam.Direction.x * speed, dam.Direction.y * speed, 0), 5f);
+    }
+
+    protected override void UpdateTransform()
+    {
+        
     }
 
     protected override void OnBegin()
@@ -52,7 +57,6 @@ public class BulletExtraViling : BulletBase
     protected override void OnDestroyed(ControlPartice VFX)
     {
         VFX.SetStartColor(colorCurrent);
-        Debug.Log("OK");
         base.OnDestroyed(VFX);
     }
 

@@ -34,7 +34,7 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 3394965231073338750, guid: 31bca4dacce0cb14c99a16275e9283a5,
     type: 3}
   m_Flags: 0
-  m_ColliderType: 0
+  m_ColliderType: 2
   isTrigger: 0
   Offset_Sorting: 0
   Offset_Position: {x: 0.5, y: 0.5}

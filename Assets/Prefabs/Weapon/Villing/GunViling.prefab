@@ -130,7 +130,7 @@ MonoBehaviour:
   _render: {fileID: 2636229400089691396}
   nameOfWeapon: Viling
   type: 2
-  _SatThuong: 5
+  _SatThuong: 10
   TrangThai: 0
   Host: {fileID: 0}
   lastHost: {fileID: 0}
@@ -4935,7 +4935,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
@@ -5028,7 +5028,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: abbfaf8fed88bbb4d9c2fda2a42eae7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

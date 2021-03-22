@@ -50,16 +50,19 @@ public class DamageData : Object
 
     [Tooltip("Trung Hòa Buffbaf, Mặc định false")]
     public bool Mediated = false;
-    public string TextMediated = "<color=red> Trung </color><color=blue>Hòa </color>";
+    public string TextMediated = "<color=red>" + Languages.getString("Loaij") + "</color><color=blue>" + Languages.getString("Bor") + "</color>";
     [Tooltip("Lực bật lùi, Mặc định 0.2f")]
-    public float BackForce = 0.2f;
+    public float BackForce = 4;
 
+    public bool Dodged = false;
+    public string TextDodged = Languages.getString("Ne");
+    public bool CanDodge => FromGunWeapon;
     // From
     public bool FromMeleeWeapon = false;
     public bool FromGunWeapon = false;
     public bool FromTNT = false;
 
-    public bool CanDestroyBullet => FromMeleeWeapon;
+    public bool CanDestroyBullet => FromMeleeWeapon || FromMeleeWeapon;
     public virtual void Decrease(int a)
     {
         DamageDecrease += a;
@@ -71,4 +74,34 @@ public class DamageData : Object
     }
 
     public DamageData Clone => (DamageData)this.MemberwiseClone();
+
+    private List<string> listString;
+    public void AddText(string a)
+    {
+        if (listString == null)
+        {
+            listString = new List<string>();
+        }
+        listString.Add(a);
+    }
+
+    public List<string> GetStringShow()
+    {
+        List <string> ss = new List<string>();
+        if (!Dodged)
+        {
+            string s = ShowText.StartColor(EntityManager.GetNameOfColorByElement(Type)) + Damage.ToString() + ShowText.EndColor();
+            ss.Add(s);
+        } else
+        {
+            ss.Add(TextDodged);
+        }
+        if (Mediated)
+        {
+            ss.Add(TextMediated);
+        }
+        if (listString != null)
+            ss.AddRange(listString);
+        return ss;
+    }
 }

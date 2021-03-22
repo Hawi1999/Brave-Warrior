@@ -4,5 +4,8 @@ using UnityEngine;
 
 public interface ICameraTarget
 {
-    Vector3 getPosition();
+    Vector2 center
+    {get; }
+    bool isNull
+    {get; }
 }

@@ -4,7 +4,7 @@ public class test : MonoBehaviour
 {
     private void Start()
     {
-        ChestManager.Instance.ReWardChest(TypeChest.Start, transform.position);
+        ChestManager.SpawnReWardChest(ColorChest.Silver, TypeChest.Start, transform.position);
     }
     private void Update()
     {

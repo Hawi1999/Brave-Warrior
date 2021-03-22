@@ -4,19 +4,35 @@ using UnityEngine;
 
 public class BulletRemnants : BulletBase
 {
-    [SerializeField] ParticleSystem VFXRemnants;
+    [SerializeField] float timeRemnants = 3f;
 
+    bool destroyed = false;
     protected override void OnBegin()
     {
         base.OnBegin();
-        VFXRemnants.enableEmission = true;
+        destroyed = false;
         render.enabled = true;
+    }
+    protected override void UpdateCollision()
+    {
+        if (!destroyed)
+        {
+            base.UpdateCollision();
+        }
+    }
+
+    protected override void UpdateTransform()
+    {
+        if (!destroyed)
+        {
+            base.UpdateTransform();
+        }
     }
 
     protected override void OnAfterDestroyed()
     {
-        VFXRemnants.enableEmission = false;
         render.enabled = false;
+        destroyed = true;
         StartCoroutine(WaitForRest(3));
     }
 

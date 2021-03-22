@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 30
-  BackFore: 3
+  BackFore: 20
   Radius: 2.5
   layerTarget:
     serializedVersion: 2

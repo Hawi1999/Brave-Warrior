@@ -61,25 +61,23 @@ public class BoolAction
     }
 }
 
-public abstract class Entity : MonoBehaviour, ICameraTarget
+public abstract class Entity : MonoBehaviour, IFindTarget
 {
-
-    public abstract int MaxHP
-    {
-        get;
-    }
-    protected int heath;
-    public virtual int Heath
+    [SerializeField] protected int Heath = 50;
+    [SerializeField] protected int Shield = 0;
+    public virtual int MaxHP => Heath;
+    protected int _CurrentHeath;
+    public virtual int CurrentHeath
     {
         get
         {
-            return heath;
+            return _CurrentHeath;
         }
         set
         {
-            int old = heath;
-            heath = Mathf.Clamp(value, 0, MaxHP);
-            OnHPChanged?.Invoke(old, heath, MaxHP);
+            int old = _CurrentHeath;
+            _CurrentHeath = Mathf.Clamp(value, 0, MaxHP);
+            OnHPChanged?.Invoke(old, _CurrentHeath, MaxHP);
         }
     }
     protected virtual bool PermitMove
@@ -100,10 +98,23 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return check.IsOK;
         }
     }
+
+    protected virtual bool PermitDown
+    {
+        get
+        {
+            BoolAction check = new BoolAction(true);
+            OnCheckForDown?.Invoke(check);
+            return check.IsOK;
+        }
+    }
+    public virtual bool IsForFind => (isActiveAndEnabled && !Died);
     [SerializeField]
     protected SpriteRenderer render;
 
-    [HideInInspector] public Vector3 Direction;
+    public Vector3 Direction
+    {get;set;
+    }
     // Được gọi khi HO thay đổi
     public UnityAction<int, int, int> OnHPChanged;
     // Được goi khi Entity Die
@@ -118,6 +129,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     public UnityAction<BoolAction> OnCheckForMove;
     // Kiểm tra được phép tấn công hay không
     public UnityAction<BoolAction> OnCheckForAttack;
+    // Kiểm tra được phép Down hay không
+    public UnityAction<BoolAction> OnCheckForDown;
     [Tooltip("được gọi khi chui xuống đất")]
     public UnityAction OnIntoTheGound;
     [Tooltip("được gọi khi chui xuống đất")]
@@ -133,7 +146,7 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     public UnityAction OnAppear;
     protected Weapon LastWeapon;
     private Weapon weapon;
-    public Weapon WeaponCurrent
+    protected Weapon WeaponCurrent
     {
         get
         {
@@ -160,9 +173,10 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     }
     protected virtual void Awake()
     {
-        OnIntoTheGound += InvokeHide;
-        OnOuttoTheGound += InvokeAppear;
+        AddAllEvents();
+        CurrentHeath = Heath;
     }
+
     #region Invoke UnityAction
     protected void InvokeHide()
     {
@@ -178,18 +192,27 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     protected Vector2[] limitMove;
     protected virtual void Start()
     {
-        OnTakeDamage += XLD;
-        OnTookDamage += BackForce;
+
     }
-    protected virtual void Death()
+
+
+    protected void Death()
     {
+        Died = true;
+        OnDead();
         OnDeath?.Invoke(this);
-        Destroy(gameObject);
+    }
+
+    protected virtual void OnDead()
+    {
     }
     public virtual void TakeDamage(DamageData dama)
     {
         dama.To = this;
-        OnTakeDamage?.Invoke(dama);
+        if (!dama.Dodged)
+        {
+            OnTakeDamage?.Invoke(dama);
+        }
         Damaged(dama.Damage);
         OnTookDamage?.Invoke(dama);
         CheckHP();
@@ -242,8 +265,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         Freeze fre = GetComponent<Freeze>();
         if (fre != null)
         {
-            fre.EndUp();
             damageData.Mediated = true;
+            fre.EndUp();
         }
         else
         if (Random.Range(0, 1f) < damageData.FireRatio)
@@ -281,32 +304,26 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         {
             if (Random.Range(0, 1f) < damaData.IceRatio)
             {
-                Debug.Log("Da Dong bang");
                 Freeze.Freezed(this, damaData.IceTime);
             }
         }
     }
-    public virtual Vector3 getPosition()
+    public virtual Vector3 GetPosition()
     {
         return transform.position;
     }
-
-    public abstract Entity TargetFire
+    public abstract IFindTarget TargetFire
     {
         get; set;
     }
     protected virtual void Damaged(int damage)
     {
-        Heath -= damage;
+        CurrentHeath -= damage;
     }
-    protected virtual void BackForce(DamageData damadata)
+    protected virtual void VFXTookDamage(DamageData damadata)
     {
-        iTween.MoveAdd(gameObject, iTween.Hash(
-            "amount", damadata.Direction * damadata.BackForce,
-            "time", 0.4f,
-            "easeType", iTween.EaseType.easeOutExpo,
-            "onupdate", "fixTransform"));
-    }
+        Force.BackForce(gameObject, damadata.Direction, damadata.BackForce, 0.2f);
+     }
     // CallBack from iTween
     protected void fixTransform()
     {
@@ -332,12 +349,10 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             position.y = limitMove[1].y;
         }
         transform.position = position;
-
-
     }
     protected void CheckHP()
     {
-        if (Heath <= 0)
+        if (CurrentHeath <= 0)
         {
             Death();
         }
@@ -351,14 +366,8 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
         }
     }
     public virtual Vector3 DirectFire { get; set; }
-    public virtual Vector3 PositionSpawnWeapon { get { return transform.position; } }
-    public virtual Vector3 PositionColliderTakeDamage
-    {
-        get
-        {
-            return transform.position;
-        }
-    }
+    public virtual Vector3 PositionSpawnWeapon => center;
+    public virtual Vector3 PositionColliderTakeDamage => center;
     public bool HasWeapon
     {
         get
@@ -366,9 +375,14 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
             return (WeaponCurrent != null);
         }
     }
-    public virtual Vector2 size => transform.localScale;
-    public virtual Vector2 center => transform.position;
-    protected virtual float scaleDefault => 1;
+    protected virtual float scaleCurrent => 1;
+    public bool IsWeapon(Weapon weapon)
+    {
+        if (WeaponCurrent == null)
+            return false;
+        return WeaponCurrent == weapon;
+    }
+
     public virtual void OnEquipment(Weapon weapon)
     {
     }
@@ -377,14 +391,106 @@ public abstract class Entity : MonoBehaviour, ICameraTarget
     }
     public virtual void OnPocket(Weapon weapon)
     {
+
     }
-    protected virtual void OnDestroy()
+    protected virtual void RemoveAllEvents()
     {
         OnTakeDamage -= XLD;
-        OnTookDamage -= BackForce;
+        OnTookDamage -= VFXTookDamage;
+        OnIntoTheGound -= InvokeHide;
+        OnOuttoTheGound -= InvokeAppear;
+        OnDeath -= (a) => RemoveAllEvents();
+    }
+
+    protected virtual void AddAllEvents()
+    {
+        OnTakeDamage += XLD;
+        OnTookDamage += VFXTookDamage;
+        OnIntoTheGound += InvokeHide;
+        OnOuttoTheGound += InvokeAppear;
+        OnDeath += (a) => RemoveAllEvents();
+    }
+
+    protected virtual void OnDestroy()
+    {
+
     }
     public virtual void setLimitMove(Vector2[] vector2s)
     {
         limitMove = vector2s;
     }
+    #region IFindTarget
+    public virtual TypeTarget typeTarget => TypeTarget.Enemy;
+    public virtual Vector2 center => transform.position;
+    public virtual Vector2 size => transform.localScale;
+
+    public virtual bool isNull => (this == null);
+
+    protected virtual Action NextAction
+    {
+        get; set;
+    }
+    protected virtual Action CurrentAction
+    {
+        get; set;
+    }
+
+    public enum Action
+    {
+        Attack,
+        Down,
+        EndAttack,
+        StartHide,
+        Hide,
+        EndHide,
+        Idle,
+        Move,
+        ReadyAttack,
+        Up,
+        WaitToChoose,
+        Busy
+    }
+
+    protected virtual void SetUpDamageData(DamageData damage)
+    {
+        damage.From = this;
+    }
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
+
+    protected virtual void OnCollisionExit2D(Collision2D collision)
+    {
+        
+    }
+    #endregion
+
+    #region  Value Animate
+
+    protected static int Animate_Idle = 5;
+    protected static int Animate_Move = 15;
+    protected static int Animate_ReadyAttack = 24;
+    protected static int Animate_Attack = 25;
+    protected static int Animate_EndAttack = 26;
+    protected static int Animate_Down = 34;
+    protected static int Animate_Up = 36;
+    protected static int Animate_Hide = 45;
+    protected static int Animate_StartHide = 44;
+    protected static int Animate_EndHide = 46;
+
+    #endregion
+    public void Spawning()
+    {
+        gameObject.SetActive(false);
+        OnHide?.Invoke();
+    }
+
+    public void BeginInRound()
+    {
+        gameObject.SetActive(true);
+        OnAppear?.Invoke();
+    }
+
+
 }

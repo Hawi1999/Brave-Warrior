@@ -72,8 +72,8 @@ GameObject:
   - component: {fileID: 5426267566257498371}
   - component: {fileID: 53768036269688357}
   - component: {fileID: 1857479938073213740}
-  - component: {fileID: -5289652673652299118}
   - component: {fileID: 1428810476333719215}
+  - component: {fileID: -7090446035563407756}
   m_Layer: 11
   m_Name: OcSen
   m_TagString: Untagged
@@ -164,7 +164,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 1
+  m_UsedByComposite: 0
   m_Offset: {x: -0.009118736, y: 0.035734892}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,8 +189,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 1
-  m_Mass: 0.11540574
+  m_UseAutoMass: 0
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -199,34 +199,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &-5289652673652299118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2746857279584622824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39d5435e46c2ddf4cbd8d5950082dbed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animates:
-  - code: Run
-    sprites:
-    - {fileID: 2573403565269679386, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    - {fileID: -6872825371662969889, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    - {fileID: 1430381864662261963, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    - {fileID: -7356578579880789933, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    - {fileID: 8550845465806940317, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    FPS: 8
-    Loop: 1
-  - code: Idle
-    sprites:
-    - {fileID: 8550845465806940317, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    - {fileID: -7872399472899917123, guid: 04250feb19f84dd43a0ed6129838cb2d, type: 3}
-    FPS: 4
-    Loop: 1
 --- !u!114 &1428810476333719215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,29 +211,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2979647d06c76438d52104fe38d3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Heath: 60
+  Shield: 0
   render: {fileID: 5426267566257498371}
-  Direction: {x: 0, y: 0, z: 0}
-  EnemyName: Oc Sen
-  Damage: 3
-  ED:
-    MaxHP: 25
-    Size: {x: 0.73, y: 0.6}
-    Shield: 2
-    time_range_move: {x: 1, y: 2}
-    time_range_idle: {x: 2, y: 4}
-    time_range_attack: {x: 4, y: 7}
-    PositionRaDan: {fileID: 8075005967108681804}
-    BulletPrefabs: {fileID: 9138097775698685740, guid: 8a2be1ce203263b4c80765c5f9502141,
-      type: 3}
+  EnemyCodeName: OcSen
   PR_HP: {fileID: 5964169202379816414}
   PR_HPsub: {fileID: 5223254241339383948}
-  colliderTakeDamage: {fileID: 7451217717755733279}
-  layerTargetFire:
-    serializedVersion: 2
-    m_Bits: 65536
-  speedMove: 2
   OffsetCenter: {fileID: 5270981782778859902}
+  sizeDefault: {x: 0.7, y: 0.64}
+  time_range_idle: {x: 0.5, y: 1}
   LastDamageData: {fileID: 0}
+  time_range_move: {x: 1, y: 2}
+  SpeedMove: 5
+  SatThuong: 4
+  bulletPrefab: {fileID: 9138097775698685740, guid: 8a2be1ce203263b4c80765c5f9502141,
+    type: 3}
+  _PositionSpawnBullet: {fileID: 8075005967108681804}
+  OffsetAngleAttack: 30
+--- !u!95 &-7090446035563407756
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2746857279584622824}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 232722138fe63ff47aa9aeb69cc31554, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4933020631883010462
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +273,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4933020631883010462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.213, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6982671563730614590}
@@ -307,7 +292,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.048792236, y: 0.22571951}
+  m_Offset: {x: 0.048792236, y: 0.02}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -406,7 +391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c15faa51cccd96e4ba2bf55e6b302afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuiPF: {fileID: 5533233973321091005, guid: 7549a107a0789b04895fb6846cd8337c, type: 3}
   color: {r: 0.7169812, g: 0.38826802, b: 0, a: 1}
   ShowGizmos: 1
   Offset: {x: 0.06, y: 0.32, z: 0}

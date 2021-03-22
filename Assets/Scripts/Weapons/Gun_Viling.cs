@@ -27,9 +27,9 @@ public class Gun_Viling : GunBase
             OffsetA = OffsetB;
             OffsetB = a;
         }
+        id_pool_bullet_extra = pool.AddPrefab(bulletExtra);
     }
-
-    private PoolingGameObject<BulletBase> pooling_bulletExtra;
+    private int id_pool_bullet_extra;
 
     public override void Shoot(DamageData damageData)
     {
@@ -47,7 +47,7 @@ public class Gun_Viling : GunBase
                 z += dolec;
                 DirShoot = MathQ.RotationToDirection(z);
                 SetUpDamageDataExtra(damage, DirShoot);
-                BulletBase bullet = pooling_bulletExtra.Spawn(PositionStartAttack, Quaternion.identity);
+                BulletBase bullet = pool.Spawn(id_pool_bullet_extra,PositionStartAttack, Quaternion.identity) as BulletBase;
                 bullet.StartUp(damage);
             }
         }
@@ -60,32 +60,7 @@ public class Gun_Viling : GunBase
         damageData.FromGunWeapon = true;
         damageData.BackForce = 0;
     }
-    public override void OnTuDo()
-    {
-        base.OnTuDo();
-        if (pooling_bulletExtra != null)
-        {
-            pooling_bulletExtra.DestroyAll();
-        }
-    }
 
-    public override void OnEquip()
-    {
-        base.OnEquip();
-        pooling_bulletExtra = new PoolingGameObject<BulletBase>(bulletExtra);
-    }
-
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-    }
-
-    protected override void OnLevelWasLoaded(int level)
-    {
-        base.OnLevelWasLoaded(level);
-        pooling_bulletExtra?.DestroyAll();
-        pooling_bulletExtra = new PoolingGameObject<BulletBase>(bulletExtra);
-    }
 
     protected override void OnDrawGizmos()
     {
@@ -96,5 +71,11 @@ public class Gun_Viling : GunBase
 
         Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z + OffsetB) * 5f);
         Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z - OffsetB) * 5f);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        pool.RemovePrefab(id_pool_bullet_extra);
     }
 }

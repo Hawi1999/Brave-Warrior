@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public enum DamageElement
 {
@@ -11,35 +12,19 @@ public enum DamageElement
 
 
 [System.Serializable]
-public class EnemyData
-{
-    public int MaxHP = 50;
-    public Vector2 Size = new Vector2(0.7f, 0.3f);
-    public int Shield = 0;
-
-    public Vector2 time_range_move = new Vector2(1f, 2f);
-    public Vector2 time_range_idle = new Vector2(2f, 4f);
-    public Vector2 time_range_attack = new Vector2(1f, 3f);
-
-    public Transform PositionRaDan;
-    public BulletEnemy BulletPrefabs;
-}
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Enemy : Entity
+public abstract class Enemy : Entity
 {
-
     #region EditorVisible
-    public string EnemyName = "New Enemy";
-    public int Damage;
-    public EnemyData ED;
-    public Transform PR_HP;
-    public Transform PR_HPsub;
-    public Collider2D colliderTakeDamage;
-    [SerializeField] protected LayerMask layerTargetFire;
-    [SerializeField] protected float speedMove = 5;
+    [SerializeField] string EnemyCodeName = "New Enemy";
+    [SerializeField] public Transform PR_HP;
+    [SerializeField] public Transform PR_HPsub;
     [SerializeField] Transform OffsetCenter;
+    [SerializeField] Vector2 sizeDefault = new Vector2(1,1);
+    [SerializeField] protected Vector2 time_range_idle = new Vector2(2f, 4f);
     #endregion
+
     #region EditorInvisible
     [HideInInspector] public DamageData LastDamageData;
     private DamageData _CurrentDamageData;
@@ -55,157 +40,87 @@ public class Enemy : Entity
             return _CurrentDamageData;
         }
     }
-    public override int Heath { get => base.Heath; set => base.Heath = value; }
-    public virtual bool IsForFind
-    {
-        get
-        {
-            return(isActiveAndEnabled && !Died);
-        }
-    }
-    public override Vector3 PositionColliderTakeDamage
-    {
-        get
-        {
-            if (colliderTakeDamage == null)
-            {
-                return gameObject.transform.position;
-            } else
-            {
-                return colliderTakeDamage.bounds.center;
-            }
-        }
-    }
-    public override Entity TargetFire
+    public override IFindTarget TargetFire
     {
         get
         {
             return PlayerController.PlayerCurrent;
         }
-        set { 
+        set 
+        { 
+
         }
     }
-    public override int MaxHP
+    public override Vector3 DirectFire { 
+        get {
+            if (TargetFire == null || TargetFire as UnityEngine.Object == null)
+                return Vector2.zero;
+            return (TargetFire.center - center).normalized; 
+        } 
+        set { } }
+    protected virtual bool HasTargetNear
     {
         get
         {
-            return ED.MaxHP;
-        }
-    }
-    protected PlayerController targetAttack
-    {
-        get
-        {
-            return TargetFire as PlayerController;
-        }
-    }
-    protected bool HasTargetNear
-    {
-        get
-        {
-            if (targetAttack == null)
+            if (TargetFire == null || TargetFire as UnityEngine.Object == null || !TargetFire.IsForFind)
             {
                 return false;
             }
-            return Vector2.Distance(targetAttack.getPosition(), center) <= 6f;
+            return Vector2.Distance(TargetFire.center, center) <= 6f;
         }
     }
-    private AnimationQ anim => GetComponent<AnimationQ>();
-    protected Rigidbody2D rig => GetComponent<Rigidbody2D>();
+    private Animator anim;
+    private Rigidbody2D rig => GetComponent<Rigidbody2D>();
     protected SelectingEnemy selecting;
-    // Di chuyển
-    protected bool isMoving = false;
     protected Vector2 dirMove = new Vector2(0,0);
-    protected float time_start_move;
-    protected float time_start_idle;
-    protected float time_move;
-    protected float time_idle;
-    // Tấn công
-    protected float time_start_attack;
-    protected float time_delay_attack;
-    protected Vector2 vitriradan
-    {
-        get
-        {
-            if (ED == null || ED.PositionRaDan == null)
-                return transform.position;
-            else
-            {
-                return ED.PositionRaDan.position;
-            }
-            
-        }
-    }
-    public override Vector2 size => new Vector2(ED.Size.x, ED.Size.y) * scaleDefault;
-    public override Vector2 center => (OffsetCenter == null) ? transform.position : OffsetCenter.localPosition * scaleDefault + transform.position;
-
-    public override Vector3 PositionSpawnWeapon => vitriradan;
-    protected override bool PermitAttack
-    {
-        get
-        {
-            BoolAction check = new BoolAction(true);
-            OnCheckForAttack?.Invoke(check);
-            return check.IsOK;
-        }
-    }
-
-    protected PoolingGameObject<BulletEnemy> pool_bullet;
+    public override Vector2 size => sizeDefault * scaleCurrent;
+    public override Vector2 center => (OffsetCenter == null) ? transform.position : OffsetCenter.position;
+    protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    protected float time_start_action;
+    protected float time_action;
     #endregion
     protected override void Awake()
     {
         base.Awake();
         gameObject.tag = "Enemy"; 
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        if (ED != null && ED.BulletPrefabs != null)
-        {
-            pool_bullet = new PoolingGameObject<BulletEnemy>(ED.BulletPrefabs);
-            OnDeath += (Enemy) => pool_bullet.DestroyAll();
-        }
-        if (EnemyManager.Instance != null)
-        {
-            EnemyManager.Instance.ShowHP(this);
-            OnTookDamage += EnemyManager.Instance.ShowHPSub;
-        } else
-        { 
-            Debug.Log("Instance cho EnemyManager không tồn tại");
-        }
-        selecting = Instantiate(VFXManager.Instance.SelectingEnemyPrefab, transform);
+        ShowHP();
+        anim = GetComponent<Animator>();
+        selecting = Instantiate(VFXManager.SelectingEnemyPrefab, transform);
         selecting.StartUp(this);
         selecting.gameObject.SetActive(false);
-        OnTookDamage += VFXDamageTook;
-        OnCheckForAttack += checkAttack;
-        OnDeath += onDeath;
-        PlayerController.OnTargetFireChanged += OnSelected;
         render.sortingLayerName = "Current";
+    }
+
+    protected virtual void ShowHP()
+    {
+        EntityManager.Instance.ShowHP(this);
     }
     protected override void Start()
     {
         base.Start();
-        Heath = MaxHP;
-        isMoving = false;
-        time_start_idle = Random.Range(Time.time - Random.Range(ED.time_range_idle.x, ED.time_range_idle.y), Time.time);
-        time_start_attack = Time.time;
-        time_idle = Random.Range(ED.time_range_idle.x, ED.time_range_idle.y);
-        time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
+        CurrentHeath = MaxHP;
+        SetNewAction(Action.Idle);
+        OnBeginIdle();
     }
-    protected override void Death()
+    protected override void AddAllEvents()
     {
-        Died = true;
-        OnDeath?.Invoke(this);
-        Destroy(this.gameObject);
+        base.AddAllEvents();
+        PlayerController.OnTargetFireChanged += OnSelected;
+        OnCheckForAttack += PermitAttackDefault;
+        OnTookDamage += EntityManager.Instance.ShowHPSub;
     }
-    protected void onDeath(Entity enitty)
+
+    protected override void RemoveAllEvents()
     {
+        base.RemoveAllEvents();
         PlayerController.OnTargetFireChanged -= OnSelected;
+        OnCheckForAttack -= PermitAttackDefault;
+        OnTookDamage -= EntityManager.Instance.ShowHPSub;
     }
 
     #region Xử lý sát thương
 
-    private void VFXDamageTook(DamageData damadata)
-    {
-
-    }
     public override void TakeDamage(DamageData dama)
     {
         CurrentDamageData = dama;
@@ -214,11 +129,19 @@ public class Enemy : Entity
     protected override void XLDNormal(DamageData damadata)
     {
         base.XLDNormal(damadata);
-        damadata.Decrease(ED.Shield);
+        damadata.Decrease(Shield);
     }
     private void OnSelected(Enemy enemy)
     {
-        selecting.gameObject.SetActive(enemy == this);
+        if (selecting != null)
+        {
+            selecting.gameObject.SetActive(enemy == this);
+        }
+    }
+
+    protected override void OnDead()
+    {
+        gameObject.SetActive(false);
     }
 
     #endregion
@@ -226,8 +149,105 @@ public class Enemy : Entity
     #region Cật Nhật
     protected virtual void Update()
     {
+        UpdateStatus();
         setSorting();
-        CheckForAttack();
+        UpdateScaleRender();
+        fixTransform();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        rig.velocity = Vector2.zero;
+    }
+    private void UpdateStatus()
+    {
+        switch (CurrentAction)
+        {
+            case Action.Idle:
+                UpdateIdle();
+                break;
+            case Action.Attack:
+                UpdateAttack();
+                break;
+            case Action.Down:
+                UpdateDown();
+                break;
+            case Action.EndAttack:
+                UpdateEndAttack();
+                break;
+            case Action.StartHide:
+                UpdateStartHide();
+                break;
+            case Action.EndHide:
+                UpdateEndHide();
+                break;
+            case Action.Hide:
+                UpdateHide();
+                break;
+            case Action.Up:
+                UpdateUp();
+                break;
+            case Action.ReadyAttack:
+                UpdateReadyAttack();
+                break;
+            case Action.Move:
+                UpdateMove();
+                break;
+        }
+    }
+
+    #endregion 
+
+    #region More Update Action
+    protected virtual void UpdateMove()
+    {
+    }
+    protected virtual void UpdateAttack()
+    {
+    }
+    protected virtual void UpdateReadyAttack()
+    {
+    }
+    protected virtual void UpdateEndAttack()
+    {
+    }
+    protected virtual void UpdateDown()
+    {
+    }
+    protected virtual void UpdateHide()
+    {
+    }
+    protected virtual void UpdateUp()
+    {
+    }
+    protected virtual void UpdateStartHide()
+    {
+    }
+    protected virtual void UpdateEndHide()
+    {
+    }
+
+    #endregion
+
+    #region Chung
+
+
+    protected bool WaitToChooseNextAction => NextAction == Action.WaitToChoose;
+
+    protected virtual void UpdateScaleRender()
+    {
+        if (HasTargetNear && CurrentAction == Action.Idle)
+        {
+            Vector3 dir = (TargetFire.center - center).normalized;
+            if (dir.x > 0)
+            {
+                transform.localScale = scaleCurrent * new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                transform.localScale = scaleCurrent * Vector3.one;
+            }
+        }
     }
     protected void setSorting()
     {
@@ -236,153 +256,112 @@ public class Enemy : Entity
             render.sortingOrder = (int)(transform.position.y * -10);
         }
     }
-    protected virtual void FixedUpdate()
+
+    protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        if (PermitMove)
-        {
-            Move();
-        } else
+        base.OnCollisionEnter2D(collision);
+    }
+
+    protected override void OnCollisionExit2D(Collision2D collision)
+    {
+        base.OnCollisionExit2D(collision);
+        if (collision.gameObject == PlayerController.PlayerCurrent.gameObject)
         {
             rig.velocity = Vector2.zero;
         }
     }
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        OnTookDamage -= EnemyManager.Instance.ShowHPSub;
-        OnTookDamage -= VFXDamageTook;
-        OnCheckForAttack -= checkAttack;
-        OnDeath -= onDeath;
-        PlayerController.OnTargetFireChanged -= OnSelected;
-    }
-    public override Vector3 getPosition()
-    {
-        return transform.position + new Vector3(0, 0.1f, 0);
-    }
 
     #endregion
 
-    #region Tấn công
-
-    protected virtual void CheckForAttack()
+    #region Idle 
+    protected virtual void UpdateIdle()
     {
-        if (PermitAttack)
+        if (WaitToChooseNextAction)
         {
-            Attack();
-            time_start_attack = Time.time;
-            time_delay_attack = Random.Range(ED.time_range_attack.x, ED.time_range_attack.y);
-        }
-    }
-    protected virtual void checkAttack(BoolAction permit)
-    {
-        permit.IsOK = Time.time - time_start_attack > time_delay_attack && targetAttack != null && HasTargetNear && ED.BulletPrefabs != null;
-    }
-    protected virtual void Attack()
-    {
-        Vector2 dirAttack = getRotationToPlayer(((Vector2)targetAttack.ColliderTakeDamaged.bounds.center - vitriradan).normalized);
-        BulletEnemy bullet = pool_bullet.Spawn(vitriradan, MathQ.DirectionToQuaternion(dirAttack));
-        DamageData dam = setUpDamageData(dirAttack);
-        bullet.StartUp(dam);
-    }
-    protected DamageData setUpDamageData(Vector3 NewDirection)
-    {
-        int SatThuong = Damage;
-        DamageData damageData = new DamageData();
-        damageData.Damage = SatThuong;
-        damageData.Direction = NewDirection;
-        damageData.From = this;
-        return damageData;
-    }
-    #endregion
-
-    #region Di Chuyen
-    protected Vector2 getRotationToPlayer(Vector2 dir)
-    {
-        Vector3 Do = MathQ.DirectionToRotation(dir);
-        Do += new Vector3(0, 0, Random.Range(-30, 30));
-        return MathQ.RotationToDirection(Do.z).normalized;
-    }
-    protected virtual void Move()
-    {
-        if (limitMove == null || limitMove.Length == 1)
-        {
-            Debug.Log("Chưa có giới hạn di chuyển");
-        }
-        if (!isMoving)
-        {
-            if (Time.time - time_start_idle > time_idle)
-            {
-                if (limitMove == null || limitMove.Length == 1)
-                {
-                    dirMove = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-                }
-                else
-                {
-                    Vector3 pos;
-                    int test = 0;
-                    do
-                    {
-                        pos = new Vector3(Random.Range(limitMove[0].x, limitMove[1].x), Random.Range(limitMove[0].y, limitMove[1].y), 0);
-                        test++;
-                    } while (!CanMoveTo(transform.position, pos) && test < 10);
-                    dirMove = (pos - transform.position).normalized;
-                }
-                isMoving = true;
-                time_start_move = Time.time;
-                time_move = Random.Range(ED.time_range_move.x, ED.time_range_move.y);
-            } else
-            {
-                if (HasTargetNear)
-                {
-                    float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) transform.localScale = scaleDefault * Vector2.one;
-                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
-                }
-                else
-                {
-                    if (dirMove.x < 0) transform.localScale = scaleDefault * Vector2.one;
-                    else if (dirMove.x > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
-                }
-                rig.velocity = Vector2.zero;
-                SetAni("Idle");
-            }
+            OnEndIdle();
+            ChooseNextAction();
         } else
         {
-            if (Time.time - time_start_move > time_move)
-            {    
-                isMoving = false;
-                time_start_idle = Time.time;
-                time_idle = Random.Range(ED.time_range_idle.x, ED.time_range_idle.y);
-            } else
-            {
-                if (PermitMove)
-                {
-                    rig.velocity = dirMove.normalized * speedMove;
-                    SetAni("Run");
-                } else
-                {
-                    SetAni("Idle");
-                }
-                if (HasTargetNear)
-                {
-                    float dirFireX = targetAttack.transform.position.x - transform.position.x;
-                    if (dirFireX < 0) transform.localScale = scaleDefault * Vector2.one;
-                    else if (dirFireX > 0) transform.localScale = new Vector3(-scaleDefault, scaleDefault, scaleDefault);
-                }
-            }
+            Idling();
+            CheckTimeToNextAction();
         }
     }
-    bool CanMoveTo(Vector3 from, Vector3 to)
+
+    protected virtual void OnBeginIdle()
     {
-        RaycastHit2D hit;
-        hit = Physics2D.Raycast(from, (to - from).normalized, Vector2.Distance(from, to), EnemyManager.Instance.WallAndBarrier);
-        return (hit.collider == null);
-    }
-    void SetAni(string code)
-    {
-        anim.setAnimation(code);
+        SetTimeToNextAction(time_range_idle);
+        SetAnimation(Animate_Idle);
     }
 
+    protected virtual void Idling()
+    {
+
+    }
+
+    protected virtual void OnEndIdle()
+    {
+
+    }
+
+    #endregion
+
+    #region Chung
+    protected bool EnoughTimeToNextAction => Time.time - time_start_action >= time_action;
+
+    protected Vector2 getRotationToPlayer(Vector2 dir, int offset)
+    {
+        if (offset < 0)
+            offset = -offset;
+        offset = offset % 90;
+        Vector3 Do = MathQ.DirectionToRotation(dir);
+        Do += new Vector3(0, 0, Random.Range(-offset, offset));
+        return MathQ.RotationToDirection(Do.z).normalized;
+    }
+
+    protected void CheckTimeToNextAction()
+    {
+        if (Time.time - time_start_action >= time_action)
+        {
+            NextAction = Action.WaitToChoose;
+        }
+    }
+
+    protected void SetTimeToNextAction(Vector2 range)
+    {
+        time_start_action = Time.time;
+        time_action = Random.Range(range.x, range.y);
+    }
+
+    protected void SetTimeToNextAction(float value)
+    {
+        time_start_action = Time.time;
+        time_action = value;
+    }
+
+    Action oldAction = Action.Idle;
+    int amount = 0;
+    protected void SetNewAction(Action newAction)
+    {
+        CurrentAction = newAction;
+        NextAction = Action.Busy;
+    }
+
+    protected void SetAnimation(int a)
+    {
+        anim.SetInteger("Value", a);
+    }
+
+    protected void SetPosition(Vector2 position)
+    {
+        rig.MovePosition(position);
+    }
+
+    protected override void VFXTookDamage(DamageData damadata)
+    {
+        iTween.ShakePosition(gameObject, new Vector3(0.1f, 0.1f, 0), 0.1f);
+    }
+
+    protected abstract void ChooseNextAction();
     #endregion
 
     #region Trang Bi
@@ -403,6 +382,11 @@ public class Enemy : Entity
 
     }
 
+    protected virtual void PermitAttackDefault(BoolAction boolAction)
+    {
+        boolAction.IsOK = HasTargetNear;
+    }
+
     protected virtual void OnDrawGizmos()
     {
         if (render == null)
@@ -413,4 +397,31 @@ public class Enemy : Entity
         Gizmos.DrawWireSphere(center, Mathf.Max(size.x, size.y) * 1.2f);
     }
     #endregion
+
+    #region Info
+
+    public string GetName()
+    {
+        string s = Languages.getString(EnemyCodeName);
+        if (s.Equals(string.Empty))
+        {
+            return "Enemy Clone";
+        } else
+        {
+            return s;
+        }
+    }
+    public override Vector3 GetPosition()
+    {
+        return center;
+    }
+
+    #endregion
+
+    #region Action
+
+    public UnityAction<Enemy> OnSpawnEnemyMore;
+
+    #endregion
+
 }

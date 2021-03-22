@@ -15,6 +15,8 @@ public class Poisoned : ElementalBuffBad
     public static float TIME_DELAY = 0.7f;
 
 
+    private PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    private int id_poison => VFXManager.IDPooling_Poison;
     private void Update()
     {
         if (timeRemaining > 0)
@@ -60,7 +62,7 @@ public class Poisoned : ElementalBuffBad
 
     public override void StartUp(Entity entity, float time)
     {
-        VFXPoison = VFXManager.PoolingPoison.Spawn(entity.center, Quaternion.identity);
+        VFXPoison = pool.Spawn(id_poison,entity.center, Quaternion.identity) as ControlPartice;
         VFXPoison.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);
         VFXPoison.Play();
         target = entity;

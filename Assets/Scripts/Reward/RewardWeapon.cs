@@ -12,7 +12,7 @@ public class RewardWeapon : Reward
     {
         get
         {
-            return weapon.TrangThai == WeaponStatus.Free && player.WeaponCurrent != weapon;
+            return weapon.TrangThai == WeaponStatus.Free && !player.IsWeapon(weapon);
         }
     }
     public override string Name
@@ -65,7 +65,7 @@ public class RewardWeapon : Reward
     {
         if (player == null)
             return false;
-        return Vector2.Distance(transform.position, player.getPosition()) <= Distance;
+        return Vector2.Distance(transform.position, player.GetPosition()) <= Distance;
     }
 
     private void OnValidate()

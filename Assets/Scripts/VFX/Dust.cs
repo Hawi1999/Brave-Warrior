@@ -12,7 +12,7 @@ public class Dust : PoolingBehaviour
     float size;
     float startTime;
     Sprite sprite;
-    protected virtual Sprite[] sprites => VFXManager.Instance.SpritesDust;
+    protected virtual Sprite[] sprites => VFXManager.SpritesDust;
     public class ClassReset
     {
         public SpriteRenderer render;

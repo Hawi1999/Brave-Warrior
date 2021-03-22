@@ -15,12 +15,13 @@ public class ColliderMeleeAttack : MonoBehaviour
     PolygonCollider2D col;
     Vector3 center => (_center == null) ? transform.position : _center.position;
 
-    private PoolingGameObject<ControlPartice> pooling_controlpartice;
+    private PoolingGameObject pooling_controlpartice => PoolingGameObject.PoolingMain;
+    private int id_pooling;
     private void Awake()
     {
         if (VFXhit != null)
         {
-            pooling_controlpartice = new PoolingGameObject<ControlPartice>(VFXhit);
+            id_pooling = pooling_controlpartice.AddPrefab(VFXhit);
         }
     }
 
@@ -91,7 +92,7 @@ public class ColliderMeleeAttack : MonoBehaviour
             {
                 if (ray.collider.gameObject == col.gameObject)
                 {
-                    pooling_controlpartice.Spawn(ray.point, Quaternion.identity).Play();
+                    (pooling_controlpartice.Spawn(id_pooling,ray.point, Quaternion.identity) as ControlPartice).Play();
                 }
             }
         }

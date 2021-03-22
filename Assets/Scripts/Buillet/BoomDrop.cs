@@ -32,16 +32,10 @@ public class BoomDrop : MonoBehaviour
         iTween.MoveTo(Egg.gameObject, iTween.Hash(
             "position", transform.position,
             "time", timeDrop,
-            "easetype", iTween.EaseType.easeInSine,
+            "easetype", iTween.EaseType.easeInCubic,
             "oncompletetarget", gameObject,
             "oncomplete", "Dropped"));
         iTween.ValueTo(Egg.gameObject, iTween.Hash(
-            "from", 0,
-            "to", 1,
-            "time", timeDrop,
-            "onupdate", "UpdateColorRender",
-            "easetype", iTween.EaseType.easeInSine));
-        iTween.ValueTo(Zone.gameObject, iTween.Hash(
             "from", 0,
             "to", 1,
             "time", timeDrop,
@@ -89,7 +83,7 @@ public class BoomDrop : MonoBehaviour
                     DamageData damage = this.damage.Clone;
                     Vector3 target = take.GetCollider().bounds.center;
                     damage.Damage = (int)(this.Damage * Mathf.Clamp01((Radius - (Vector2.Distance(target, transform.position))) / Radius));
-                    damage.BackForce = Mathf.Clamp01((Radius - (Vector2.Distance(target, transform.position))) / Radius) * Radius;
+                    damage.BackForce = 5 * Mathf.Clamp01((Radius - (Vector2.Distance(target, transform.position))) / Radius) * Radius;
                     damage.Direction = (target - transform.position).normalized;
                     take.TakeDamaged(damage);
                 }
@@ -99,7 +93,7 @@ public class BoomDrop : MonoBehaviour
 
     IEnumerator WaitForDestroy()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(5);
         Destroy(this.gameObject);
     }
 

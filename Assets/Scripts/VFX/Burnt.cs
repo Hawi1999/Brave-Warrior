@@ -14,7 +14,8 @@ public class Burnt : ElementalBuffBad
     public static int MAX_DAMAGE = 100000;
     public static float TIME_DELAY = 0.3f;
 
-
+    private PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    private int id_fire => VFXManager.IDPooling_Fire;
     private void Update()
     {
         if (timeRemaining > 0)
@@ -55,7 +56,7 @@ public class Burnt : ElementalBuffBad
 
     public override void StartUp(Entity entity, float time)
     {
-        VFXBurnt = VFXManager.PoolingFire.Spawn(entity.transform.position, Quaternion.identity);
+        VFXBurnt = pool.Spawn(id_fire,entity.transform.position, Quaternion.identity) as ControlPartice;
         VFXBurnt.Play();
         target = entity;
         VFXBurnt.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);

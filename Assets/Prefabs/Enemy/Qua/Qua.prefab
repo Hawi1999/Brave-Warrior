@@ -234,14 +234,14 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &2179755933600766571
 MonoBehaviour:
@@ -255,30 +255,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6123201db037bdb47bb67b6134a82225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Heath: 70
+  Shield: 0
   render: {fileID: 293661161041652141}
-  Direction: {x: 0, y: 0, z: 0}
-  EnemyName: Qua
-  Damage: 0
-  ED:
-    MaxHP: 40
-    Size: {x: 0.7, y: 0.45}
-    Shield: 0
-    time_range_move: {x: 0, y: 0}
-    time_range_idle: {x: 0, y: 3}
-    time_range_attack: {x: 2, y: 4}
-    PositionRaDan: {fileID: 0}
-    BulletPrefabs: {fileID: 0}
+  EnemyCodeName: QuaTim
   PR_HP: {fileID: 8998493614793782294}
   PR_HPsub: {fileID: 3331632590896207034}
-  colliderTakeDamage: {fileID: 3619302012606178112}
-  layerTargetFire:
-    serializedVersion: 2
-    m_Bits: 0
-  speedMove: 3
   OffsetCenter: {fileID: 1047964733295150076}
+  sizeDefault: {x: 0.7, y: 0.5}
+  time_range_idle: {x: 0.5, y: 0.7}
   LastDamageData: {fileID: 0}
+  time_range_move: {x: 0.7, y: 1}
+  SpeedMove: 5
   Boom: {fileID: 4215637733933342811, guid: acfa572cf274d3647b36413b9d8a4b53, type: 3}
   RadiusDropNear: 3
+  RatioDodge: 0.2
 --- !u!95 &1160552825372927280
 Animator:
   serializedVersion: 3
@@ -397,7 +388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c15faa51cccd96e4ba2bf55e6b302afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuiPF: {fileID: 5533233973321091005, guid: 7549a107a0789b04895fb6846cd8337c, type: 3}
   color: {r: 0.59797335, g: 0, b: 0.6792453, a: 1}
   ShowGizmos: 1
   Offset: {x: 0, y: 0.26, z: 0}

@@ -23,7 +23,7 @@ public class SpawnPracticeEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (list.Count < 5)
+        if (list.Count < 1)
         {
             if (Time.time - lastSpawn > distanceSpawn)
             {
@@ -36,10 +36,9 @@ public class SpawnPracticeEnemy : MonoBehaviour
     void SpawnEnemy()
     {
         Vector3 position = getPosition();
-        Enemy enemy = EnemyManager.Instance.Spawn(EnemyPrefab, position, PREnemy, getLimit());
+        Enemy enemy = EntityManager.Instance.SpawnEnemy(EnemyPrefab, position, PREnemy, getLimit());
         list.Add(enemy);
         enemy.gameObject.AddComponent<LockAttack>();
-        enemy.OnDeath += (Entity) => list.Remove(enemy);
     }
 
     Vector2 getPosition()
@@ -51,7 +50,7 @@ public class SpawnPracticeEnemy : MonoBehaviour
         {
             i++;
             position = new Vector2(Random.Range(min.x, max.x), Random.Range(min.y, max.y));
-            cols = Physics2D.OverlapBoxAll(position, Vector2.one / 2, 0, EnemyManager.Instance.WallAndBarrier);
+            cols = Physics2D.OverlapBoxAll(position, Vector2.one / 2, 0, EntityManager.Instance.WallAndBarrier);
         } while (cols != null && cols.Length != 0 && i < 50);
         return position;
     }

@@ -25,10 +25,9 @@ public class DustFromEnemy : DustControl
     }
     public virtual void SpawnBui(DamageData damage)
     {
-        if (pooling_dust == null)
+        if (pooling == null)
         {
             Debug.Log("Dust need Prefab");
-            return;
         }
         Vector3 DirZ = MathQ.DirectionToRotation(damage.Direction);
         int Amount = damage.Damage/2 * MutiDus;
@@ -38,14 +37,14 @@ public class DustFromEnemy : DustControl
             Vector3 pos = new Vector3(Random.Range(-RangeSpawn.x, RangeSpawn.x), Random.Range(-RangeSpawn.y, RangeSpawn.y), 0) + Offset;
             Vector3 dir = MathQ.RotationToDirection(DirZ.z + Random.Range(-Off, Off));
             pos = transform.TransformPoint(pos);
-            pooling_dust.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360))))
+            (pooling.Spawn(id_dust,pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360)))) as Dust)
                  .SetUp(1, dir, Random.Range(RangeSpeed.x, RangeSpeed.y), Random.Range(RangeSize.x, RangeSize.y), color);
         }
     }
 
     public virtual void Dead()
     {
-        if (pooling_dust == null)
+        if (pooling == null)
         {
             Debug.Log("Dust need Prefab");
             return;
@@ -58,7 +57,7 @@ public class DustFromEnemy : DustControl
             Vector3 pos = new Vector3(Random.Range(-RangeSpawn.x, RangeSpawn.x), Random.Range(-RangeSpawn.y, RangeSpawn.y), 0) + Offset;
             Vector3 dir = MathQ.RotationToDirection(DirZ + Random.Range(-Off, Off));
             pos = transform.TransformPoint(pos);
-            pooling_dust.Spawn(pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360))))
+            (pooling.Spawn(id_dust,pos, MathQ.DirectionToQuaternion(new Vector3(0, 0, Random.Range(0, 360)))) as Dust)
                  .SetUp(1, dir, Random.Range(RangeSpeed.x, RangeSpeed.y), Random.Range(RangeSize.x, RangeSize.y), color);
         }
     }

@@ -64,7 +64,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: {fileID: 21300000, guid: 536aba77b3ae3e24fa15bec0852e4d00, type: 3}
-  MT: {fileID: 21300000, guid: 97fbb62e69f9b914983e859fa6e29971, type: 3}
   nameSkin: {fileID: 0}
   LocalPositionMT: {x: 0, y: 0.35, z: 0}
   LocalPositionName: {x: 0, y: 0.2, z: 0}
@@ -99,13 +98,13 @@ MonoBehaviour:
   _render: {fileID: 5193306121721724126}
   nameOfWeapon: H70
   type: 2
-  _SatThuong: 5
+  _SatThuong: 8
   TrangThai: 0
   Host: {fileID: 0}
   lastHost: {fileID: 0}
   Target: {fileID: 0}
   _criticalRate: 0.2
-  VienDan: {fileID: 8251205432692017628, guid: 8176b05f7f548534a9b191ba51a4d625, type: 3}
+  VienDan: {fileID: 8831393561928542396, guid: 8176b05f7f548534a9b191ba51a4d625, type: 3}
   VFXShoot: {fileID: 5254929082289740851}
   SpeedShoot: 5
   DoGiat: 10
@@ -4898,7 +4897,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
@@ -5023,7 +5022,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 0833448e7dd60264db0eceb3c0fe4b5d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

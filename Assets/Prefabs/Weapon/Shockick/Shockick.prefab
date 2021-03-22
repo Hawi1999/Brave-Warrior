@@ -64,7 +64,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: {fileID: 21300000, guid: 96d84477a8eca9845897fa2942b729fd, type: 3}
-  MT: {fileID: 21300000, guid: 97fbb62e69f9b914983e859fa6e29971, type: 3}
   nameSkin: {fileID: 0}
   LocalPositionMT: {x: 0, y: 0.3, z: 0}
   LocalPositionName: {x: 0, y: 0.18, z: 0}
@@ -99,7 +98,7 @@ MonoBehaviour:
   _render: {fileID: 3062332279430356679}
   nameOfWeapon: Shockick
   type: 2
-  _SatThuong: 6
+  _SatThuong: 8
   TrangThai: 0
   Host: {fileID: 0}
   lastHost: {fileID: 0}
@@ -109,6 +108,7 @@ MonoBehaviour:
   VFXShoot: {fileID: 0}
   SpeedShoot: 1.3
   DoGiat: 5
+  HeadGun: {fileID: 0}
   isLeftDir: 0
   TFRadanPhai: {fileID: 2823408792911057709}
   TimeAddFire: 4
@@ -181,7 +181,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 6a646adce8e77a3429aea6354c6a5c99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

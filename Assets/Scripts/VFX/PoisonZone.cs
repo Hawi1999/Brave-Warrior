@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class PoisonZone : MonoBehaviour, ITakeHit
+public class PoisonZone : TileTakeHit
 {
     public float _Time = 2;
     public SpriteRenderer renderZone;
@@ -27,12 +27,7 @@ public class PoisonZone : MonoBehaviour, ITakeHit
         }
         vfx?.Stop();
     }
-
-    private void Start()
-    {
-
-    }
-    public void TakeDamaged(DamageData data)
+    public override void TakeDamaged(DamageData data)
     {
         if (!poisoning)
         {
@@ -50,12 +45,7 @@ public class PoisonZone : MonoBehaviour, ITakeHit
             vfx?.Play();
             poisoning = true;
             lastDamage = Time.time;
-
         }
-    }
-    private void DestroyThis()
-    {
-        Destroy(gameObject);
     }
 
     private void Update()
@@ -75,7 +65,7 @@ public class PoisonZone : MonoBehaviour, ITakeHit
                 "time", 1f,
                 "onupdate", "UpdateAlpha",
                 "onupdateparams", "a",
-                "oncomplete", "DestroyThis"));
+                "oncomplete", "RemoveTile"));
                 p = true;
             }
             timePoi += Time.deltaTime;
@@ -111,11 +101,6 @@ public class PoisonZone : MonoBehaviour, ITakeHit
         Color b = renderZone.color;
         b.a = a;
         renderZone.color = b;
-    }
-
-    public Collider2D GetCollider()
-    {
-        return GetComponent<Collider2D>();
     }
 
 

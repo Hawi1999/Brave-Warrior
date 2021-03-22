@@ -8,14 +8,16 @@ public class Freeze : ElementalBuffBad, ILockMove
 
     Entity target;
     SpriteRenderer sprite;
-    SpriteRenderer spritePrefab = VFXManager.Instance.IcePrefab;
+    void Awake()
+    {
+
+    }
     public override void StartUp(Entity entity, float time)
     {
         Time_remaining = time;
         target = entity;
         target.OnBuffsChanged?.Invoke(DamageElement.Ice, true);
-        target.OnCheckForAttack += LockAttack;
-        target.OnCheckForMove += LockMove;
+        SetEvent(true);
         SpawnIce();
     }
 
@@ -24,8 +26,13 @@ public class Freeze : ElementalBuffBad, ILockMove
         if (Time_remaining <= 0)
         {
             EndUp();
-        } 
-        sprite.transform.localScale = new Vector3(target.size.x, target.size.y);
+            return;
+        }
+        if (sprite != null && target != null)
+        {
+            sprite.transform.position = target.center;
+            sprite.transform.localScale = Vector3.one * Mathf.Max(target.size.x, target.size.y) * 1.5f;
+        }
         Time_remaining -= Time.deltaTime;
     }
 
@@ -41,7 +48,12 @@ public class Freeze : ElementalBuffBad, ILockMove
 
     private void SpawnIce()
     {
-
+        if (VFXManager.IcePrefab != null && VFXManager.SpritesIce != null && VFXManager.SpritesIce.Length != 0)
+        {
+            Sprite[] s = VFXManager.SpritesIce;
+            sprite = Instantiate(VFXManager.IcePrefab);
+            sprite.sprite = s[Random.Range(0, s.Length)];
+        }
     }
 
     public void AddTime(float time)
@@ -64,20 +76,45 @@ public class Freeze : ElementalBuffBad, ILockMove
             fre.AddTime(time);
         }
     }
-
-    private void OnDestroy()
+    private void SetEvent(bool a)
     {
-        target.OnBuffsChanged?.Invoke(DamageElement.Ice, false);
-        if (sprite)
+        if (target != null)
         {
-            Destroy(sprite.gameObject);
+            if (a)
+            {
+                target.OnCheckForAttack += LockAttack;
+                target.OnCheckForMove += LockMove;
+                target.OnDeath += (Enemy) => OnEntityDead();
+            } else
+            {
+                target.OnCheckForAttack -= LockAttack;
+                target.OnCheckForMove -= LockMove;
+                target.OnDeath -= (Enemy) => OnEntityDead();
+            }
         }
-        target.OnCheckForAttack -= LockAttack;
-        target.OnCheckForMove -= LockMove;
+    }
+
+    private void OnEntityDead()
+    {
+        EndUp();
     }
 
     public void EndLockMove()
     {
         EndUp();
+    }
+
+    public override void EndUp()
+    {
+        if (sprite != null)
+        {
+            Destroy(sprite.gameObject);
+        }
+        if (target != null)
+        {
+            target.OnBuffsChanged?.Invoke(DamageElement.Ice, false);
+            SetEvent(false);
+        }
+        base.EndUp();
     }
 }

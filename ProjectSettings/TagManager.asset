@@ -9,6 +9,7 @@ TagManager:
   - VFXController
   - CanvasMain
   - Enemy
+  - Tile
   layers:
   - Default
   - TransparentFX

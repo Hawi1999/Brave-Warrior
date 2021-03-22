@@ -13,7 +13,8 @@ public class GunBase : Weapon
     [SerializeField] protected Transform HeadGun;
     [HideInInspector] public bool isLeftDir;
 
-    protected PoolingGameObject<BulletBase> poolling_bullet;
+    protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    protected int id_pool_bullet;
 
     protected float CriticalRate => _criticalRate;
     protected float distanceShoot
@@ -50,6 +51,15 @@ public class GunBase : Weapon
         return "Gun " + nameOfWeapon;
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        if (VienDan != null)
+        {
+            id_pool_bullet = pool.AddPrefab(VienDan);
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -57,7 +67,7 @@ public class GunBase : Weapon
     }
     protected virtual void Update()
     {
-        if (Host != null && (transform.hasChanged || Host.TargetFire != null))
+        if (Host != null && (transform.hasChanged || (Host.TargetFire != null && Host.TargetFire as UnityEngine.Object != null)))
         {
             RotationGun(); 
         }
@@ -80,7 +90,7 @@ public class GunBase : Weapon
     public virtual void Shoot(DamageData damageData)
     {
         Vector3 DirShoot = GiatSung(Host.DirectFire);
-        BulletBase bull = poolling_bullet.Spawn(PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot));
+        BulletBase bull = pool.Spawn(id_pool_bullet, PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot)) as BulletBase;
         SetUpDamageData(damageData, DirShoot);
         bull.StartUp(damageData);
     }
@@ -125,22 +135,6 @@ public class GunBase : Weapon
     public override void OnEquip()
     {
         base.OnEquip();
-        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
-    }
-
-    public override void OnTuDo()
-    {
-        base.OnTuDo();
-        if (poolling_bullet != null)
-        {
-            poolling_bullet.DestroyAll();
-        }
-    }
-
-    protected virtual void OnLevelWasLoaded(int level)
-    {
-        poolling_bullet?.DestroyAll();
-        poolling_bullet = new PoolingGameObject<BulletBase>(VienDan);
     }
 
     protected override void OnValidate()
@@ -153,5 +147,11 @@ public class GunBase : Weapon
         Gizmos.color = Color.red;
         Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z + DoGiat/2) * 10f);
         Gizmos.DrawLine(PositionStartAttack, PositionStartAttack + MathQ.RotationToDirection(transform.rotation.eulerAngles.z - DoGiat/2) * 10f);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        pool.RemovePrefab(id_pool_bullet);
     }
 }

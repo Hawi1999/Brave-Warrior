@@ -22,21 +22,21 @@ public class ShowHPEnemy : MonoBehaviour
 
     private void StartUp()
     {
-        enemy.OnHPChanged += HPChanged;
-        enemy.OnDeath += WhenEnemyDie;
-        enemy.OnHide += () => OnEnemyHide(true);
-        enemy.OnAppear += () => OnEnemyHide(false);
+        AddEvents();
         if (enemy != null)
         {
             Vector2 a = Rtf.sizeDelta;
             Rtf.sizeDelta = new Vector2(enemy.size.x, 0.1f);
-            HPChanged(0, enemy.Heath, enemy.MaxHP);
+            HPChanged(0, enemy.CurrentHeath, enemy.MaxHP);
         } else
         {
             Debug.Log("Enemy is null");
         }
     }
-
+    private void Update()
+    {
+        transform.position = enemy.PR_HP.position;
+    }
 
     private void OnEnemyHide(bool a)
     {
@@ -113,17 +113,33 @@ public class ShowHPEnemy : MonoBehaviour
     public void SetStart(Enemy target)
     {
         enemy = target;
-        enemy.OnBuffsChanged += OnBuffSet;
         StartUp();
     }
 
     private void WhenEnemyDie(Entity entity)
     {
-        enemy.OnHPChanged -= HPChanged;
-        enemy.OnDeath -= WhenEnemyDie;
-        enemy.OnHide -= () => OnEnemyHide(true);
-        enemy.OnAppear -= () => OnEnemyHide(false);
-        gameObject.SetActive(false);
+        RemoveEvents();
+        Destroy(gameObject);
+    }
+    private void AddEvents()
+    {
+        enemy.OnBuffsChanged += OnBuffSet;
+        enemy.OnHPChanged += HPChanged;
+        enemy.OnDeath += WhenEnemyDie;
+        enemy.OnHide += () => OnEnemyHide(true);
+        enemy.OnAppear += () => OnEnemyHide(false);
+    }
+
+    private void RemoveEvents()
+    {
+        if (enemy != null)
+        {
+            enemy.OnBuffsChanged -= OnBuffSet;
+            enemy.OnHPChanged -= HPChanged;
+            enemy.OnDeath -= WhenEnemyDie;
+            enemy.OnHide -= () => OnEnemyHide(true);
+            enemy.OnAppear -= () => OnEnemyHide(false);
+        }
     }
 
     private void OnBuffSet(DamageElement ele, bool isOK)

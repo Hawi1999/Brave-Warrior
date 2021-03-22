@@ -49,7 +49,7 @@ public class Gun_K20 : GunBase
         if (nextAmountbullet == 1)
         {
             Vector3 DirShoot = GiatSung(Host.DirectFire);
-            BulletBase bull = poolling_bullet.Spawn(PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot));
+            BulletBase bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot)) as BulletBase;
             SetUpDamageData(damageData, DirShoot);
             bull.StartUp(damageData);
             nextAmountbullet = 2;
@@ -57,12 +57,12 @@ public class Gun_K20 : GunBase
         {
             vitriTren = true;
             Vector3 DirShoot1 = GiatSung(Host.DirectFire);
-            BulletBase bull = poolling_bullet.Spawn(PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot1));
+            BulletBase bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot1)) as BulletBase;
             SetUpDamageData(damageData, DirShoot1);
             bull.StartUp(damageData);
             vitriTren = false;
             Vector3 DirShoot2 = GiatSung(Host.DirectFire);
-            bull = poolling_bullet.Spawn(PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot2));
+            bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot2)) as BulletBase;
             SetUpDamageData(damageData, DirShoot2);
             bull.StartUp(damageData);
             nextAmountbullet = 1;

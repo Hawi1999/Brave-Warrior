@@ -206,7 +206,7 @@ public class MeleeBase : Weapon
     protected virtual void SetUpDamageData(DamageData damageData)
     {
         damageData.Damage = SatThuong;
-        damageData.BackForce = 0.5f;
+        damageData.BackForce = 1;
         damageData.FromMeleeWeapon = true;
     }
     
