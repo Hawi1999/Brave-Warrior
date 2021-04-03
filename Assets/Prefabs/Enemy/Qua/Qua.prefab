@@ -255,14 +255,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6123201db037bdb47bb67b6134a82225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 70
-  Shield: 0
+  HeathBasic: 70
+  sizeDefault: {x: 0.7, y: 0.5}
   render: {fileID: 293661161041652141}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: QuaTim
   PR_HP: {fileID: 8998493614793782294}
   PR_HPsub: {fileID: 3331632590896207034}
   OffsetCenter: {fileID: 1047964733295150076}
-  sizeDefault: {x: 0.7, y: 0.5}
   time_range_idle: {x: 0.5, y: 0.7}
   LastDamageData: {fileID: 0}
   time_range_move: {x: 0.7, y: 1}

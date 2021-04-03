@@ -488,14 +488,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7f1241f424df043a3519c5a753346e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 1500
-  Shield: 0
+  HeathBasic: 1500
+  sizeDefault: {x: 1.48, y: 1.16}
   render: {fileID: 7305011111817504869}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: KingOP
   PR_HP: {fileID: 546121958624445835}
   PR_HPsub: {fileID: 3153653948809074105}
   OffsetCenter: {fileID: 138875915089104733}
-  sizeDefault: {x: 1.48, y: 1.16}
   time_range_idle: {x: 1, y: 1}
   LastDamageData: {fileID: 0}
   time_range_move: {x: 1, y: 1}

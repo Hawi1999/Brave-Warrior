@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c73fd1438772f34995b349d04c06ae9, type: 3}
   m_Name: R1
   m_EditorClassIdentifier: 
-  typeRound: 2
-  position: {x: -35, y: -22}
+  typeRound: 4
+  position: {x: 35, y: -22}
   groupEnemy: 1
   Waves: {fileID: 11400000, guid: d9656f493a007a04f90cefda95008cd8, type: 2}
   typeChest: 0
   colorChest: 0
-  codeMap: 1
+  AmountBoss: 2
+  WavesHail: []
+  Level: 1

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,24 +13,26 @@ public class ShowHPEnemy : MonoBehaviour
     [SerializeField] private RectTransform Rtf;
     [SerializeField] private Transform ParentShowBuff;
     [SerializeField] private Image PrefabsShowBuffs;
-    [SerializeField] private Sprite[] spriteElement;
-    [SerializeField] private DamageElement[] connectSprite;
+    private List<Buff1Datas> listBuffs;
 
-
-    private List<DamageElement> listele = new List<DamageElement>();
     private Enemy enemy;
+    private void Awake()
+    {
+        listBuffs = new List<Buff1Datas>();
+
+    }
 
     private void StartUp()
     {
-        AddEvents();
         if (enemy != null)
         {
-            Vector2 a = Rtf.sizeDelta;
+            AddEvents();
             Rtf.sizeDelta = new Vector2(enemy.size.x, 0.1f);
-            HPChanged(0, enemy.CurrentHeath, enemy.MaxHP);
+            HPChanged();
         } else
         {
             Debug.Log("Enemy is null");
+            Destroy(gameObject);
         }
     }
     private void Update()
@@ -46,39 +48,29 @@ public class ShowHPEnemy : MonoBehaviour
 
     private void UpdateListBuff()
     {
-        if (spriteElement == null || connectSprite == null || spriteElement.Length == 0 || connectSprite.Length == 0 || spriteElement.Length != connectSprite.Length)
-        {
-            Debug.Log("Dữ liệu cho showbuff ko rõ ràng");
-            return;
-        }
         for (int i = 0; i < ParentShowBuff.childCount; i++)
         {
             Destroy(ParentShowBuff.GetChild(i).gameObject);
         }
-        for (int i = 0; i < listele.Count; i++)
+        for (int i = 0; i < listBuffs.Count; i++)
         {
-            for (int j = 0; j < connectSprite.Length; j++)
-            {
-                if (connectSprite[j] == listele[i])
-                {
-                    Instantiate(PrefabsShowBuffs, ParentShowBuff).sprite = spriteElement[j];
-                }
-            }
+            Image s = Instantiate(PrefabsShowBuffs, ParentShowBuff);
+            s.sprite = listBuffs[i].sprite;
         }
     }
 
-    private void AddBuff(DamageElement ele)
+    private void AddBuff(Buff1Datas ele)
     {
         if (!BuffExist(ele))
         {
-            listele.Add(ele);
+            listBuffs.Add(ele);
             UpdateListBuff();
         }
     }
 
-    private bool BuffExist(DamageElement ele)
+    private bool BuffExist(Buff1Datas ele)
     {
-        foreach (DamageElement elem in listele)
+        foreach (Buff1Datas elem in listBuffs)
         {
             if (ele == elem)
             {
@@ -88,25 +80,26 @@ public class ShowHPEnemy : MonoBehaviour
         return false;
     }
 
-    private void RemoveBuff(DamageElement ele)
+    private void RemoveBuff(Buff1Datas ele)
     {
         if (BuffExist(ele))
         {
-            listele.Remove(ele);
+            listBuffs.Remove(ele);
             UpdateListBuff();
         }
     }
 
 
-    public void HPChanged(int oldHP, int newHP, int maxHP)
+    public void HPChanged()
     {
         if (enemy == null)
         {
             Debug.Log("Không tìm thấy quái vật để hiện thị máu");
             return;
         }
-        float a = ((float)(newHP)) / enemy.MaxHP;
+        float a = ((float)enemy.CurrentHeath / enemy.MaxHP);
         sli.value = a;
+        a = Mathf.Clamp01(a);
         render.color = color.Evaluate(a);
     }
 
@@ -123,34 +116,73 @@ public class ShowHPEnemy : MonoBehaviour
     }
     private void AddEvents()
     {
-        enemy.OnBuffsChanged += OnBuffSet;
-        enemy.OnHPChanged += HPChanged;
+        enemy.OnValueChanged += OnHasValueChaned;
         enemy.OnDeath += WhenEnemyDie;
         enemy.OnHide += () => OnEnemyHide(true);
         enemy.OnAppear += () => OnEnemyHide(false);
+
     }
 
     private void RemoveEvents()
     {
         if (enemy != null)
         {
-            enemy.OnBuffsChanged -= OnBuffSet;
-            enemy.OnHPChanged -= HPChanged;
+            enemy.OnValueChanged -= OnHasValueChaned;
             enemy.OnDeath -= WhenEnemyDie;
             enemy.OnHide -= () => OnEnemyHide(true);
             enemy.OnAppear -= () => OnEnemyHide(false);
         }
     }
 
-    private void OnBuffSet(DamageElement ele, bool isOK)
+    private void OnHasValueChaned(int c)
     {
-        if (isOK)
+        #region Buff
+        string code = string.Empty ;
+        bool value = false;
+        bool hasBuff = true;
+        if (c == Entity.HARMFUL_POISON)
         {
-            AddBuff(ele);
+            code = "Poison";
+            value = enemy.Harmful_Poison;
+        } else
+        if (c == Entity.HARMFUL_ICE)
+        {
+            code = "Ice";
+            value = enemy.Harmful_Ice;
+        } else
+        if (c == Entity.HARMFUL_FIRE)
+        {
+            code = "Fire";
+            value = enemy.Harmful_Fire;
+        } else
+        if (c == Entity.HARMFUL_ELECTIC)
+        {
+            code = "Electric";
+            value = enemy.Harmful_Electric;
+        } else
+        {
+            hasBuff = false;
         }
-        else
+        if (hasBuff)
         {
-            RemoveBuff(ele);
+            Buff1Datas b = DataMap.GetBuff(code);
+            if (b != null)
+            {
+                if (value)
+                {
+                    AddBuff(b);
+                }
+                else
+                {
+                    RemoveBuff(b);
+                }
+            }
+        }
+        #endregion
+
+        if (c == Entity.HP || c == Entity.MAPHP)
+        {
+            HPChanged();
         }
     }
 }

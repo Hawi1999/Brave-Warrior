@@ -22,9 +22,9 @@ public class Gun_Shockick : GunBase
         }
     }
 
-    protected override void SetUpDamageData(DamageData damageData, Vector3 Direction)
+    protected override void SetUpDamageData(DamageData damageData)
     {
-        base.SetUpDamageData(damageData, Direction);
+        base.SetUpDamageData(damageData);
         damageData.Type = DamageElement.Fire;
         damageData.FireTime = TimeAddFire;
         damageData.FireRatio = 1;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7725563207918249954}
   - component: {fileID: 5945235851873355518}
   - component: {fileID: 5659409466822285480}
+  - component: {fileID: 2038207017500611758}
   m_Layer: 0
   m_Name: Shockick
   m_TagString: Untagged
@@ -79,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18170ff808be22e44aef5c3e29b31ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeCollider: 1
   weapon: {fileID: 5659409466822285480}
   showname: {fileID: 7725563207918249954}
   _Name: Reward Gun Shockick
@@ -112,6 +114,32 @@ MonoBehaviour:
   isLeftDir: 0
   TFRadanPhai: {fileID: 2823408792911057709}
   TimeAddFire: 4
+--- !u!61 &2038207017500611758
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729381950199519412}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+  m_EdgeRadius: 0
 --- !u!1 &1941110085150561184
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-[Serializable]
-public class SaveScene {
-    public string NameScene;
-    public Vector3 Pos;
 
-    public SaveScene(string name, Vector3 pos)
-    {
-        NameScene = name;
-        Pos = pos;
-    }
-}
 public class GameController : MonoBehaviour
 {
     /* Thể hiện duy nhất cho GameController
@@ -58,6 +49,7 @@ public class GameController : MonoBehaviour
 
     private void LoadData()
     {
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"));
         SceneManager.sceneLoaded += (Scene, Load) => Languages.UpdateLanguageInScene();
         Languages.LanguageCurrent = Languages.Nation.VietNam;
         Languages.LoadData();
@@ -68,7 +60,7 @@ public class GameController : MonoBehaviour
         DataMap.LoadData();
     }
 
-    public static string getStringTimeBySeconds(long Giay)
+    public static string getStringTime(long Giay)
     {
 
         string s = "";
@@ -129,6 +121,72 @@ public class GameController : MonoBehaviour
     public void moMan()
     {
         MoMan.SetActive(true);
+    }
+
+    public static A GetRandomItem<A>(List<int> ut, List<A> a) where A : UnityEngine.Object
+    { 
+        if (a.Count == 0 || ut.Count == 0)
+        {
+            return null;
+        }
+        int slm = Mathf.Max(a.Count, ut.Count);
+        int sum = 0;
+        for (int i = 0; i < ut.Count; i++)
+        {
+            if (ut[i] <= 0)
+            {
+                ut[i] = 1;
+            }
+            sum += ut[i];
+        }
+        int id = 0;
+        int rd = UnityEngine.Random.Range(0, sum) + 1;
+        while (id < slm)
+        {
+            if (rd - ut[id] <= 0)
+            {
+                return a[id];
+            }
+            else
+            {
+                rd -= ut[id];
+                id++;
+            }
+        }
+        return a[0];
+    }
+
+    public static string GetRandomItem(List<int> ut, List<string> a) 
+    {
+        if (a.Count == 0 || ut.Count == 0)
+        {
+            return string.Empty;
+        }
+        int slm = Mathf.Max(a.Count, ut.Count);
+        int sum = 0;
+        for (int i = 0; i < ut.Count; i++)
+        {
+            if (ut[i] <= 0)
+            {
+                ut[i] = 1;
+            }
+            sum += ut[i];
+        }
+        int id = 0;
+        int rd = UnityEngine.Random.Range(0, sum) + 1;
+        while (id < slm)
+        {
+            if (rd - ut[id] <= 0)
+            {
+                return a[id];
+            }
+            else
+            {
+                rd -= ut[id];
+                id++;
+            }
+        }
+        return a[0];
     }
 }
 

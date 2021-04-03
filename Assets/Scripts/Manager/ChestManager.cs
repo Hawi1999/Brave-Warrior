@@ -7,7 +7,7 @@ public enum TypeChest
 {
     RCopper = 0,
     RSilver = 1,
-    RGoldGold = 2,
+    RGold = 2,
     Start = 3,
 
     WeaponCopper = 4,
@@ -27,11 +27,29 @@ public class ChestManager
         ChestDatas = Resources.LoadAll<ChestData>(Path);
         ChestPrefabs = Resources.LoadAll<Chest>(Path);
     }
+    public static Chest SpawnStartChest(ColorChest color, CodeMap codeMap, Vector3 Position)
+    {
+        ChestData cdt = getDataChest(TypeChest.Start, codeMap);
+        if (cdt == null)
+        {
+            Debug.Log("Không tìm thấy ChestData type = " + TypeChest.Start);
+            return null;
+        }
+        Chest cpf = getChestPrefab(color);
+        if (cpf == null)
+        {
+            Debug.Log("Không tìm thấy Prefabs Chest Colortype = " + color);
+            return null;
+        }
+        Chest chest = GameObject.Instantiate(cpf, Position, Quaternion.identity);
+        chest.SetUpData(cdt);
+        return chest;
+    }
 
 
     public static Chest SpawnReWardChest(ColorChest color, TypeChest type, Vector3 Position)
     {
-        ChestData cdt = getDataChest(type);
+        ChestData cdt = getDataChest(type, MAP_GamePlay.CodeMapcurent);
         if (cdt == null)
         {
             Debug.Log("Không tìm thấy ChestData type = " + type);
@@ -49,9 +67,9 @@ public class ChestManager
     }
 
 
-    public static ChestData getDataChest(TypeChest type)
+    public static ChestData getDataChest(TypeChest type, CodeMap codemap)
     {
-        return Array.Find(ChestDatas, e => e.Type == type);
+        return Array.Find(ChestDatas, e => e.Type == type && e.codeMap == codemap);
     }
 
     public static Chest getChestPrefab(ColorChest color)

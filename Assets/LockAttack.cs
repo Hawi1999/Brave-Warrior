@@ -9,13 +9,6 @@ public class LockAttack : MonoBehaviour
     void Start()
     {
         entity = GetComponent<Entity>();
-        entity.OnCheckForAttack += Lock;
+        entity.LockAttack.Register("LockAttack");
     }
-
-    private void Lock(BoolAction a)
-    {
-        a.Priority_level_false = 1;
-    }
-
-
 }

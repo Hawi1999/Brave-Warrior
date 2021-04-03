@@ -73,12 +73,12 @@ public class LockRoom : Door, IBattle
         }
     }
 
-    public void OnGameStarted()
+    public void OnSceneStarted()
     {
         Open();
     }
 
-    public void OnGameEnded()
+    public void OnSceneEnded()
     {
         
     }

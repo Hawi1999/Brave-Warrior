@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: R20B
   m_EditorClassIdentifier: 
   typeRound: 2
-  position: {x: 0, y: 0}
+  position: {x: 420, y: 228}
   groupEnemy: 1
   Waves: {fileID: 0}
-  typeChest: 0
-  colorChest: 0
-  codeMap: 0
+  typeChest: 6
+  colorChest: 2
+  AmountBoss: 1
+  WavesHail: []

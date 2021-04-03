@@ -28,7 +28,7 @@ public class HienThiThongTinCayDangTrong : MonoBehaviour
         long Giay = miniGiay / 1000;
         if (miniGiay > 0)
         {
-            TimeLeft.text = GameController.getStringTimeBySeconds(Giay);
+            TimeLeft.text = GameController.getStringTime(Giay);
             sliderTime.value = (float)timedatrong / tongthoigian;
         } else
         {

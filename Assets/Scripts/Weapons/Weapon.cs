@@ -127,7 +127,7 @@ public abstract class Weapon : MonoBehaviour, IShowName
         render.flipX = false;
         render.flipY = false;
         transform.parent = TransformInstanceOnLoad.getTransform();
-        ChooseMinapulation.Instance.Remove(reward);
+        ChooseMinapulation.PlayerChoose.Remove(reward);
     }
 
     public static string getColorNameByLevelWeapon(LevelWeapon type)

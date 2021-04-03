@@ -6,12 +6,10 @@ public enum DamageElement
     Normal = 0,
     Fire = 1,
     Poison = 2,
-    Ice = 4,
-    Electric = 5
+    Ice = 3,
+    Electric = 4
 }
 
-
-[System.Serializable]
 
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Enemy : Entity
@@ -21,11 +19,11 @@ public abstract class Enemy : Entity
     [SerializeField] public Transform PR_HP;
     [SerializeField] public Transform PR_HPsub;
     [SerializeField] Transform OffsetCenter;
-    [SerializeField] Vector2 sizeDefault = new Vector2(1,1);
     [SerializeField] protected Vector2 time_range_idle = new Vector2(2f, 4f);
     #endregion
 
     #region EditorInvisible
+    public static TakeBuff EnemyTakeBuffer = new TakeBuff();
     [HideInInspector] public DamageData LastDamageData;
     private DamageData _CurrentDamageData;
     [HideInInspector] public DamageData CurrentDamageData
@@ -66,16 +64,16 @@ public abstract class Enemy : Entity
             {
                 return false;
             }
-            return Vector2.Distance(TargetFire.center, center) <= 6f;
+            return Vector2.Distance(TargetFire.center, center) <= 20f;
         }
     }
     private Animator anim;
     private Rigidbody2D rig => GetComponent<Rigidbody2D>();
-    protected SelectingEnemy selecting;
+    protected Selecting selecting;
     protected Vector2 dirMove = new Vector2(0,0);
-    public override Vector2 size => sizeDefault * scaleCurrent;
     public override Vector2 center => (OffsetCenter == null) ? transform.position : OffsetCenter.position;
     protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    public override TakeBuff take => EnemyTakeBuffer;
     protected float time_start_action;
     protected float time_action;
     #endregion
@@ -84,7 +82,6 @@ public abstract class Enemy : Entity
         base.Awake();
         gameObject.tag = "Enemy"; 
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        ShowHP();
         anim = GetComponent<Animator>();
         selecting = Instantiate(VFXManager.SelectingEnemyPrefab, transform);
         selecting.StartUp(this);
@@ -99,23 +96,18 @@ public abstract class Enemy : Entity
     protected override void Start()
     {
         base.Start();
-        CurrentHeath = MaxHP;
+        ShowHP();
         SetNewAction(Action.Idle);
         OnBeginIdle();
     }
-    protected override void AddAllEvents()
+    protected override void SetUpStartEvents()
     {
-        base.AddAllEvents();
-        PlayerController.OnTargetFireChanged += OnSelected;
-        OnCheckForAttack += PermitAttackDefault;
+        base.SetUpStartEvents();
         OnTookDamage += EntityManager.Instance.ShowHPSub;
     }
-
-    protected override void RemoveAllEvents()
+    protected override void SetUpEndEvent()
     {
-        base.RemoveAllEvents();
-        PlayerController.OnTargetFireChanged -= OnSelected;
-        OnCheckForAttack -= PermitAttackDefault;
+        base.SetUpEndEvent();
         OnTookDamage -= EntityManager.Instance.ShowHPSub;
     }
 
@@ -126,17 +118,17 @@ public abstract class Enemy : Entity
         CurrentDamageData = dama;
         base.TakeDamage(dama);
     }
+    protected override void CheckHP(DamageData damage)
+    {
+        if (CurrentHeath <= 0)
+        {
+            damage.OnHitToDieEnemy?.Invoke(this);
+            Death();
+        }
+    }
     protected override void XLDNormal(DamageData damadata)
     {
         base.XLDNormal(damadata);
-        damadata.Decrease(Shield);
-    }
-    private void OnSelected(Enemy enemy)
-    {
-        if (selecting != null)
-        {
-            selecting.gameObject.SetActive(enemy == this);
-        }
     }
 
     protected override void OnDead()
@@ -144,11 +136,19 @@ public abstract class Enemy : Entity
         gameObject.SetActive(false);
     }
 
+    protected override void SetUpDamageData(DamageData damage)
+    {
+        base.SetUpDamageData(damage);
+        damage.AddDamageOrigin(take.GetValue(BuffRegister.TypeBuff.IncreaseDamageByValue));
+        damage.AddDamagePercentOrigin(take.GetValue(BuffRegister.TypeBuff.IncreaseDamageByPercent));
+    }
     #endregion
 
     #region Cật Nhật
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
+        CheckAttackDefault();
         UpdateStatus();
         setSorting();
         UpdateScaleRender();
@@ -241,11 +241,11 @@ public abstract class Enemy : Entity
             Vector3 dir = (TargetFire.center - center).normalized;
             if (dir.x > 0)
             {
-                transform.localScale = scaleCurrent * new Vector3(-1, 1, 1);
+                transform.localScale = ScaleCurrent.Value * new Vector3(-1, 1, 1);
             }
             else
             {
-                transform.localScale = scaleCurrent * Vector3.one;
+                transform.localScale = ScaleCurrent.Value * Vector3.one;
             }
         }
     }
@@ -382,9 +382,15 @@ public abstract class Enemy : Entity
 
     }
 
-    protected virtual void PermitAttackDefault(BoolAction boolAction)
+    protected virtual void CheckAttackDefault()
     {
-        boolAction.IsOK = HasTargetNear;
+        if (!HasTargetNear)
+        {
+            LockAttack.Register("DontHasTargetNear");
+        } else
+        {
+            LockAttack.CancelRegistration("DontHasTargetNear");
+        }
     }
 
     protected virtual void OnDrawGizmos()
@@ -414,6 +420,22 @@ public abstract class Enemy : Entity
     public override Vector3 GetPosition()
     {
         return center;
+    }
+
+    public override void OnTargetFound(Entity host, IFindTarget target)
+    {
+        if (selecting == null)
+            return;
+        if (host == PlayerController.PlayerCurrent)
+        {
+            if (target != null && target as Object != null)
+            {
+                 selecting.gameObject.SetActive(target as Object == this);
+            } else
+            {
+                selecting.gameObject.SetActive(false);
+            }
+        }
     }
 
     #endregion

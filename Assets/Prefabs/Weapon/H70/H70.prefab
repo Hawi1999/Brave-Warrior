@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6126902051391831926}
   - component: {fileID: 2422506037603961047}
   - component: {fileID: 144929362030351276}
+  - component: {fileID: -5673941507692153338}
   m_Layer: 0
   m_Name: H70
   m_TagString: Untagged
@@ -79,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18170ff808be22e44aef5c3e29b31ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeCollider: 1
   weapon: {fileID: 144929362030351276}
   showname: {fileID: 6126902051391831926}
   _Name: Reward Gun H70
@@ -110,6 +112,32 @@ MonoBehaviour:
   DoGiat: 10
   HeadGun: {fileID: 4581502055868890040}
   isLeftDir: 0
+--- !u!61 &-5673941507692153338
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4618775661193297135}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+  m_EdgeRadius: 0
 --- !u!1 &4691250858863360142
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,11 +36,11 @@ public class Ene_Qua : EnemySky
             Vector2 dir = (TargetFire.center - center).normalized;
             if (dir.x > 0)
             {
-                transform.localScale = scaleCurrent * Vector3.one;
+                transform.localScale = ScaleCurrent.Value * Vector3.one;
             }
             else
             {
-                transform.localScale = scaleCurrent * new Vector3(-1, 1, 1);
+                transform.localScale = ScaleCurrent.Value * new Vector3(-1, 1, 1);
             }
         }
     }

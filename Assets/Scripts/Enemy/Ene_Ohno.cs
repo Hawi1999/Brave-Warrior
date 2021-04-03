@@ -13,18 +13,6 @@ public class Ene_Ohno : EnemyGround
     float timeReadyAttack = 0.5f;
     float timeAttack1 = 1;
     float timeAttack2;
-
-    protected override bool HasTargetNear
-    {
-        get
-        {
-            if (TargetFire == null || TargetFire as UnityEngine.Object == null || !TargetFire.IsForFind)
-            {
-                return false;
-            }
-            return Vector2.Distance(TargetFire.center, center) <= 20f;
-        }
-    }
     Vector3 vitriranda1
     {
         get

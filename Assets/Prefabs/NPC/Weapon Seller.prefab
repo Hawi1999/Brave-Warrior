@@ -153,6 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: {fileID: 21300000, guid: 7bc165d7a298b3f4baeaab1acc684eb8, type: 3}
-  MT: {fileID: 21300000, guid: 97fbb62e69f9b914983e859fa6e29971, type: 3}
+  nameSkin: {fileID: 0}
   LocalPositionMT: {x: 0, y: 1.32, z: 0}
   LocalPositionName: {x: 0, y: 0.2, z: 0}

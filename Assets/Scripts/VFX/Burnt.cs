@@ -9,7 +9,7 @@ public class Burnt : ElementalBuffBad
     private float timeDelay = 0;
     private float timeRemaining = 0;
     private Entity target;
-    public static float TILE = 0.02f;
+    public static float TILE = 0.005f;
     public static int MIN_DAMAGE = 2;
     public static int MAX_DAMAGE = 100000;
     public static float TIME_DELAY = 0.3f;
@@ -61,7 +61,8 @@ public class Burnt : ElementalBuffBad
         target = entity;
         VFXBurnt.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);
         VFXBurnt.transform.position = target.center;
-        target.OnBuffsChanged?.Invoke(DamageElement.Fire, true);
+        target.Harmful_Fire = true;
+        target.OnValueChanged?.Invoke(Entity.HARMFUL_FIRE);
         SetLissener(true);
         AddTime(time);
     }
@@ -75,7 +76,8 @@ public class Burnt : ElementalBuffBad
     {
         SetLissener(false);
         VFXBurnt.Stop();
-        target.OnBuffsChanged?.Invoke(DamageElement.Fire, false);
+        target.Harmful_Fire = false;
+        target.OnValueChanged?.Invoke(Entity.HARMFUL_FIRE);
         base.EndUp();
     }
 

@@ -6,6 +6,4 @@ public interface ICameraTarget
 {
     Vector2 center
     {get; }
-    bool isNull
-    {get; }
 }

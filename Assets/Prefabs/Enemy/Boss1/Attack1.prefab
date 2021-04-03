@@ -4804,9 +4804,9 @@ MonoBehaviour:
   StartWhenAwake: 0
   bulletPrefab: {fileID: 2643889092834122390, guid: 24e597c43f630174eb2527f27468ac33,
     type: 3}
-  Amount: 8
+  Amount: 16
   SpawnBullet: {fileID: 2443361707491972688}
-  timeDelaySpawn: 0.8
+  timeDelaySpawn: 0.5
   AutoStart: 1
   timeStart: 1
   AutoDetruct: 1

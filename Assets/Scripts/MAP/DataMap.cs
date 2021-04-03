@@ -10,21 +10,27 @@ public class DataMap : MonoBehaviour
 
     static EnemyDatas[] _EnemyDatas;
     static TileDatas[] _TileDatas;
-    static TextureMapDatas[] _Maps;
+    static TextureMapDatas[] _MapDatas;
     static RoundDatas[] _RoundDatas;
-    static LockRoomDatas[] _Doors;
+    static LockRoomDatas[] _DoorDatas;
+    static Buff1Datas[] _Buff1Datas;
+    static Buff2Datas[] _Buff2Datas;
+    /// <summary>
+    /// Load tat ca du lieu game tu Resoures 
+    /// </summary>
     public static void LoadData()
     {
         _EnemyDatas = Resources.LoadAll<EnemyDatas>(Path);
         _TileDatas = Resources.LoadAll<TileDatas>(Path);
-        _Maps = Resources.LoadAll<TextureMapDatas>(Path);
-        _Doors = Resources.LoadAll<LockRoomDatas>(Path);
+        _MapDatas = Resources.LoadAll<TextureMapDatas>(Path);
+        _DoorDatas = Resources.LoadAll<LockRoomDatas>(Path);
         _RoundDatas = Resources.LoadAll<RoundDatas>(Path);
+        _Buff1Datas = Resources.LoadAll<Buff1Datas>(Path);
+        _Buff2Datas = Resources.LoadAll<Buff2Datas>(Path);
     }
-
     public static LockRoom GetLockRoomPrefab(LockRoomDatas.Direct direct)
     {
-        return Array.Find(_Doors, e => e.codeMap == MAP_GamePlay.CodeMapcurent && e.direct == direct).Preafabs;
+        return Array.Find(_DoorDatas, e => e.codeMap == MAP_GamePlay.CodeMapcurent && e.direct == direct).Preafabs;
     }
     public static TileDatas GetTileDatas(Color color)
     {
@@ -42,7 +48,7 @@ public class DataMap : MonoBehaviour
     }
     public static Texture2D GetSpriteMap(CodeMap c, TypeRound r)
     {
-        foreach (TextureMapDatas t in _Maps)
+        foreach (TextureMapDatas t in _MapDatas)
         {
             if (t.EqualCodes(c, r))
             {
@@ -112,7 +118,12 @@ public class DataMap : MonoBehaviour
     }
     public static RoundDatas GetRoundDatas()
     {
-        return (Array.Find(_RoundDatas, e => e.codeMap == MAP_GamePlay.CodeMapcurent));
+        RoundDatas r = Array.Find(_RoundDatas, e => e.codeMap == MAP_GamePlay.CodeMapcurent);
+        if (r != null)
+        {
+            return ScriptableObject.Instantiate(r);
+        }
+        return null;
     }
     public static TileDatas GetWallTiles()
     {
@@ -160,5 +171,22 @@ public class DataMap : MonoBehaviour
             }
         }
         return null;
+    }
+    public static Buff1Datas GetBuff(string code)
+    {
+        return Array.Find(_Buff1Datas, e => e.Code == code);
+    }
+
+    /// <summary>
+    /// Lay Clone Data type Buff2Data in Resources
+    /// </summary>
+    /// <param name="level"> level bufff </param>
+    /// <returns></returns>
+    public static Buff2Data GetBuff2(int level)
+    {
+        Buff2Datas b = Array.Find(_Buff2Datas, e => e.Level == level);
+        if (b == null)
+            return null;
+        return b.GetBuff;
     }
 }

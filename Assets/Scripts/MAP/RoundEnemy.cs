@@ -46,6 +46,7 @@ public class RoundEnemy : RoundBase
     {
         if (id_new > idmax)
         {
+            RoundComplete();
             Clear();
         } else
         {
@@ -57,6 +58,7 @@ public class RoundEnemy : RoundBase
     {
         OpenAllDoor();
         OnClear();
+        RoundCurrent = null;
         PlayerController.PlayerCurrent.setLimitMove(null);
     }
     private void SpawnEnemy(int a)
@@ -106,7 +108,7 @@ public class RoundEnemy : RoundBase
     {
         Vector3 pos = TileManager.GetPositionInGoundCurrent();
         pos = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), 0) + new Vector3(0.5f, 0.5f, 0);
-        ChestManager.SpawnReWardChest(ColorChest.Copper, TypeChest.RCopper, pos);
+        ChestManager.SpawnReWardChest(Data.colorChest, Data.typeChest, pos);
         PlayerController.PlayerCurrent.setLimitMove(null);
     }
 

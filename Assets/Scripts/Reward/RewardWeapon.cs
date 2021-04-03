@@ -8,11 +8,13 @@ public class RewardWeapon : Reward
     public Weapon weapon;
     public ShowName showname;
     public string _Name;
+
+    protected bool showed = false;
     public override bool WaitingForChoose
     {
         get
         {
-            return weapon.TrangThai == WeaponStatus.Free && !player.IsWeapon(weapon);
+            return weapon.TrangThai == WeaponStatus.Free && !player.IsWeapon(weapon) && base.WaitingForChoose;
         }
     }
     public override string Name
@@ -22,23 +24,9 @@ public class RewardWeapon : Reward
             return _Name;
         }
     }
-
-    private void Update()
-    {
-        if (player != null)
-            {
-            if (isNearPlayer(1f) && WaitingForChoose)
-            {
-                ChooseMinapulation.Instance.Add(this);
-            } else if (player != null)
-            {
-                ChooseMinapulation.Instance.Remove(this);
-            }
-        }
-    }
     public override void OnChoose(IManipulation manipulation)
     {
-        if (manipulation == this)
+        if (manipulation != null && manipulation as Object == this)
         {
             showname.Show();
         }
@@ -49,23 +37,21 @@ public class RewardWeapon : Reward
     }
     public override void TakeManipulation(PlayerController host)
     {
+        base.TakeManipulation(host);
         host.Equipment(weapon);
-        ChooseMinapulation.Instance.Remove(this);
         showname.Hide();
     }
 
-    public override void Appear()
+    public override void OnPlayerInto()
     {
-        PositionControl pct = gameObject.AddComponent<PositionControl>();
-        pct.SetUp(transform.position, transform.position + new Vector3(0,0.4f,0), 0.5f);
-        pct.StartAnimation();
-    }
-
-    private bool isNearPlayer(float Distance)
-    {
-        if (player == null)
-            return false;
-        return Vector2.Distance(transform.position, player.GetPosition()) <= Distance;
+        base.OnPlayerInto();
+        if (!showed)
+        {
+            PositionControl pct = gameObject.AddComponent<PositionControl>();
+            pct.SetUp(transform.position, transform.position + new Vector3(0,0.4f,0), 0.5f);
+            pct.StartAnimation();
+            showed = true;
+        }
     }
 
     private void OnValidate()

@@ -117,45 +117,19 @@ public class Personal : MonoBehaviour
     public static void AddDOLA(int a)
     {
         int old = DOLA;
-        int add;
-        if (a >= 0)
-        {
-            add = (int)(a * (Buffer.Buff_DOLA));
-        } else
-        {
-            add = (int)(a * Buffer.Neft_DOLA);
-        }
-
-        DOLA += add;
+        DOLA += a;
         OnDOLAChanged?.Invoke(old, DOLA);
     }
     public static void AddDia(int a)
     {
         int old = Dia;
-        int add;
-        if (a >= 0)
-        {
-            add = (int)(a * (Buffer.Buff_Dia));
-        }
-        else
-        {
-            add = (int)(a * Buffer.Neft_Dia);
-        }
-        Dia += add;
+        Dia += a;
         OnDiaChanged?.Invoke(old, Dia);
     }
     public static void AddTheLuc(int a)
     {
         int old = TheLuc;
-        int add;
-        if (a >= 0)
-        {
-            add = (int)(a * Buffer.Buff_TL);
-        } else
-        {
-            add = (int)(a * Buffer.Neft_TL);
-        }
-        TheLuc += add;
+        TheLuc += a;
         OnTheLucChanged?.Invoke(old, TheLuc);
     }
     private void ThongBaoDOLAChanged(int o, int n)

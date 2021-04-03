@@ -24,6 +24,11 @@ public class ShowName : MonoBehaviour
         SetUp();
     }
 
+    private void Start()
+    {
+        renderName.color = ishowname.GetColorName();
+    }
+
     public void Show()
     {
         if (Info != null)
@@ -81,7 +86,6 @@ public class ShowName : MonoBehaviour
         renderMT.transform.position = thongtinMT;
         renderName.sortingLayerName = "Effect";
         renderName.sortingOrder = 15;
-        renderName.color = ishowname.GetColorName();
 
         renderMT.sortingLayerName = "Effect";
         renderMT.sortingOrder = 15;

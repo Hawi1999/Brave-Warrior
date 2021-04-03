@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Events;
 
 public class MAPController : MonoBehaviour
 {
@@ -208,4 +209,9 @@ public class MAPController : MonoBehaviour
         }
         GameController.Instance.LoadScene(scene);
     }
+
+    /// <summary>
+    /// Hàm này được gọi khi khi qua màn OpenMap
+    /// </summary>
+    public static UnityEvent OnGameReadyStart;
 }

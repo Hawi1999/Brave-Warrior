@@ -6,6 +6,7 @@ public enum TypeTarget
 {
     Enemy,
     Player,
+    Object
 }
 
 public interface IFindTarget: ICameraTarget
@@ -14,9 +15,7 @@ public interface IFindTarget: ICameraTarget
     {
         get;
     }
-    bool IsForFind
-    {
-        get;
-    }
     Vector2 size { get;}
+    void OnTargetFound(Entity host, IFindTarget target);
+    bool IsForFind {get; }
 }

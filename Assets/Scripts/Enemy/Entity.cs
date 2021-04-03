@@ -3,69 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BoolAction
-{
-    private bool _IsOK;
-    private int ptrue = 0;
-    private int pfalse = 0;
-    public bool IsOK
-    {
-        set
-        {
-            _IsOK = value;
-        }
-        get
-        {
-            if (Priority_level_true > Priority_level_false)
-            {
-                return true;
-            }
-            if (Priority_level_true < Priority_level_false)
-            {
-                return false;
-            }
-            return _IsOK;
-        }
-    }
-    public int Priority_level_true
-    {
-        get
-        {
-            return ptrue;
-        }
-        set
-        {
-            if (value > ptrue)
-            {
-                ptrue = value;
-            }
-        }
-    }
-    public int Priority_level_false
-    {
-        get
-        {
-            return pfalse;
-        }
-        set
-        {
-            if (value > pfalse)
-            {
-                pfalse = value;
-            }
-        }
-    }
-    public BoolAction(bool a)
-    {
-        IsOK = a;
-    }
-}
-
 public abstract class Entity : MonoBehaviour, IFindTarget
 {
-    [SerializeField] protected int Heath = 50;
-    [SerializeField] protected int Shield = 0;
-    public virtual int MaxHP => Heath;
+    [SerializeField] protected int HeathBasic = 50;
+    [SerializeField] protected Vector2 sizeDefault = new Vector2(1, 1);
+    public virtual int MaxHP { get; set; }
     protected int _CurrentHeath;
     public virtual int CurrentHeath
     {
@@ -77,65 +19,40 @@ public abstract class Entity : MonoBehaviour, IFindTarget
         {
             int old = _CurrentHeath;
             _CurrentHeath = Mathf.Clamp(value, 0, MaxHP);
-            OnHPChanged?.Invoke(old, _CurrentHeath, MaxHP);
+            if (old != _CurrentHeath)
+            {
+                OnValueChanged?.Invoke(HP);
+            }
         }
     }
-    protected virtual bool PermitMove
-    {
-        get
-        {
-            BoolAction pm = new BoolAction(true);
-            OnCheckForMove?.Invoke(pm);
-            return pm.IsOK;
-        }
-    }
-    protected virtual bool PermitAttack
-    {
-        get
-        {
-            BoolAction check = new BoolAction(true);
-            OnCheckForAttack?.Invoke(check);
-            return check.IsOK;
-        }
-    }
-
-    protected virtual bool PermitDown
-    {
-        get
-        {
-            BoolAction check = new BoolAction(true);
-            OnCheckForDown?.Invoke(check);
-            return check.IsOK;
-        }
-    }
-    public virtual bool IsForFind => (isActiveAndEnabled && !Died);
-    [SerializeField]
-    protected SpriteRenderer render;
+    protected virtual bool PermitMove => LockMove.isOk;
+    protected virtual bool PermitAttack => LockAttack.isOk;
+    protected virtual bool PermitSkill => LockUseSkill.isOk;
+    public virtual bool IsForFind => (isActiveAndEnabled && !Died.Value);
+    public SpriteRenderer render;
 
     public Vector3 Direction
     {get;set;
     }
-    // Được gọi khi HO thay đổi
-    public UnityAction<int, int, int> OnHPChanged;
+    public Vector3 DirectionCurrent;
+    public abstract TakeBuff take { get; }
     // Được goi khi Entity Die
     public UnityAction<Entity> OnDeath;
+    public UnityAction<Entity> OnRivive;
     // Được gọi khi Buff nào đó xuất hiện hay biến mất
-    public UnityAction<DamageElement, bool> OnBuffsChanged;
+    public UnityAction<int> OnValueChanged;
     // Chỉnh sửa sát thương trước khi nhân
     public UnityAction<DamageData> OnTakeDamage;
     // Xem Damage sau khi nhận
     public UnityAction<DamageData> OnTookDamage;
-    // Kiểm tra được phép di chuyển hay không
-    public UnityAction<BoolAction> OnCheckForMove;
-    // Kiểm tra được phép tấn công hay không
-    public UnityAction<BoolAction> OnCheckForAttack;
-    // Kiểm tra được phép Down hay không
-    public UnityAction<BoolAction> OnCheckForDown;
+    public LockAction LockMove = new LockAction();
+    public LockAction LockAttack = new LockAction();
+    public LockAction LockColliderTakeDamage = new LockAction();
+    public LockAction LockUseSkill = new LockAction();
     [Tooltip("được gọi khi chui xuống đất")]
     public UnityAction OnIntoTheGound;
     [Tooltip("được gọi khi chui xuống đất")]
     public UnityAction OnOuttoTheGound;
-
     [Tooltip("được gọi mỗi Frame khi tấn công")]
     public UnityAction OnAttacked;
     [Tooltip("được gọi mỗi Frame khi không tấn công")]
@@ -173,8 +90,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     }
     protected virtual void Awake()
     {
-        AddAllEvents();
-        CurrentHeath = Heath;
+        SetUpStartEvents();
     }
 
     #region Invoke UnityAction
@@ -192,20 +108,31 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     protected Vector2[] limitMove;
     protected virtual void Start()
     {
-
+        SetUpStartvalue();
     }
 
-
+    protected virtual void Update()
+    {
+        if (transform.hasChanged)
+        {
+            OnValueChanged?.Invoke(TRANSFORM);
+        }
+    }
     protected void Death()
     {
-        Died = true;
+        Died.Value = true;
         OnDead();
         OnDeath?.Invoke(this);
     }
-
     protected virtual void OnDead()
     {
     }
+
+    public void AddHealth(int a)
+    {
+        CurrentHeath += a;
+    }
+    #region TakeDamage
     public virtual void TakeDamage(DamageData dama)
     {
         dama.To = this;
@@ -215,7 +142,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
         }
         Damaged(dama.Damage);
         OnTookDamage?.Invoke(dama);
-        CheckHP();
+        CheckHP(dama);
     }
     protected virtual void XLD(DamageData damadata)
     {
@@ -308,10 +235,6 @@ public abstract class Entity : MonoBehaviour, IFindTarget
             }
         }
     }
-    public virtual Vector3 GetPosition()
-    {
-        return transform.position;
-    }
     public abstract IFindTarget TargetFire
     {
         get; set;
@@ -320,11 +243,17 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         CurrentHeath -= damage;
     }
+    protected virtual void WhenValueChanged(int code)
+    {
+
+    }
     protected virtual void VFXTookDamage(DamageData damadata)
     {
         Force.BackForce(gameObject, damadata.Direction, damadata.BackForce, 0.2f);
      }
     // CallBack from iTween
+
+    #endregion 
     protected void fixTransform()
     {
         if (limitMove == null)
@@ -350,19 +279,20 @@ public abstract class Entity : MonoBehaviour, IFindTarget
         }
         transform.position = position;
     }
-    protected void CheckHP()
+    protected virtual void CheckHP(DamageData damage)
     {
         if (CurrentHeath <= 0)
         {
+            OnValueChanged?.Invoke(DIED);
             Death();
         }
     }
-    protected bool Died;
+    protected ValueBool Died = new ValueBool(false);
     public virtual bool IsALive
     {
         get
         {
-            return !Died;
+            return !Died.Value;
         }
     }
     public virtual Vector3 DirectFire { get; set; }
@@ -375,12 +305,17 @@ public abstract class Entity : MonoBehaviour, IFindTarget
             return (WeaponCurrent != null);
         }
     }
-    protected virtual float scaleCurrent => 1;
+
+    public ValueFloat ScaleCurrent = new ValueFloat(1);
     public bool IsWeapon(Weapon weapon)
     {
         if (WeaponCurrent == null)
             return false;
         return WeaponCurrent == weapon;
+    }
+    public virtual Vector3 GetPosition()
+    {
+        return transform.position;
     }
 
     public virtual void OnEquipment(Weapon weapon)
@@ -393,27 +328,68 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
 
     }
-    protected virtual void RemoveAllEvents()
+    protected  virtual void SetUpStartEvents()
     {
-        OnTakeDamage -= XLD;
-        OnTookDamage -= VFXTookDamage;
-        OnIntoTheGound -= InvokeHide;
-        OnOuttoTheGound -= InvokeAppear;
-        OnDeath -= (a) => RemoveAllEvents();
-    }
+        LockAttack.OnValueChanged += () => OnValueChanged?.Invoke(LOCK_ATTACK);
+        LockMove.OnValueChanged += () => OnValueChanged?.Invoke(LOCK_MOVE);
+        LockColliderTakeDamage.OnValueChanged += () => OnValueChanged?.Invoke(LOCK_COLLIDER_TAKEDAMAGE);
+        Died.OnValueChanged += () => OnValueChanged?.Invoke(DIED);
+        ScaleCurrent.OnValueChanged += () => OnValueChanged?.Invoke(SCALESIZE);
 
-    protected virtual void AddAllEvents()
-    {
+        take.OnBuffRegisterValueChanged += OnBuffRegistersValueChanged;
+        take.OnValueChanged += OnTakeBuffValueChanged;
+
+        OnValueChanged += WhenValueChanged;
+
         OnTakeDamage += XLD;
         OnTookDamage += VFXTookDamage;
         OnIntoTheGound += InvokeHide;
         OnOuttoTheGound += InvokeAppear;
-        OnDeath += (a) => RemoveAllEvents();
+    }
+
+    protected virtual void SetUpEndEvent()
+    {
+        LockAttack.OnValueChanged -= () => OnValueChanged?.Invoke(LOCK_ATTACK);
+        LockMove.OnValueChanged -= () => OnValueChanged?.Invoke(LOCK_MOVE);
+        LockColliderTakeDamage.OnValueChanged -= () => OnValueChanged?.Invoke(LOCK_COLLIDER_TAKEDAMAGE);
+        Died.OnValueChanged -= () => OnValueChanged?.Invoke(DIED);
+        ScaleCurrent.OnValueChanged -= () => OnValueChanged?.Invoke(SCALESIZE);
+
+        take.OnBuffRegisterValueChanged -= OnBuffRegistersValueChanged;
+        take.OnValueChanged -= OnTakeBuffValueChanged;
+
+        OnValueChanged += WhenValueChanged;
+
+        OnTakeDamage -= XLD;
+        OnTookDamage -= VFXTookDamage;
+        OnIntoTheGound -= InvokeHide;
+        OnOuttoTheGound -= InvokeAppear;
+    }
+
+    protected virtual void SetUpStartvalue()
+    {
+        MaxHP = (int)(take.GetValue(BuffRegister.TypeBuff.IncreaseMaxHealthByPercent) * HeathBasic + HeathBasic + take.GetValue(BuffRegister.TypeBuff.IncreaseMaxHealthByValue));
+
+        CurrentHeath = MaxHP;
+    }
+
+    protected virtual void OnBuffRegistersValueChanged(BuffRegister.TypeBuff Type, ChangesValue changes)
+    {
+        if (Type == BuffRegister.TypeBuff.IncreaseSizeByPercent)
+        {
+            ScaleCurrent.Value = 1 + take.GetValue(BuffRegister.TypeBuff.IncreaseSizeByPercent);
+            transform.localScale = new Vector3(ScaleCurrent.Value, ScaleCurrent.Value, 1);
+        }
+    }
+
+    protected virtual void OnTakeBuffValueChanged(int a)
+    {
+
     }
 
     protected virtual void OnDestroy()
     {
-
+        SetUpEndEvent();
     }
     public virtual void setLimitMove(Vector2[] vector2s)
     {
@@ -422,9 +398,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     #region IFindTarget
     public virtual TypeTarget typeTarget => TypeTarget.Enemy;
     public virtual Vector2 center => transform.position;
-    public virtual Vector2 size => transform.localScale;
-
-    public virtual bool isNull => (this == null);
+    public virtual Vector2 size => sizeDefault * ScaleCurrent.Value;
 
     protected virtual Action NextAction
     {
@@ -434,6 +408,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         get; set;
     }
+
 
     public enum Action
     {
@@ -455,6 +430,11 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         damage.From = this;
     }
+    public virtual void OnTargetFound(Entity entity, IFindTarget t)
+    {
+
+    }
+
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         
@@ -464,6 +444,34 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         
     }
+    #endregion
+
+    #region ValueChanged 
+    public static int LOCK_ATTACK = 1;
+    public static int LOCK_MOVE = 2;
+    public static int LOCK_COLLIDER_TAKEDAMAGE = 3;
+    public static int DIED = 4;
+    public static int TIED = 5;
+    public static int SCALESIZE = 6;
+    public static int TRANSFORM = 7;
+    public static int HP;
+    public static int MAPHP;
+    public static int SHIELD;
+    public static int MAXSHIELD;
+    public static int HEALPHY;
+
+    public static int HARMFUL_ELECTIC = 100;
+    public static int HARMFUL_POISON = 101;
+    public static int HARMFUL_FIRE = 102;
+    public static int HARMFUL_ICE = 103;
+    [HideInInspector]
+    public bool Harmful_Electric = false;
+    [HideInInspector]
+    public bool Harmful_Poison = false;
+    [HideInInspector]
+    public bool Harmful_Fire = false;
+    [HideInInspector]
+    public bool Harmful_Ice = false;
     #endregion
 
     #region  Value Animate
@@ -490,6 +498,11 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         gameObject.SetActive(true);
         OnAppear?.Invoke();
+    }
+
+    public virtual void Revive()
+    {
+        OnRivive?.Invoke(this);
     }
 
 

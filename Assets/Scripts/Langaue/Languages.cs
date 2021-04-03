@@ -32,9 +32,11 @@ public class Languages : MonoBehaviour
     }
 
     private static Lang[] MutiLang;
+    private static LangSprite[] MutiLangSprite;
     public static void LoadData()
     {
-         MutiLang = Resources.LoadAll<Lang>("Language");
+        MutiLang = Resources.LoadAll<Lang>("Language");
+        MutiLangSprite = Resources.LoadAll<LangSprite>("Language");
     }
     public enum Nation
     {
@@ -79,6 +81,16 @@ public class Languages : MonoBehaviour
         return a;
     }
 
+    public static Sprite getSprite(string CODE)
+    {
+        LangSprite lang = null;
+        if (MutiLangSprite != null)
+        {
+            lang = Array.Find(MutiLangSprite, e => e.CODE == CODE);
+        }
+        return getSprite(lang, LanguageCurrent);
+    }
+
     private static string getString(Lang lang, Nation nation)
     {
         if (lang == null)
@@ -95,6 +107,21 @@ public class Languages : MonoBehaviour
                 return string.Empty;
         }
     }
-
+    private static Sprite getSprite(LangSprite lang, Nation nation)
+    {
+        if (lang == null)
+        {
+            return null;
+        }
+        switch (nation)
+        {
+            case Nation.VietNam:
+                return lang.VietNam;
+            case Nation.EngLish:
+                return lang.English;
+            default:
+                return null;
+        }
+    }
 
 }

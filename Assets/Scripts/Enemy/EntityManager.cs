@@ -98,14 +98,25 @@ public class EntityManager : MonoBehaviour
         return enemy;
     }
 
-    public void SpawnPlayer()
+    public void SpawnPlayer(PlayerController player)
     {
-        PlayerController player = PlayerController.PlayerCurrent;
         if (player == null)
             return;
+        player.gameObject.SetActive(false);
         VFXSpawn v = Instantiate(VFXSpawnPrefabs, player.transform.position, Quaternion.identity);
         player.Spawning();
         v.OnCompleteVFX += player.BeginInRound;
+    }
+
+    public void RevivePlayer(PlayerController player)
+    {
+        if (player == null)
+            return;
+        player.gameObject.SetActive(false);
+        VFXSpawn v = Instantiate(VFXSpawnPrefabs, player.transform.position, Quaternion.identity);
+        player.Spawning();
+        v.OnCompleteVFX += player.BeginInRound;
+        v.OnCompleteVFX += player.Revive; 
     }
 
     public static Color GetColorByElement(DamageElement ele)

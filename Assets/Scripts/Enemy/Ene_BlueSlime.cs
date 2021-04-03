@@ -35,6 +35,18 @@ public class Ene_BlueSlime : EnemyGround
         pool.RemovePrefab(id_bul);
     }
 
+    protected override void OnDead()
+    {
+        base.OnDead();
+        pool.RemovePrefab(id_bul);
+    }
+
+    public override void Revive()
+    {
+        base.Revive();
+        id_bul = pool.AddPrefab(bulletPrefabs);
+    }
+
     protected override void ChooseNextAction()
     {
         if (CurrentAction == Action.Idle)
@@ -112,12 +124,12 @@ public class Ene_BlueSlime : EnemyGround
 
     protected override void XLDIce(DamageData damaData)
     {
-        damaData.DecreaseByPercent(0.5f);
+        damaData.AddDecreaseByPercent(0.5f);
     }
 
     protected override void XLDFireFireFrom(DamageData damageData)
     {
         base.XLDFireFireFrom(damageData);
-        damageData.DecreaseByPercent(-2);
+        damageData.AddDecreaseByPercent(-2);
     }
 }

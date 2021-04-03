@@ -32,6 +32,19 @@ public class Ene_FireGhost : EnemyGhost
         base.OnDestroy();
         pool.RemovePrefab(id_bull);
     }
+
+
+    protected override void OnDead()
+    {
+        base.OnDead();
+        pool.RemovePrefab(id_bull);
+    }
+
+    public override void Revive()
+    {
+        base.Revive();
+        id_bull = pool.AddPrefab(Bullet);
+    }
     protected override void ChooseNextAction()
     {
         if (CurrentAction == Action.Idle)

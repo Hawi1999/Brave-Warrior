@@ -14,6 +14,7 @@ public class RoundBoss : RoundBase
     protected override void OnPLayerOnInFirst()
     {
         base.OnPLayerOnInFirst();
+        PlayerController.PlayerCurrent.setLimitMove(Data.GetPositionLimit());
         StartRound();
     }
 
@@ -27,13 +28,44 @@ public class RoundBoss : RoundBase
             return;
         }
         CloseAllDoor();
-        Enemy enemy = EntityManager.Instance.SpawnEnemy(prefab, transform.position, transform);
-        enemy.OnDeath += (E) => OnHasEnemyDie(E as Enemy);
-        enemy.OnSpawnEnemyMore += HasMoreEnemy;
+        List<Vector2> listposspawn = new List<Vector2>();
+        for (int i = 0; i < Data.AmountBoss; i++)
+        {
+            listposspawn.Add(Vector2.zero);
+        }
+        switch (Data.AmountBoss)
+        {
+            case 1:
+                listposspawn[0] = Data.position;
+                break;
+            case 2:
+                listposspawn[0] = Data.position + new Vector2(-Data.Size.x / 4, 0);
+                listposspawn[1] = Data.position + new Vector2(Data.Size.x / 4, 0);
+                break;
+            case 3:
+                listposspawn[0] = Data.position + new Vector2(-Data.Size.x / 4, 0);
+                listposspawn[1] = Data.position + new Vector2(Data.Size.x / 4, 0);
+                listposspawn[2] = Data.position + new Vector2(0,Data.Size.y / 4);
+                break;
+            case 4:
+                listposspawn[2] = Data.position + new Vector2(0, Data.Size.y / 4);
+                listposspawn[0] = Data.position + new Vector2(-Data.Size.x / 4, 0);
+                listposspawn[1] = Data.position + new Vector2(Data.Size.x / 4, 0);
+                listposspawn[3] = Data.position + new Vector2(0, -Data.Size.y / 4);
+                break;
+
+
+        }
+        for (int i = 0; i < Data.AmountBoss; i++)
+        {
+            Enemy enemy = EntityManager.Instance.SpawnEnemy(prefab, listposspawn[i], transform);
+            HasMoreEnemy(enemy);
+        }
 
     }
     private void HasMoreEnemy(Enemy e)
     {
+        Debug.Log("Enemy Added");
         enemtsSpawned.Add(e);
         e.OnDeath += (E) => OnHasEnemyDie(E as Enemy);
         e.OnSpawnEnemyMore += HasMoreEnemy;
@@ -42,6 +74,7 @@ public class RoundBoss : RoundBase
     private void OnHasEnemyDie(Enemy e)
     {
         enemtsSpawned.Remove(e);
+        Debug.Log("Removed con lai :" + enemtsSpawned.Count);
         if (enemtsSpawned.Count <= 0)
         {
             EndRound();
@@ -50,7 +83,9 @@ public class RoundBoss : RoundBase
 
     private void EndRound()
     {
-        Debug.Log("Chưa có hiệu ứng khi hết trận nè");
         OpenAllDoor();
+        RoundComplete();
+        RoundCurrent = null;
+        PlayerController.PlayerCurrent.setLimitMove(null);
     }
 }

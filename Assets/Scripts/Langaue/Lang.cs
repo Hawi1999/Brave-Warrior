@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "new Code", menuName = "Language/new Code")]
+[CreateAssetMenu(fileName = "new Code", menuName = "Language/Strings")]
 public class Lang : ScriptableObject
 {
     public string CODE => name;

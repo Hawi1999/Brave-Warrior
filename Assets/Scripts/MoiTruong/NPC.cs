@@ -19,12 +19,13 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
     bool geting = false;
     public virtual void OnChoose(IManipulation manipulation)
     {
-        if (manipulation == this)
+        if (manipulation != null && manipulation as Object == this)
         {
-            ShowOutLine(true);
-        } else
+            showname.Show();
+        }
+        else
         {
-            ShowOutLine(false);
+            showname.Hide();
         }
     }
 
@@ -65,7 +66,6 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
     private void Start()
     {
         EnableInfo(true);
-        ShowOutLine(false);
     }
     private void Update()
     {
@@ -91,10 +91,10 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
     {
         if (isNearPlayer(1.5f) && WaitingForChoose)
         {
-            ChooseMinapulation.Instance.Add(this);
+            ChooseMinapulation.PlayerChoose.Add(this);
         } else
         {
-            ChooseMinapulation.Instance.Remove(this);
+            ChooseMinapulation.PlayerChoose.Remove(this);
         }
     }
     private bool isNearPlayer(float Distance)
@@ -106,15 +106,6 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
     #endregion
 
     #region Void
-    protected void ShowOutLine(bool a)
-    {
-        if (a)
-        {
-            render?.material.SetInt("show_outline", 1);
-        } else {
-            render?.material.SetInt("show_outline", 0);
-        }
-    }
     protected void EnableInfo(bool isEnable)
     {
         if (showname != null)

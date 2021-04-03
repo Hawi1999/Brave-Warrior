@@ -11,7 +11,6 @@ public class RewardManager : MonoBehaviour
     {
         AllRewards = Resources.Load<Rewards>(Path);
     }
-
     public static Reward GetRewardByName(string Name)
     {
         List <Reward> Rewards = new List<Reward>();
@@ -21,7 +20,6 @@ public class RewardManager : MonoBehaviour
         return Array.Find(Rewards.ToArray(), e => e.Name == Name);
 
     }
-
     public static Reward[] GetRewardsByName(string[] Name)
     {
         List<Reward> rewards = new List<Reward>();
@@ -34,5 +32,20 @@ public class RewardManager : MonoBehaviour
             }
         }
         return rewards.ToArray();
+    }
+
+    static string PathRewardBuff = "Prefabs/RewardBuff";
+    public static void Buff2(Vector2 position, int level)
+    {
+        BuffInGround prefab = Resources.Load<BuffInGround>(PathRewardBuff);
+        Buff2Data b = DataMap.GetBuff2(level);
+        if (prefab == null || b == null)
+        {
+            Debug.Log("Khong tin tai Prefab hoac Buff");
+            return;
+        }
+        BuffInGround buff = Instantiate(prefab);
+        buff.transform.position = position;
+        buff.SetUp(b);
     }
 }

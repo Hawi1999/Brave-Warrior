@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public class RoundBegin : RoundBase, IBattle
 {
-    public void OnGameStarted()
+    public void OnSceneStarted()
     {
-        EntityManager.Instance.SpawnPlayer();
+        EntityManager.Instance.SpawnPlayer(PlayerController.PlayerCurrent);
         OpenAllDoor();
     }
 
-    public void OnGameEnded()
+    public void OnSceneEnded()
     {
         
     }

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c73fd1438772f34995b349d04c06ae9, type: 3}
+  m_Name: R30
+  m_EditorClassIdentifier: 
+  typeRound: 1
+  position: {x: 0, y: 0}
+  groupEnemy: 1
+  Waves: {fileID: 11400000, guid: a424959a1ee5dba46adcfd66bab0b7d8, type: 2}
+  typeChest: 1
+  colorChest: 1
+  AmountBoss: 1
+  WavesHail: []

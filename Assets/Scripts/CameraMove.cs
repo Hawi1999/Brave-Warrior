@@ -2,13 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+public class TaretVector3
+{
+    public string id;
+    public Vector3 position;
+
+    public TaretVector3(string id, Vector3 position)
+    {
+        this.id = id;
+        this.position = position;
+    }
+    public void SetPosition(Vector3 a)
+    {
+        position = a;
+    }
+}
 
 public class CameraMove : MonoBehaviour
 {
     public static CameraMove Instance{
         get; private set;
     }
-    private Vector2 currentVelocity;
     private Vector3 currentVelocity3;
     [SerializeField] private float smoothTime = 0.05f;
     [SerializeField] private float MaxSpeed = 4;
@@ -24,6 +38,32 @@ public class CameraMove : MonoBehaviour
 
     bool isShaking = false;
     float timeShaking = 0;
+    List<TaretVector3> targets = new List<TaretVector3>();
+
+    public void AddPosition(TaretVector3 target)
+    {
+        for (int i = 0; i < targets.Count;i++)
+        {
+            if (target.id == targets[i].id)
+            {
+                targets[i].SetPosition(target.position);
+                return;
+            }
+        }
+        targets.Add(target);
+    }
+
+    public void RemovePosition(string id)
+    {
+        for (int i = targets.Count - 1; i > -1; i--)
+        {
+            if (id == targets[i].id)
+            {
+                targets.RemoveAt(i);
+                return;
+            }
+        }
+    }
     private void Awake()
     {
         if (Instance == null)
@@ -44,8 +84,7 @@ public class CameraMove : MonoBehaviour
             Debug.LogWarning("Khong tim thay Player");
             return;
         }
-        Vector3 target_pos = targetMove();
-        MoveSmooth(transform.position, target_pos);
+        Move();
         if (isShaking)
         {
             // Shaking thì sao ?
@@ -78,20 +117,22 @@ public class CameraMove : MonoBehaviour
         transform.position = transform.position + new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0);
     }
 
-    void MoveSmooth(Vector3 oldPosition, Vector3 target)
+    void Move()
     {
-        Vector3 new_pos;
-        transform.position = Vector3.SmoothDamp(oldPosition, target, ref currentVelocity3, smoothTime);
-        //new_pos.x = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.x, target.x, ref currentVelocity.x, smoothTime, MaxSpeed), Xmin, Xmax);
-        //new_pos.y = Mathf.Clamp(Mathf.SmoothDamp(oldPosition.y, target.y, ref currentVelocity.y, smoothTime, MaxSpeed), Ymin, Ymax);
-        //new_pos.z = -10;
-    }
-
-    Vector3 targetMove()
-    {
-        if (!Player.HasEnemyAliveNear)
-            return Player.center;
-        return (Player.TargetFire.center + Player.center)/2;
+        if (targets.Count == 0)
+        {
+            return;
+        }
+        Vector3 target = Vector3.zero;
+        string s = string.Empty;
+        foreach (TaretVector3 t in targets)
+        {
+            s += t.id + ":" +  t.position + "\n";
+            target += t.position;
+        }
+        target /= targets.Count;
+        target.z = -10;
+        transform.position = Vector3.SmoothDamp(transform.position, target, ref currentVelocity3, smoothTime);
     }
 
     private void OnDestroy()

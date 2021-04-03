@@ -211,14 +211,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2979647d06c76438d52104fe38d3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 60
-  Shield: 0
+  HeathBasic: 60
+  sizeDefault: {x: 0.7, y: 0.64}
   render: {fileID: 5426267566257498371}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: OcSen
   PR_HP: {fileID: 5964169202379816414}
   PR_HPsub: {fileID: 5223254241339383948}
   OffsetCenter: {fileID: 5270981782778859902}
-  sizeDefault: {x: 0.7, y: 0.64}
   time_range_idle: {x: 0.5, y: 1}
   LastDamageData: {fileID: 0}
   time_range_move: {x: 1, y: 2}

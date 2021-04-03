@@ -41,22 +41,17 @@ public class KhoNongSan : Bag, IUpdateLanguage
         BT.ChangeText(0, "Mo");
         BT.SetListener(0, Open);
         HienBT();
-        PlayerController.PlayerCurrent.OnCheckForMove -= LockMove;
+        PlayerController.PlayerCurrent.LockMove.CancelRegistration("OpenKho");
     }
+    int id_block_move;
     protected override void Open()
     {
         base.Open();
         BT.ChangeText(0, Languages.getString("SapXep"));
         BT.SetListener(0, SapXep);
         UpdateList();
-        PlayerController.PlayerCurrent.OnCheckForMove += LockMove;
+        PlayerController.PlayerCurrent.LockMove.Register("OpenKho");
     }
-
-    private void LockMove(BoolAction permitMove)
-    {
-        permitMove.IsOK = false;
-    }
-
 
 
     public void AddItemSave(Item item, int SoLuong)

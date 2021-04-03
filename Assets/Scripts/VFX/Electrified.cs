@@ -29,11 +29,11 @@ public class Electrified : ElementalBuffBad
 
         if (!isInElectricShock)
         {
-            if (Time.time - lastTime > DelayTime)
+            if (Time.time - lastTime > DelayTime && target != null)
             {
                 isInElectricShock = true;
-                target.OnCheckForAttack += LockAttack;
-                target.OnCheckForMove += LockMove;
+                target.LockAttack.Register("Electrical");
+                target.LockMove.Register("Electrical");
                 if (avalableRender)
                 {
                     ShockWave();
@@ -42,11 +42,11 @@ public class Electrified : ElementalBuffBad
             }
         } else
         {
-            if (Time.time - lastTimeGiat > timeGiat)
+            if (Time.time - lastTimeGiat > timeGiat && target != null)
             {
                 isInElectricShock = false;
-                target.OnCheckForAttack -= LockAttack;
-                target.OnCheckForMove -= LockMove;
+                target.LockAttack.CancelRegistration("Electrical");
+                target.LockMove.CancelRegistration("Electrical");
                 lastTime = Time.time;
             }
         }
@@ -57,16 +57,6 @@ public class Electrified : ElementalBuffBad
         }
     }
 
-    private void LockMove(BoolAction a)
-    {
-        a.IsOK = false;
-    }
-
-    private void LockAttack(BoolAction a)
-    {
-        a.IsOK = false;
-    }
-
     public override void StartUp(Entity target, float time)
     {
         start = true;
@@ -74,11 +64,16 @@ public class Electrified : ElementalBuffBad
         ThoiGianConLai = time;
         isInElectricShock = false;
         lastTimeGiat = Time.time - timeGiat;
-        target.OnBuffsChanged?.Invoke(DamageElement.Electric, true);
-        target.OnHide += () => Setavalible(true);
-        target.OnAppear += () => Setavalible(false);
-        target.OnIntoTheGound += () => Setavalible(true);
-        target.OnOuttoTheGound += () => Setavalible(false);
+        if (target != null)
+        {
+            target.Harmful_Electric = true;
+            target.OnValueChanged?.Invoke(Entity.HARMFUL_ELECTIC);
+            target.OnHide += () => Setavalible(true);
+            target.OnAppear += () => Setavalible(false);
+            target.OnIntoTheGound += () => Setavalible(true);
+            target.OnOuttoTheGound += () => Setavalible(false);
+            target.OnDeath += (a) => WhenTargetDied();
+        }
     }
 
     public void AddTime(float time)
@@ -105,17 +100,14 @@ public class Electrified : ElementalBuffBad
         }
     }
 
-    private void OnDestroy()
-    {
-        if (target != null)
-        {
-            target.OnBuffsChanged?.Invoke(DamageElement.Electric, false);
-        }
-    }
-
     private void Setavalible(bool a)
     {
         avalableRender = !a;
+    }
+
+    private void WhenTargetDied()
+    {
+        EndUp();
     }
 
     public override void EndUp()
@@ -123,12 +115,15 @@ public class Electrified : ElementalBuffBad
         base.EndUp();
         if (target != null)
         {
+            target.Harmful_Electric = false;
+            target.OnValueChanged?.Invoke(Entity.HARMFUL_ELECTIC);
             target.OnHide -= () => Setavalible(true);
             target.OnAppear -= () => Setavalible(false);
             target.OnIntoTheGound -= () => Setavalible(true);
             target.OnOuttoTheGound -= () => Setavalible(false);
-            target.OnCheckForAttack -= LockAttack;
-            target.OnCheckForMove -= LockMove;
+            target.LockAttack.CancelRegistration("Electrical");
+            target.LockMove.CancelRegistration("Electrical");
+            target.OnDeath -= (a) => WhenTargetDied();
         }
     }
 }

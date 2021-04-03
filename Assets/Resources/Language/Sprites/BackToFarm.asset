@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1526fc91b15ec154a80fc0b65bc4bb6e, type: 3}
+  m_Name: BackToFarm
+  m_EditorClassIdentifier: 
+  VietNam: {fileID: -2651420127651315282, guid: 5d489911654b4e9439a8dad5b2e87aac,
+    type: 3}
+  English: {fileID: -1752370094588949789, guid: 5d489911654b4e9439a8dad5b2e87aac,
+    type: 3}

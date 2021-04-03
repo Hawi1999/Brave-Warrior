@@ -61,6 +61,10 @@ public class QuanLyVuon : MonoBehaviour
     private Transform GO_TheoDoi;
     private DatTrong dat_current;
     private PlayerController player => PlayerController.PlayerCurrent;
+    private void Awake()
+    {
+        HinhVuong.gameObject.SetActive(false);
+    }
     void Start() 
     {
         StartUp();
@@ -182,18 +186,13 @@ public class QuanLyVuon : MonoBehaviour
         GameController.MyJoy?.gameObject.SetActive(true);
         if (dat_current != null)
         dat_current.cachChonTrong = CachChonTrong.Empty;
-        player.OnCheckForMove -= LockMove;
-    }
-
-    void LockMove(BoolAction permitMove)
-    {
-        permitMove.IsOK = false;
+        player.LockMove.CancelRegistration("ChonCay");
     }
     void onClickChon()
     {
         if (dat_current == null)
         {
-            int gia = (int)((5000 + (dats.Count - 6) * 5000)*Buffer.Neft_DOLA);
+            int gia = (int)((5000 + (dats.Count - 6) * 5000));
             Notification.AreYouSure(Languages.getString("MuaManhDatVoiGia") + " <color=yellow>$" + gia.ToString() + "</color>?", () => MuaDat(gia));
         }
         else
@@ -235,7 +234,7 @@ public class QuanLyVuon : MonoBehaviour
         ChonCay.Main.SetActive(true);
         VC.CapNhatDanhSachChonMoi();
         GameController.MyJoy?.gameObject.SetActive(false);
-        player.OnCheckForMove += LockMove;
+        player.LockMove.Register("ChonCay");
     }
     void ThuHoach()
     {
@@ -274,7 +273,7 @@ public class QuanLyVuon : MonoBehaviour
         {
             return;
         }
-        int gia = (int)(cay.getGiaMua()*Buffer.Neft_DOLA);
+        int gia = cay.getGiaMua();
         if (Personal.DOLA >= gia)
         {   
             DatTrong dat = getDatTrongSelecting();

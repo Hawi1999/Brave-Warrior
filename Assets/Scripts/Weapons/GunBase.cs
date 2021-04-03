@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(GunJerky))]
 public class GunBase : Weapon
 {
-    [SerializeField] private float _criticalRate = 0.2f;
     [SerializeField] protected BulletBase VienDan;
     [SerializeField] protected ParticleSystem VFXShoot;
     [SerializeField] protected float SpeedShoot;
@@ -15,8 +14,6 @@ public class GunBase : Weapon
 
     protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
     protected int id_pool_bullet;
-
-    protected float CriticalRate => _criticalRate;
     protected float distanceShoot
     {
         get
@@ -89,19 +86,17 @@ public class GunBase : Weapon
     }
     public virtual void Shoot(DamageData damageData)
     {
-        Vector3 DirShoot = GiatSung(Host.DirectFire);
+        Vector3 DirShoot = damageData.Direction;
         BulletBase bull = pool.Spawn(id_pool_bullet, PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot)) as BulletBase;
-        SetUpDamageData(damageData, DirShoot);
+        SetUpDamageData(damageData);
         bull.StartUp(damageData);
     }
 
-    protected virtual void SetUpDamageData(DamageData damageData, Vector3 Direction)
+    protected virtual void SetUpDamageData(DamageData damageData)
     {
-        bool isCritical = Random.Range(0, 1f) < CriticalRate;
+        bool isCritical = Random.Range(0, 1f) < 0.2f;
         int SatThuong = this.SatThuong;
-        if (isCritical) SatThuong = (int)(this.SatThuong * (this.CriticalRate + 1));
         damageData.Damage = SatThuong;
-        damageData.Direction = Direction;
         damageData.FromGunWeapon = true;
         damageData.IsCritical = isCritical;
     }

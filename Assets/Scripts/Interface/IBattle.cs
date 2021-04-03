@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IBattle 
 {
-    void OnGameStarted();
-    void OnGameEnded();
+    void OnSceneStarted();
+    void OnSceneEnded();
 }

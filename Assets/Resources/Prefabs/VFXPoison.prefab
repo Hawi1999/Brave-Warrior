@@ -106,7 +106,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -169,8 +169,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.3
-      minScalar: 0.2
+      scalar: 1
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -660,7 +660,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
+    type: 5
     angle: 0
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -983,22 +983,22 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0
-          inSlope: 0
-          outSlope: 0
+          value: 0.28272247
+          inSlope: 1.7937422
+          outSlope: 1.7937422
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.3397561
         - serializedVersion: 3
-          time: 0.4392187
-          value: 0.49435303
-          inSlope: 0.3315835
-          outSlope: 0.3315835
+          time: 0.49827307
+          value: 0.99696994
+          inSlope: 0.033624485
+          outSlope: 0.033624485
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.33333334
+          outWeight: 0.4899504
         - serializedVersion: 3
           time: 1
           value: 0
@@ -4739,7 +4739,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
@@ -4776,6 +4776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8953bce2e35b5b4dbabe651cd41ba71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DestroyWhenDone: 0
   par: {fileID: 863568206369467036}
   AutoDeactive: 0
   timeToDeactive: 1

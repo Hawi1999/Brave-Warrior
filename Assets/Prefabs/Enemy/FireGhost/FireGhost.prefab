@@ -316,14 +316,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0bc71ac94dac8438d1bedd54456f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 100
-  Shield: 0
+  HeathBasic: 120
+  sizeDefault: {x: 0.7, y: 0.7}
   render: {fileID: 8257452122370472141}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: FireGhost
   PR_HP: {fileID: 3498202507326978770}
   PR_HPsub: {fileID: 3785804462316033659}
   OffsetCenter: {fileID: 7353089362489197489}
-  sizeDefault: {x: 0.7, y: 0.7}
   time_range_idle: {x: 0, y: 2}
   LastDamageData: {fileID: 0}
   time_range_move: {x: 0, y: 2}

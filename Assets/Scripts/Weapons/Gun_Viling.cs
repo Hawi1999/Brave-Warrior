@@ -33,22 +33,20 @@ public class Gun_Viling : GunBase
 
     public override void Shoot(DamageData damageData)
     {
-        DamageData damExtra = damageData.Clone;
         base.Shoot(damageData);
         for (int i = -1; i <= 1; i+=2)
         {
             int am = (int)Random.Range(RangeAmount.x, RangeAmount.y + 1);
             for (int j = 0; j < am; j++) 
             {
-                DamageData damage = damExtra.Clone;
                 int dolec = i * (Random.Range(OffsetA, OffsetB + 1));
-                Vector3 DirShoot = Host.DirectFire;
+                Vector3 DirShoot = damageData.Direction;
                 float z = MathQ.DirectionToRotation(DirShoot).z;
                 z += dolec;
                 DirShoot = MathQ.RotationToDirection(z);
-                SetUpDamageDataExtra(damage, DirShoot);
+                SetUpDamageDataExtra(damageData, DirShoot);
                 BulletBase bullet = pool.Spawn(id_pool_bullet_extra,PositionStartAttack, Quaternion.identity) as BulletBase;
-                bullet.StartUp(damage);
+                bullet.StartUp(damageData);
             }
         }
     }

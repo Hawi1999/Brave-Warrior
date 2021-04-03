@@ -102,7 +102,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 2ff212055739b3947854616a8b675888, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4932,7 +4932,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -886489761
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
@@ -4971,6 +4971,7 @@ GameObject:
   - component: {fileID: 821780232077130742}
   - component: {fileID: -9117119968488463280}
   - component: {fileID: 4696103136558359833}
+  - component: {fileID: 7722461610732838911}
   m_Layer: 0
   m_Name: Prefab K20
   m_TagString: Untagged
@@ -5006,7 +5007,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: {fileID: 21300000, guid: 78479a21d5745f7419bd21d7e3cc898e, type: 3}
-  MT: {fileID: 21300000, guid: 97fbb62e69f9b914983e859fa6e29971, type: 3}
   nameSkin: {fileID: 0}
   LocalPositionMT: {x: 0, y: 0.25, z: 0}
   LocalPositionName: {x: 0, y: 0.2, z: 0}
@@ -5022,8 +5022,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18170ff808be22e44aef5c3e29b31ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeCollider: 1
   weapon: {fileID: -9117119968488463280}
   showname: {fileID: -6006464487594377298}
+  _Name: Reward Gun K20
 --- !u!61 &821780232077130742
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5066,7 +5068,7 @@ MonoBehaviour:
   _render: {fileID: 6849655532144640176}
   nameOfWeapon: K20
   type: 1
-  _SatThuong: 5
+  _SatThuong: 7
   TrangThai: 0
   Host: {fileID: 0}
   lastHost: {fileID: 0}
@@ -5076,6 +5078,7 @@ MonoBehaviour:
   VFXShoot: {fileID: 8823143453708906043}
   SpeedShoot: 3.5
   DoGiat: 10
+  HeadGun: {fileID: 0}
   isLeftDir: 0
   TFRadanPhaiTren: {fileID: 3078762551083437215}
   TFRadanPhaiDuoi: {fileID: 930077524913105742}
@@ -5096,6 +5099,32 @@ MonoBehaviour:
   speedPositionBF: 5
   TimeBF: 0.05
   TimeAT: 0.1
+--- !u!61 &7722461610732838911
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4834120409733069548}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+  m_EdgeRadius: 0
 --- !u!1 &8432996356172669275
 GameObject:
   m_ObjectHideFlags: 0

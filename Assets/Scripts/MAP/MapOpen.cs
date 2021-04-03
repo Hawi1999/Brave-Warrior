@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class MapOpen : MAPController
 {
+    public Transform PositionSpawnChestStart;
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        ChestManager.SpawnStartChest(ColorChest.Silver, CodeMap.Map1, PositionSpawnChestStart ? PositionSpawnChestStart.position : Vector3.zero);
+    }
+
     protected override PlayerController CreatePlayer()
     {
         if (ParentGamePlay.Instance != null)
@@ -12,6 +24,7 @@ public class MapOpen : MAPController
         }
         Instantiate(new GameObject("ParentGamePlay")).AddComponent<ParentGamePlay>();
         PlayerController player = base.CreatePlayer();
+        PlayerController.PlayerTakeBuff.Reset();
         player.transform.parent = ParentGamePlay.Instance;
         return player;
     }

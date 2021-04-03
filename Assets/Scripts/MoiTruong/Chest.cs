@@ -64,10 +64,6 @@ public class Chest : MonoBehaviour
         TimeStart = Time.time;
     }
 
-    public void setUp(ChestData chestData)
-    {
-        this.Data = chestData;
-    }
     public void OpenChest()
     {
         ani.setAnimation("OpenChest");
@@ -78,7 +74,6 @@ public class Chest : MonoBehaviour
         }
         Reward reward = RewardManager.GetRewardByName(Data.getRandomReward());
         reward = Instantiate(reward, transform.position, Quaternion.identity);
-        reward.Appear();
         if (flyup != null)
         {
             flyup.Play();
@@ -110,11 +105,11 @@ public class Chest : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player")){
-        if (!opened)
-        {
-            OpenChest();
-            opened = true;
-        }
+            if (!opened)
+            {
+                OpenChest();
+                opened = true;
+            }
         }
     }
 }

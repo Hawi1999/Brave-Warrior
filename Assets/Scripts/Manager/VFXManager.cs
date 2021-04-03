@@ -12,7 +12,7 @@ public class VFXManager : MonoBehaviour
     public static Dust DustPrefab;
     public static ControlPartice FirePrefab;
     public static ControlPartice PoisonPrefab;
-    public static SelectingEnemy SelectingEnemyPrefab;
+    public static Selecting SelectingEnemyPrefab;
     [Space]
     [Header("Orther VFX")]
     public static SpriteRenderer IcePrefab;
@@ -33,7 +33,7 @@ public class VFXManager : MonoBehaviour
         FirePrefab = Resources.Load<ControlPartice>("Prefabs/VFXBurnt");
         PoisonPrefab = Resources.Load<ControlPartice>("Prefabs/VFXPoison");
         DustPrefab = Resources.Load<Dust>("Prefabs/Bui");
-        SelectingEnemyPrefab = Resources.Load<SelectingEnemy>("Prefabs/SelectingEnemy");
+        SelectingEnemyPrefab = Resources.Load<Selecting>("Prefabs/SelectingEnemy");
         giatDien = Resources.Load<AnimationQ>("Prefabs/VFXGiatDien");
         IcePrefab = Resources.Load<SpriteRenderer>("Prefabs/Ice");
         // Load Sprites

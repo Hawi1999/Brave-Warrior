@@ -8,27 +8,27 @@ public class RewardGold : Reward
     [Range(1, 3)]
     [SerializeField] int Level = 1;
     int amount;
+    protected bool showed = false;
     public int Amount => amount;
     [SerializeField] TakeGoldFromMap Prejabs;
 
     public override bool WaitingForChoose => true;
 
-    public override void Appear()
+    public override void OnPlayerInto()
     {
-        amount = Random.Range(5 * Level, 10 * Level + 1);
-        for (int i = 0; i < Amount; i++)
+        if (!showed)
         {
-            TakeGoldFromMap tg = Instantiate(Prejabs, transform.position, Quaternion.identity);
-            tg.MoveToPosion(transform.position + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0));
+            amount = Random.Range(5 * Level, 10 * Level + 1);
+            for (int i = 0; i < Amount; i++)
+            {
+                TakeGoldFromMap tg = Instantiate(Prejabs, transform.position, Quaternion.identity);
+                tg.MoveToPosion(transform.position + new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0));
+            }
+            showed = true;
         }
     }
 
-    public override void OnChoose(IManipulation manipulation)
-    {
-        
-    }
-
-    public override void TakeManipulation(PlayerController host)
+    protected override void Update()
     {
         
     }

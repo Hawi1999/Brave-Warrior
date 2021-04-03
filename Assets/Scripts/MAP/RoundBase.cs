@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(BoxCollider2D))]
@@ -48,19 +49,19 @@ public abstract class RoundBase : MonoBehaviour
             {
                 case Direct.Left:
                     a = Instantiate(DataMap.GetLockRoomPrefab(LockRoomDatas.Direct.Vertical), transform);
-                    a.transform.position = (Vector2)Data.GetPosition(Direct.Left);
+                    a.transform.position = (Vector2)Data.GetPositionOutSide(Direct.Left);
                     break;
                 case Direct.Right:
                     a = Instantiate(DataMap.GetLockRoomPrefab(LockRoomDatas.Direct.Vertical), transform);
-                    a.transform.position = (Vector2)Data.GetPosition(Direct.Right) + Vector2.left;
+                    a.transform.position = (Vector2)Data.GetPositionOutSide(Direct.Right) + Vector2.left;
                     break;
                 case Direct.Up:
                     a = Instantiate(DataMap.GetLockRoomPrefab(LockRoomDatas.Direct.Horizontal), transform);
-                    a.transform.position = (Vector2)Data.GetPosition(Direct.Up) + Vector2.down;
+                    a.transform.position = (Vector2)Data.GetPositionOutSide(Direct.Up) + Vector2.down;
                     break;
                 case Direct.Down:
                     a = Instantiate(DataMap.GetLockRoomPrefab(LockRoomDatas.Direct.Horizontal), transform);
-                    a.transform.position = (Vector2)Data.GetPosition(Direct.Down);
+                    a.transform.position = (Vector2)Data.GetPositionOutSide(Direct.Down);
                     break;
             }
             if (a != null)
@@ -129,6 +130,13 @@ public abstract class RoundBase : MonoBehaviour
     }
     protected virtual void OnPLayerLeaveFirst()
     {
-        RoundCurrent = null;
+        
     }
+
+    protected virtual void RoundComplete()
+    {
+        OnRoundComplete?.Invoke(this);
+    }
+
+    public UnityAction<RoundBase> OnRoundComplete;
 }

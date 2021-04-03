@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ChooseMinapulation : MonoBehaviour
 {
-    public static ChooseMinapulation Instance;
+    public static ChooseMinapulation PlayerChoose;
     [HideInInspector] public List<IManipulation> manipulations;
     private IManipulation manipulation_current;
     private PlayerController player => PlayerController.PlayerCurrent;
@@ -13,7 +13,7 @@ public class ChooseMinapulation : MonoBehaviour
     private float lastChoose;
     void Awake()
     {
-        Instance = this;
+        PlayerChoose = this;
     }
     public IManipulation Choosing
     {

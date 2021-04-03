@@ -4980,14 +4980,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f64fbf2152b13428747a50ee8d99bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 80
-  Shield: 0
+  HeathBasic: 80
+  sizeDefault: {x: 0.7, y: 0.52}
   render: {fileID: 2848821326652682352}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: NhimDa
   PR_HP: {fileID: 7673772024745533234}
   PR_HPsub: {fileID: 5618140830831023058}
   OffsetCenter: {fileID: 478386622644572919}
-  sizeDefault: {x: 0.7, y: 0.52}
   time_range_idle: {x: 2, y: 4}
   LastDamageData: {fileID: 0}
   time_range_hide: {x: 2, y: 4}

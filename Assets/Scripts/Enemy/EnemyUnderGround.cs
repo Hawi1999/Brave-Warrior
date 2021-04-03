@@ -26,12 +26,6 @@ public abstract class EnemyUnderGround : Enemy
     }
     protected virtual void OnBeginDown()
     {
-        if (!PermitDown)
-        {
-            CurrentAction = Action.Idle;
-            OnBeginIdle();
-            return;
-        }
         SetTimeToNextAction(timeDown);
         SetAnimation(Animate_Down);
     }

@@ -16,10 +16,11 @@ public enum TypeEnemy
 
 public enum TypeRound
 {
-    Begin,
-    Enemy,
-    Boss,
-    Chest,
+    Begin = 0,
+    Enemy = 1,
+    Boss = 2,
+    Chest = 3,
+    Hail = 4
 }
 
 public enum ColorChest
@@ -35,5 +36,9 @@ public enum Direct
     Right,
     Up,
     Down,
-    Center
+    Center,
+    LeftUp,
+    RightUp,
+    LeftDown,
+    RightDown
 }

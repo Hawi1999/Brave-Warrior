@@ -9,7 +9,7 @@ public class Poisoned : ElementalBuffBad
     private float timeDelay = 0;
     private float timeRemaining = 0;
     private Entity target;
-    public static float TILE = 0.02f;
+    public static float TILE = 0.005f;
     public static int MIN_DAMAGE = 4;
     public static int MAX_DAMAGE = 100000;
     public static float TIME_DELAY = 0.7f;
@@ -39,7 +39,10 @@ public class Poisoned : ElementalBuffBad
 
     private void LateUpdate()
     {
-        VFXPoison.transform.position = target.transform.position;
+        if (target != null)
+        {
+            VFXPoison.transform.position = target.center;
+        }
     }
 
     private void SetUpDamageData(DamageData damage)
@@ -65,8 +68,13 @@ public class Poisoned : ElementalBuffBad
         VFXPoison = pool.Spawn(id_poison,entity.center, Quaternion.identity) as ControlPartice;
         VFXPoison.transform.localScale = new Vector3(entity.size.x, entity.size.y, 1);
         VFXPoison.Play();
-        target = entity;
-        SetLissener(true);
+        if (entity != null)
+        {
+            target = entity;
+            target.Harmful_Poison = true;
+            target.OnValueChanged?.Invoke(Entity.HARMFUL_POISON);
+            SetLissener(true);
+        }
         AddTime(time);
     }
 
@@ -98,6 +106,11 @@ public class Poisoned : ElementalBuffBad
     {
         SetLissener(false);
         VFXPoison.Stop();
+        if (target != null)
+        {
+            target.Harmful_Poison = false;
+            target.OnValueChanged?.Invoke(Entity.HARMFUL_POISON);
+        }
         base.EndUp();
     }
 

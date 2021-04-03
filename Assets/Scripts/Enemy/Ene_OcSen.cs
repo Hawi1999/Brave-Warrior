@@ -63,10 +63,6 @@ public class Ene_OcSen : EnemyGround
         OnBeginIdle();
     }
 
-    protected virtual void checkAttack(BoolAction permit)
-    {
-        permit.IsOK = HasTargetNear && bulletPrefab != null;
-    }
     protected virtual void Attacking()
     {
     }
@@ -107,6 +103,17 @@ public class Ene_OcSen : EnemyGround
     {
         base.OnDestroy();
         pool.RemovePrefab(id_bul);
+    }
+    protected override void OnDead()
+    {
+        base.OnDead();
+        pool.RemoveAllPooled(id_bul);
+    }
+
+    public override void Revive()
+    {
+        base.Revive();
+        id_bul = pool.AddPrefab(bulletPrefab);
     }
 
     #endregion

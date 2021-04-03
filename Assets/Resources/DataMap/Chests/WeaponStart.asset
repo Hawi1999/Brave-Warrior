@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WeaponStart
   m_EditorClassIdentifier: 
   Type: 3
+  codeMap: 1
   UuTien: 01000000
   NameOfRewards:
-  - Reward Gun Layar
+  - Reward Gun K20

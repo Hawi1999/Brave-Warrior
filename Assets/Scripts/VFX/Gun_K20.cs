@@ -48,23 +48,23 @@ public class Gun_K20 : GunBase
     {
         if (nextAmountbullet == 1)
         {
-            Vector3 DirShoot = GiatSung(Host.DirectFire);
+            Vector3 DirShoot = damageData.Direction;
             BulletBase bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot)) as BulletBase;
-            SetUpDamageData(damageData, DirShoot);
+            SetUpDamageData(damageData);
             bull.StartUp(damageData);
             nextAmountbullet = 2;
         } else if (nextAmountbullet == 2)
         {
             vitriTren = true;
-            Vector3 DirShoot1 = GiatSung(Host.DirectFire);
-            BulletBase bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot1)) as BulletBase;
-            SetUpDamageData(damageData, DirShoot1);
-            bull.StartUp(damageData);
+            DamageData dam = damageData.Clone;
+            SetUpDamageData(dam);
+            BulletBase bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(dam.Direction)) as BulletBase;
+            bull.StartUp(dam);
             vitriTren = false;
-            Vector3 DirShoot2 = GiatSung(Host.DirectFire);
-            bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(DirShoot2)) as BulletBase;
-            SetUpDamageData(damageData, DirShoot2);
-            bull.StartUp(damageData);
+            dam = damageData.Clone;
+            SetUpDamageData(damageData);
+            bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(dam.Direction)) as BulletBase;
+            bull.StartUp(dam);
             nextAmountbullet = 1;
         }
     }
@@ -105,5 +105,11 @@ public class Gun_K20 : GunBase
                 }
             }
         }
+    }
+
+    protected override void SetUpDamageData(DamageData damageData)
+    {
+        base.SetUpDamageData(damageData);
+        damageData.Direction = GiatSung(damageData.Direction);
     }
 }

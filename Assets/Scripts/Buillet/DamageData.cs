@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DamageData : Object
 {
@@ -11,15 +12,27 @@ public class DamageData : Object
     {
         get
         {
-            return Mathf.Max(0, _damageOriginal - (DamageDecrease + (int)((_damageOriginal) * DamagePercentDecrease)));
+            float damageorigin = _damageOriginal + AddDamageOriginal + (int)(_damageOriginal * AddDamagePercentOriginal);
+            if (IsCritical)
+            {
+                damageorigin += damageorigin + damageorigin * AddDamageCritical;
+            }
+            return Mathf.Max(0, (int)(damageorigin - (DamageDecrease + (int)((damageorigin) * DamagePercentDecrease))));
         }
         set
         {
             _damageOriginal = value;
         }
     }
-    private int DamageDecrease = 0;
+
+    
+
+
+    private float AddDamageOriginal = 0;
+    private float AddDamagePercentOriginal = 0;
+    private float DamageDecrease = 0;
     private float DamagePercentDecrease = 0;
+    private float AddDamageCritical = 0;
     public bool IsCritical = false;
     public Vector3 PointHit;
     public Vector3 Direction = Vector3.up;
@@ -33,12 +46,14 @@ public class DamageData : Object
     public float timeGiatDien = 4;
 
     // Đạn Lửa
+
     public float FireTime = 4;
     public bool FireFrom = false;
     public float FireRatio = 0.2f;
     public float FireDamagePerSecond = 4;
 
-    // Đạn Độc
+    // Đạn Độc 
+
     public float PoisonTime = 4;
     public bool PoisonFrom = false;
     public float PoisonRatio = 0.2f;
@@ -63,17 +78,32 @@ public class DamageData : Object
     public bool FromTNT = false;
 
     public bool CanDestroyBullet => FromMeleeWeapon || FromMeleeWeapon;
-    public virtual void Decrease(int a)
+
+    public virtual void AddDecrease(float a)
     {
         DamageDecrease += a;
     }
 
-    public virtual void DecreaseByPercent(float _0to1_)
+    public virtual void AddDecreaseByPercent(float _0to1_)
     {
         DamagePercentDecrease += _0to1_;
     }
 
-    public DamageData Clone => (DamageData)this.MemberwiseClone();
+    public void AddDamageOrigin(float a)
+    {
+        AddDamageOriginal += a;
+    }
+
+    public void AddDamagePercentOrigin(float a)
+    {
+        AddDamagePercentOriginal += a;
+    }
+
+    public void AddDamageCritByPercent(float a)
+    {
+        AddDamageCritical += a;
+    }
+    public DamageData Clone => (DamageData)MemberwiseClone();
 
     private List<string> listString;
     public void AddText(string a)
@@ -84,7 +114,6 @@ public class DamageData : Object
         }
         listString.Add(a);
     }
-
     public List<string> GetStringShow()
     {
         List <string> ss = new List<string>();
@@ -104,4 +133,5 @@ public class DamageData : Object
             ss.AddRange(listString);
         return ss;
     }
+    public UnityAction<Enemy> OnHitToDieEnemy;
 }

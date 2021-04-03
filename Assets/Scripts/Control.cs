@@ -34,15 +34,17 @@ public class Control : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     Image image => GetComponent<Image>();
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         Add(IDCODE);
-        image.sprite = SpriteDown;
+        if (SpriteDown != null)
+            image.sprite = SpriteDown;
     }
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         Remove(IDCODE);
-        image.sprite = SpriteUp;
+        if (SpriteUp != null)
+            image.sprite = SpriteUp;
     }
 
     protected virtual void Start()

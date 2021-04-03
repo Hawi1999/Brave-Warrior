@@ -1,13 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class test : MonoBehaviour
 {
     private void Start()
     {
-        ChestManager.SpawnReWardChest(ColorChest.Silver, TypeChest.Start, transform.position);
+        sss a = new sss();
+        a.action += HH;
+        sss b = a.Clone();
+        a.action?.Invoke();
+        b.action?.Invoke();
+
     }
-    private void Update()
+
+    static int a;
+    public UnityAction action;
+
+    public void HH()
     {
-        
+        Debug.Log("Test Inoved " + ++a);
     }
 }

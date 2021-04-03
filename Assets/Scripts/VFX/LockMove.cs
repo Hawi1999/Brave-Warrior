@@ -12,7 +12,7 @@ public class LockMove : MonoBehaviour, ILockMove
         if (start)
         {
             if (time <= 0){
-                entity.OnCheckForMove -= Lock;
+                entity.LockMove.CancelRegistration("LockMove");
                 Destroy(this);
             }
             time -= Time.deltaTime;
@@ -24,7 +24,7 @@ public class LockMove : MonoBehaviour, ILockMove
         start = true;
         this.time = time;
         this.entity = entity;
-        entity.OnCheckForMove += Lock;
+        entity.LockMove.Register("LockMove");
     }
 
     public void SetTime(float Time)
@@ -48,14 +48,9 @@ public class LockMove : MonoBehaviour, ILockMove
         }
     }
 
-    private void Lock(BoolAction permit)
-    {
-        permit.IsOK = false;
-    }
-
     private void OnDestroy()
     {
-        entity.OnCheckForMove -= Lock;
+        entity.LockMove.CancelRegistration("LockMove");
         Debug.Log(Time.time);
     }
 

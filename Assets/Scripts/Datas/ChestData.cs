@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +7,14 @@ using UnityEngine;
 public class ChestData : ScriptableObject
 {
     public TypeChest Type = TypeChest.Start;
+    public CodeMap codeMap = CodeMap.Map1;
     public int[] UuTien;
     public string[] NameOfRewards;
 
     public string getRandomReward()
     {
+        return GameController.GetRandomItem(new List<int>(UuTien), new List<string>(NameOfRewards));
+        /*
         int tong = 0;
         for (int i = 0; i < UuTien.Length; i++)
         {
@@ -26,6 +30,6 @@ public class ChestData : ScriptableObject
                 return NameOfRewards[i];
             }
         }
-        return "";
+        return "";*/
     }
 }

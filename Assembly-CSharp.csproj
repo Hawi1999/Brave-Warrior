@@ -47,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>4.8.2.0</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>4.9.1.0</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2019.3.12f1</UnityVersion>
@@ -78,13 +78,8 @@
     <Compile Include="Assets\Scripts\AutoSortingLayerBySortingGroup.cs" />
     <Compile Include="Assets\Scripts\BTThaoTacManHinh.cs" />
     <Compile Include="Assets\Scripts\Bag.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Buff_DOLA.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Buff_Dia.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Buff_TL.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Buffer.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Neft_DOLA.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Neft_Dia.cs" />
-    <Compile Include="Assets\Scripts\Buff_Neft\Neft_TL.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\BuffInGround.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\BuffRegister.cs" />
     <Compile Include="Assets\Scripts\Buillet\Boom.cs" />
     <Compile Include="Assets\Scripts\Buillet\BoomDrop.cs" />
     <Compile Include="Assets\Scripts\Buillet\BulletBase.cs" />
@@ -102,19 +97,28 @@
     <Compile Include="Assets\Scripts\Buillet\DamageData.cs" />
     <Compile Include="Assets\Scripts\Buillet\DamingCircle.cs" />
     <Compile Include="Assets\Scripts\Buillet\Lazer.cs" />
+    <Compile Include="Assets\Scripts\Buillet\Meteorite.cs" />
     <Compile Include="Assets\Scripts\Buillet\SpawnBullet.cs" />
     <Compile Include="Assets\Scripts\Buillet\SpawnBulletCircle.cs" />
     <Compile Include="Assets\Scripts\CameraMove.cs" />
     <Compile Include="Assets\Scripts\CanvasMain.cs" />
+    <Compile Include="Assets\Scripts\Charater\Glide.cs" />
+    <Compile Include="Assets\Scripts\Charater\Shield.cs" />
+    <Compile Include="Assets\Scripts\Charater\Skill.cs" />
     <Compile Include="Assets\Scripts\ChooseMinapulation.cs" />
     <Compile Include="Assets\Scripts\Control.cs" />
+    <Compile Include="Assets\Scripts\ControlSkill.cs" />
     <Compile Include="Assets\Scripts\ControlX.cs" />
+    <Compile Include="Assets\Scripts\Datas\Buff1Datas.cs" />
+    <Compile Include="Assets\Scripts\Datas\Buff2Data.cs" />
+    <Compile Include="Assets\Scripts\Datas\Buff2Datas.cs" />
     <Compile Include="Assets\Scripts\Datas\ChestData.cs" />
     <Compile Include="Assets\Scripts\Datas\Data.cs" />
     <Compile Include="Assets\Scripts\Datas\EnemyBossDatas.cs" />
     <Compile Include="Assets\Scripts\Datas\Enums.cs" />
     <Compile Include="Assets\Scripts\Datas\GameController.cs" />
     <Compile Include="Assets\Scripts\Datas\LockRoomDatas.cs" />
+    <Compile Include="Assets\Scripts\Datas\MultiTileDatas.cs" />
     <Compile Include="Assets\Scripts\Datas\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Datas\RoundBegin.cs" />
     <Compile Include="Assets\Scripts\Datas\RoundData.cs" />
@@ -144,6 +148,8 @@
     <Compile Include="Assets\Scripts\Enemy\ShowText.cs" />
     <Compile Include="Assets\Scripts\GoTo.cs" />
     <Compile Include="Assets\Scripts\HienThiTaiSan.cs" />
+    <Compile Include="Assets\Scripts\IU\ShowBuff2Player.cs" />
+    <Compile Include="Assets\Scripts\IU\ShowTableDied.cs" />
     <Compile Include="Assets\Scripts\Interface\IBattle.cs" />
     <Compile Include="Assets\Scripts\Interface\ICameraTarget.cs" />
     <Compile Include="Assets\Scripts\Interface\IFindTarget.cs" />
@@ -156,9 +162,11 @@
     <Compile Include="Assets\Scripts\Interface\PoolingGameObject.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\Langaue\Lang.cs" />
+    <Compile Include="Assets\Scripts\Langaue\LangSprite.cs" />
     <Compile Include="Assets\Scripts\Langaue\Languages.cs" />
     <Compile Include="Assets\Scripts\LoadingText.cs" />
     <Compile Include="Assets\Scripts\LockRoom.cs" />
+    <Compile Include="Assets\Scripts\MAP\AnimColor.cs" />
     <Compile Include="Assets\Scripts\MAP\DataMap.cs" />
     <Compile Include="Assets\Scripts\MAP\DrawMap.cs" />
     <Compile Include="Assets\Scripts\MAP\MAPController.cs" />
@@ -170,23 +178,29 @@
     <Compile Include="Assets\Scripts\MAP\RoundBoss.cs" />
     <Compile Include="Assets\Scripts\MAP\RoundChest.cs" />
     <Compile Include="Assets\Scripts\MAP\RoundEnemy.cs" />
+    <Compile Include="Assets\Scripts\MAP\RoundHail.cs" />
     <Compile Include="Assets\Scripts\MAP\TransformInstanceOnLoad.cs" />
     <Compile Include="Assets\Scripts\MAP\Waves.cs" />
     <Compile Include="Assets\Scripts\MaHoavaBienDIch.cs" />
     <Compile Include="Assets\Scripts\Manager\ChestManager.cs" />
+    <Compile Include="Assets\Scripts\Manager\Classs.cs" />
     <Compile Include="Assets\Scripts\Manager\RewardManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Savemanager.cs" />
     <Compile Include="Assets\Scripts\Manager\TileManager.cs" />
     <Compile Include="Assets\Scripts\Manager\VFXManager.cs" />
     <Compile Include="Assets\Scripts\Manager\WeaponManager.cs" />
-    <Compile Include="Assets\Scripts\MathQ.cs" />
     <Compile Include="Assets\Scripts\MinhHao\Force.cs" />
+    <Compile Include="Assets\Scripts\MinhHao\GiveBuff.cs" />
+    <Compile Include="Assets\Scripts\MinhHao\MathQ.cs" />
+    <Compile Include="Assets\Scripts\MinhHao\TakeBuff.cs" />
+    <Compile Include="Assets\Scripts\MinhHao\Value.cs" />
     <Compile Include="Assets\Scripts\MoMan.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\CayTrong.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\Chest.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\DatTrong.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\Door.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\NPC.cs" />
+    <Compile Include="Assets\Scripts\MoiTruong\ShowShield.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\WeaponSeller.cs" />
     <Compile Include="Assets\Scripts\NoticeBackground.cs" />
     <Compile Include="Assets\Scripts\Notification.cs" />
@@ -204,7 +218,7 @@
     <Compile Include="Assets\Scripts\TILE\DuongMon.cs" />
     <Compile Include="Assets\Scripts\TILE\HangRao2Tile.cs" />
     <Compile Include="Assets\Scripts\TILE\HangRaoTile.cs" />
-    <Compile Include="Assets\Scripts\TILE\MultiTileDatas.cs" />
+    <Compile Include="Assets\Scripts\TILE\MultiSpritesTile.cs" />
     <Compile Include="Assets\Scripts\TILE\RiverTile.cs" />
     <Compile Include="Assets\Scripts\TILE\TileDatas.cs" />
     <Compile Include="Assets\Scripts\TILE\TileGridMap.cs" />
@@ -212,6 +226,7 @@
     <Compile Include="Assets\Scripts\TakeDamage.cs" />
     <Compile Include="Assets\Scripts\TakeHit\BarrierTakeHit.cs" />
     <Compile Include="Assets\Scripts\TakeHit\DoorTakeHit.cs" />
+    <Compile Include="Assets\Scripts\TakeHit\MeteoriteTakeHit.cs" />
     <Compile Include="Assets\Scripts\TakeHit\TNTTakeHit.cs" />
     <Compile Include="Assets\Scripts\TakeHit\TileTakeHit.cs" />
     <Compile Include="Assets\Scripts\TakeHit\WallTakeHit.cs" />
@@ -225,11 +240,14 @@
     <Compile Include="Assets\Scripts\TrangTrai\QuayHangSlotItem.cs" />
     <Compile Include="Assets\Scripts\TrangTrai\SlotItem.cs" />
     <Compile Include="Assets\Scripts\TrangTrai\VungChonCayDeTrong.cs" />
+    <Compile Include="Assets\Scripts\VFX\AutoRotation.cs" />
     <Compile Include="Assets\Scripts\VFX\Burnt.cs" />
     <Compile Include="Assets\Scripts\VFX\ControlPartice.cs" />
     <Compile Include="Assets\Scripts\VFX\Dust.cs" />
     <Compile Include="Assets\Scripts\VFX\DustConeControl.cs" />
     <Compile Include="Assets\Scripts\VFX\DustControl.cs" />
+    <Compile Include="Assets\Scripts\VFX\DustFromMeteorite.cs" />
+    <Compile Include="Assets\Scripts\VFX\DustFromPlayer.cs" />
     <Compile Include="Assets\Scripts\VFX\Electrified.cs" />
     <Compile Include="Assets\Scripts\VFX\ElementalBuff.cs" />
     <Compile Include="Assets\Scripts\VFX\ElementalBuffBad.cs" />
@@ -237,12 +255,14 @@
     <Compile Include="Assets\Scripts\VFX\FlySmooth.cs" />
     <Compile Include="Assets\Scripts\VFX\Freeze.cs" />
     <Compile Include="Assets\Scripts\VFX\Gun_K20.cs" />
+    <Compile Include="Assets\Scripts\VFX\Illusion.cs" />
     <Compile Include="Assets\Scripts\VFX\LockMove.cs" />
     <Compile Include="Assets\Scripts\VFX\PoisonZone.cs" />
     <Compile Include="Assets\Scripts\VFX\Poisoned.cs" />
     <Compile Include="Assets\Scripts\VFX\PositionControl.cs" />
     <Compile Include="Assets\Scripts\VFX\ScaleControl.cs" />
-    <Compile Include="Assets\Scripts\VFX\SelectingEnemy.cs" />
+    <Compile Include="Assets\Scripts\VFX\Selecting.cs" />
+    <Compile Include="Assets\Scripts\VFX\ShowInfoSkill.cs" />
     <Compile Include="Assets\Scripts\VFX\VFXSpawn.cs" />
     <Compile Include="Assets\Scripts\VFX\VFXSpawnDestroyed.cs" />
     <Compile Include="Assets\Scripts\VFX\VFXSpawnEnemy.cs" />
@@ -262,6 +282,7 @@
     <Compile Include="Assets\Scripts\Weapons\Weapons.cs" />
     <Compile Include="Assets\ScriptsTest.cs" />
     <Compile Include="Assets\SpawnPracticeEnemy.cs" />
+    <Compile Include="Assets\sss.cs" />
     <Compile Include="Assets\test.cs" />
     <None Include="Assets\Author\Thanks To.txt" />
     <Reference Include="UnityEngine">
@@ -440,6 +461,9 @@
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.12f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -877,7 +901,13 @@
       <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{7F0B2F5B-96C6-8F31-1149-7D7BBF9907F7}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

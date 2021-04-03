@@ -13,6 +13,8 @@ public class MAP_GamePlay : MAPController
     RoundDatas rounds;
     public static CodeMap CodeMapcurent;
     public static GroupEnemy CodeEnemyCurrent;
+
+    static string PathCanvasMain = "Prefabs/CanvasGamePlay";
     protected override void Awake()
     {
         base.Awake();
@@ -24,7 +26,31 @@ public class MAP_GamePlay : MAPController
         base.Start();
         SetUpRounds();
         PlayerController.PlayerCurrent.gameObject.SetActive(false);
+        PlayerController.PlayerCurrent.OnDeath += (a) => WhenPlayerDied();
+        CanvasMain cvm = Resources.Load<CanvasMain>(PathCanvasMain);
+        if (cvm != null)
+        {
+            Instantiate(cvm);
+        }
     }
+
+    private void WhenPlayerDied()
+    {
+        Invoke("ShownChooseAfterDie", 2f);
+    }
+
+    private void ShownChooseAfterDie()
+    {
+        ShowTableDied s = Resources.Load<ShowTableDied>("Prefabs/CANVASdie");
+        if (s != null)
+        {
+            Instantiate(s, GameController.CanvasMain.transform);
+        } else
+        {
+            GameController.Instance.LoadScene("TrangTrai");
+        }
+    }
+
     private void SetUpRounds()
     {
         // SetUpInfo
@@ -86,16 +112,16 @@ public class MAP_GamePlay : MAPController
             Vector2Int p2 = r2.position;
             if (p1.x == p2.x)
             {
-                DrawMap.DrawConnect((Vector3Int)r1.GetPosition(Direct.Up), (Vector3Int)r2.GetPosition(Direct.Down));
+                DrawMap.DrawConnect((Vector3Int)r1.GetPositionOutSide(Direct.Up), (Vector3Int)r2.GetPositionOutSide(Direct.Down));
             } else
             if (p1.y == p2.y)
             {
                 if (p1.x < p2.x)
                 {
-                    DrawMap.DrawConnect((Vector3Int)r1.GetPosition(Direct.Right), (Vector3Int)r2.GetPosition(Direct.Left));
+                    DrawMap.DrawConnect((Vector3Int)r1.GetPositionOutSide(Direct.Right), (Vector3Int)r2.GetPositionOutSide(Direct.Left));
                 } else
                 {
-                    DrawMap.DrawConnect((Vector3Int)r2.GetPosition(Direct.Right), (Vector3Int)r1.GetPosition(Direct.Left));
+                    DrawMap.DrawConnect((Vector3Int)r2.GetPositionOutSide(Direct.Right), (Vector3Int)r1.GetPositionOutSide(Direct.Left));
                 }
             }
         }
@@ -117,6 +143,20 @@ public class MAP_GamePlay : MAPController
         }
         return current;
     }
+
+    private void RoundFinalComplete(RoundBase r)
+    {
+        if (r.Data == rounds.GetRound(rounds.NumberRound - 1))
+        {
+            Invoke("ComingHome", 3f);
+        }
+    }
+
+    private void ComingHome()
+    {
+        GameController.Instance.LoadScene("TrangTrai");
+    }
+
     private RoundBase SetRoundData(RoundData round)
     {
         RoundBase r = null;
@@ -139,9 +179,14 @@ public class MAP_GamePlay : MAPController
                 r = Instantiate(new GameObject("Round Begin"), transform)
                     .AddComponent<RoundBegin>();
                 break;
+            case TypeRound.Hail:
+                r = Instantiate(new GameObject("Round Hail"), transform)
+                    .AddComponent<RoundHail>();
+                break;
         }
         r.SetUp(round);
         r.SetLocKRoom(round.GetDirects().ToArray());
+        r.OnRoundComplete += RoundFinalComplete;
         return r;
     }
 
@@ -160,7 +205,7 @@ public class MAP_GamePlay : MAPController
         var updateLanguages = GameObject.FindObjectsOfType<MonoBehaviour>().OfType<IBattle>();
         foreach (IBattle i in updateLanguages)
         {
-            i.OnGameStarted();
+            i.OnSceneStarted();
         }
     }
 }

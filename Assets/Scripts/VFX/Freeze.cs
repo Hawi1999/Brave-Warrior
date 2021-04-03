@@ -16,7 +16,10 @@ public class Freeze : ElementalBuffBad, ILockMove
     {
         Time_remaining = time;
         target = entity;
-        target.OnBuffsChanged?.Invoke(DamageElement.Ice, true);
+        target.Harmful_Ice = true;
+        target.OnValueChanged?.Invoke(Entity.HARMFUL_ICE);
+        target.LockMove.Register("Freeze");
+        target.LockAttack.Register("Freeze");
         SetEvent(true);
         SpawnIce();
     }
@@ -34,16 +37,6 @@ public class Freeze : ElementalBuffBad, ILockMove
             sprite.transform.localScale = Vector3.one * Mathf.Max(target.size.x, target.size.y) * 1.5f;
         }
         Time_remaining -= Time.deltaTime;
-    }
-
-    private void LockAttack(BoolAction a)
-    {
-        a.IsOK = false;
-    }
-
-    private void LockMove(BoolAction a)
-    {
-        a.IsOK = false;
     }
 
     private void SpawnIce()
@@ -82,13 +75,9 @@ public class Freeze : ElementalBuffBad, ILockMove
         {
             if (a)
             {
-                target.OnCheckForAttack += LockAttack;
-                target.OnCheckForMove += LockMove;
                 target.OnDeath += (Enemy) => OnEntityDead();
             } else
             {
-                target.OnCheckForAttack -= LockAttack;
-                target.OnCheckForMove -= LockMove;
                 target.OnDeath -= (Enemy) => OnEntityDead();
             }
         }
@@ -112,7 +101,10 @@ public class Freeze : ElementalBuffBad, ILockMove
         }
         if (target != null)
         {
-            target.OnBuffsChanged?.Invoke(DamageElement.Ice, false);
+            target.Harmful_Ice = false;
+            target.OnValueChanged?.Invoke(Entity.HARMFUL_ICE);
+            target.LockMove.CancelRegistration("Freeze");
+            target.LockAttack.CancelRegistration("Freeze");
             SetEvent(false);
         }
         base.EndUp();
