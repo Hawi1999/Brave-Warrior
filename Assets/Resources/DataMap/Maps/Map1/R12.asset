@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: R12
   m_EditorClassIdentifier: 
   typeRound: 1
-  position: {x: 350, y: 78}
+  position: {x: 35, y: 203}
   groupEnemy: 1
   Waves: {fileID: 11400000, guid: 5ffddb0724ff7ce4fb5fec6d567527af, type: 2}
   typeChest: 0
   colorChest: 0
   AmountBoss: 1
   WavesHail: []
+  Level: 0

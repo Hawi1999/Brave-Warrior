@@ -9,9 +9,10 @@ public class Ene_Qua : EnemySky
     [SerializeField] float RatioDodge = 0.5f;
     private float timeAttack = 1f;
     private float l => RadiusDropNear;
-    protected override void Awake()
+
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         render.sortingLayerName = "Fly";
     }
 

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: {fileID: 0}
   nameSkin: {fileID: 0}
-  LocalPositionMT: {x: 0, y: 0.73, z: 0}
+  LocalPositionMT: {x: 0, y: 0.6, z: 0}
   LocalPositionName: {x: 0, y: 0.2, z: 0}
 --- !u!114 &6841965046079790065
 MonoBehaviour:
@@ -66,6 +66,7 @@ MonoBehaviour:
   sizeCollider: 1
   render: {fileID: 6841965047448823937}
   renderVFX: {fileID: 6841965047092581727}
+  clipTake: {fileID: 8300000, guid: d182e0d6539203944bc9248421b27f7c, type: 3}
 --- !u!61 &-3134863563153515316
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -265,6 +266,6 @@ SpriteRenderer:
   m_Size: {x: 2.34375, y: 2.34375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

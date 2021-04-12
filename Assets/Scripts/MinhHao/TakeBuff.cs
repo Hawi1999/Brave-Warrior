@@ -5,14 +5,12 @@ using UnityEngine.Events;
 
 public class TakeBuff
 {
-    #region Value CallBack Action
-    public static int AMOUNT_BUFF2DATA_REGISTED = 1;
-    public static int AMOUNT_GIVEBUFF_REGISTED = 2;
-    #endregion
-    public List<BuffRegister> buffs = new List<BuffRegister>();
-    private List<GiveBuff> giveBuffs = new List<GiveBuff>();
+    public static int AMOUNT_GIVEBUFF_REGISTED = 1;
 
-    public void Register(GiveBuff give, BuffRegister.TypeBuff typeBuff, float a)
+    #region From GiveBuff
+    public List<BuffRegister> buffs = new List<BuffRegister>();
+    private List<IGiveBuff> giveBuffs = new List<IGiveBuff>();
+    public void Register(IGiveBuff give, int typeBuff, float a)
     {
         if(TryFind(typeBuff, out BuffRegister b))
         {
@@ -27,12 +25,11 @@ public class TakeBuff
         if (!giveBuffs.Contains(give))
         {
             giveBuffs.Add(give);
-            OnValueChanged?.Invoke(AMOUNT_BUFF2DATA_REGISTED);
         }
-        Debug.Log("Haha");
         OnValueChanged?.Invoke(AMOUNT_GIVEBUFF_REGISTED);
     }
-    public void RemoveRegister(GiveBuff give)
+
+    public void RemoveRegister(IGiveBuff give)
     {
         for (int i = buffs.Count; i > -1; i--)
         {
@@ -47,7 +44,6 @@ public class TakeBuff
         if (giveBuffs.Contains(give))
         {
             giveBuffs.Remove(give);
-            OnValueChanged?.Invoke(AMOUNT_BUFF2DATA_REGISTED);
         }
         OnValueChanged?.Invoke(AMOUNT_GIVEBUFF_REGISTED);
     }
@@ -58,7 +54,7 @@ public class TakeBuff
             buffs.RemoveAt(i);
         }
     }
-    public float GetValue(BuffRegister.TypeBuff type)
+    public float GetValue(int type)
     {
         if (TryFind(type, out BuffRegister b))
         {
@@ -67,7 +63,7 @@ public class TakeBuff
         else
             return 0;
     }
-    private bool TryFind(BuffRegister.TypeBuff Type, out BuffRegister b)
+    private bool TryFind(int Type, out BuffRegister b)
     {
         for (int i = 0; i < buffs.Count; i++)
         {
@@ -80,23 +76,39 @@ public class TakeBuff
         b = null;
         return false;
     }
-    public List<T> GetALlGiveBuff<T>() where T : GiveBuff
+
+    public bool ExitBuff(int Type)
     {
-        List<T> t = new List<T>();
-        foreach (GiveBuff g in giveBuffs)
+
+        for (int i = 0; i < buffs.Count; i++)
         {
-            if (g is T)
+            if (buffs[i].Type == Type)
             {
-                t.Add(g as T);
+                return true;
+            }
+        }
+        return false;
+    }
+    #endregion
+
+    public List<IShowBuffA> GetALlBuffA() 
+    {
+        List<IShowBuffA> t = new List<IShowBuffA>();
+        foreach (IGiveBuff g in giveBuffs)
+        {
+            if (g is IShowBuffA)
+            {
+                t.Add(g as IShowBuffA);
             }
         }
         return t;
     }
-    public void InvokeOnBuffRegisterValueChanged(BuffRegister.TypeBuff Type, ChangesValue changes)
+    public void InvokeOnBuffRegisterValueChanged(int Type, ChangesValue changes)
     {
         OnBuffRegisterValueChanged?.Invoke(Type, changes);
     }
     public UnityAction<int> OnValueChanged;
-    public UnityAction<BuffRegister.TypeBuff, ChangesValue> OnBuffRegisterValueChanged;
+    public UnityAction<int, ChangesValue> OnBuffRegisterValueChanged;
+
 
 }

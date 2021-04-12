@@ -6,15 +6,17 @@ using UnityEngine.Events;
 [RequireComponent(typeof(ShowName))]
 public class BuffInGround : Reward, IShowName, IManipulation
 {
-    Buff2Data Data;
+    IBuffInGround Data;
     [SerializeField] SpriteRenderer render;
     [SerializeField] SpriteRenderer renderVFX;
+    [SerializeField] AudioClip clipTake;
     private ShowName showname;
     public override string Name => "Buff " + Data.name;
-    public override bool WaitingForChoose =>  !appearing && base.WaitingForChoose;
+    public override bool WaitingForChoose =>  !appearing && base.WaitingForChoose && !taked;
 
 
     private bool appearing = true;
+    private bool taked = false;
 
     float timeVFX = 1;
     protected override void Awake()
@@ -72,7 +74,8 @@ public class BuffInGround : Reward, IShowName, IManipulation
 
     public override void OnChoose(IManipulation manipulation)
     {
-        if (manipulation != null && manipulation as Object == this)
+        base.OnChoose(manipulation);
+        if (manipulation != null && manipulation as UnityEngine.Object == this)
         {
             showname.Show();
         }
@@ -84,18 +87,24 @@ public class BuffInGround : Reward, IShowName, IManipulation
 
     public override void TakeManipulation(PlayerController host)
     {
+        base.TakeManipulation(host);
         if (!taked)
         {
             base.TakeManipulation(host);
-            Data.Register(host.take);
+            Data.OnHostTake(host);
+            if (clipTake != null)
+            {
+                SoundManager.PLayOneShot(clipTake);
+            }
             StartCoroutine(AnimationEnd());
+            taked = true;
         }
     }
 
-    public void SetUp(Buff2Data buff)
+    public void SetUp(IBuffInGround buff)
     {
         Data = buff;
-        render.sprite = Data.sprite;
+        render.sprite = Data.Sprite;
     }
 
     public string GetName()
@@ -103,13 +112,18 @@ public class BuffInGround : Reward, IShowName, IManipulation
         return "Reward " + Name;
     }
 
-    public Color GetColorName()
-    {
-        return Data.colorName;
-    }
-
     public SpriteRenderer GetRender()
     {
         return render;
+    }
+
+    public Color GetColorName()
+    {
+        return Color.green;
+    }
+
+    public override bool EqualTypeByChest(TypeReward type)
+    {
+        return false;
     }
 }

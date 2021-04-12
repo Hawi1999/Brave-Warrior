@@ -27,6 +27,7 @@ public class RoundHail : RoundBase
     private static int idMeteo;
     private PoolingGameObject pool => PoolingGameObject.PoolingMain;
     private SpriteRenderer zoneSpawn;
+    private BoxCollider2D colliderEnd;
     List<Meteorite> meteos = new List<Meteorite>();
     protected override void OnPLayerOnInFirst()
     {
@@ -49,6 +50,15 @@ public class RoundHail : RoundBase
                 Debug.Log("Không tìm thấy Thiện thạch");
             }
         }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        colliderEnd = new GameObject("ColliderEnd").AddComponent<BoxCollider2D>();
+        colliderEnd.gameObject.layer = LayerMask.NameToLayer("Player");
+        colliderEnd.gameObject.AddComponent<WallTakeHit>();
+        colliderEnd.gameObject.SetActive(false);
     }
 
     private void BeginRound()
@@ -79,6 +89,8 @@ public class RoundHail : RoundBase
         bool isVer;
         float zZone;
         Vector2 posZone;
+        Vector2 posColliderEnd;
+        Vector2 SizeCollidrEnd;
         switch (i)
         {
             case 0:
@@ -88,6 +100,8 @@ public class RoundHail : RoundBase
                 isVer = false;
                 zZone = 270f;
                 posZone = Data.GetPositionInSide(Direct.Left);
+                posColliderEnd = Data.GetPositionInSide(Direct.Right) + Vector2.right / 2;
+                SizeCollidrEnd = new Vector2(1, Data.Size.y);
                 break;
             case 1:
                 Direction = Vector2.up;
@@ -96,6 +110,8 @@ public class RoundHail : RoundBase
                 isVer = true;
                 zZone = 0;
                 posZone = Data.GetPositionInSide(Direct.Down);
+                posColliderEnd = Data.GetPositionInSide(Direct.Up) + Vector2.up / 2;
+                SizeCollidrEnd = new Vector2(Data.Size.x, 1);
                 break;
             case 2:
                 Direction = Vector2.left;
@@ -104,6 +120,8 @@ public class RoundHail : RoundBase
                 b = Direct.RightUp;
                 zZone = 90;
                 posZone = Data.GetPositionInSide(Direct.Right);
+                posColliderEnd = Data.GetPositionInSide(Direct.Left) + Vector2.left / 2;
+                SizeCollidrEnd = new Vector2(1, Data.Size.y);
                 break;
             case 3:
                 Direction = Vector2.down;
@@ -112,6 +130,8 @@ public class RoundHail : RoundBase
                 isVer = true;
                 zZone = 180f;
                 posZone = Data.GetPositionInSide(Direct.Up);
+                posColliderEnd = Data.GetPositionInSide(Direct.Down) + Vector2.down / 2;
+                SizeCollidrEnd = new Vector2(Data.Size.x, 1);
                 break;
             default:
                 Direction = Vector2.right;
@@ -120,6 +140,8 @@ public class RoundHail : RoundBase
                 isVer = false;
                 zZone = 270f;
                 posZone = Data.GetPositionInSide(Direct.Left);
+                posColliderEnd = Data.GetPositionInSide(Direct.Right) + Vector2.right / 2;
+                SizeCollidrEnd = new Vector2(1, Data.Size.y);
                 break;
         }
         Node1 = Data.GetMidPositionInCellLimit(a);
@@ -142,13 +164,19 @@ public class RoundHail : RoundBase
             zoneSpawn.transform.rotation = Quaternion.Euler(new Vector3(0, 0, zZone));
             zoneSpawn.transform.localScale = new Vector3((isVer ? Data.Size.x : Data.Size.y), 1, 1);
         }
-        StartCoroutine(SpawnMeteorites(Node1, Node2, Direction, isVer, posZone));
+        StartCoroutine(SpawnMeteorites(Node1, Node2, Direction, isVer, posZone, posColliderEnd, SizeCollidrEnd));
     }
 
     private bool spawning = false;
-    IEnumerator SpawnMeteorites(Vector2 Node1, Vector2 Node2, Vector2 Direction, bool isVer, Vector3 posZone)
+    IEnumerator SpawnMeteorites(Vector2 Node1, Vector2 Node2, Vector2 Direction, bool isVer, Vector3 posZone, Vector2 posColliderEnd, Vector2 sizeColliderEnd)
     {
         yield return new WaitForSeconds(3f);
+        if (colliderEnd != null)
+        {
+            colliderEnd.gameObject.SetActive(true);
+            colliderEnd.transform.position = posColliderEnd;
+            colliderEnd.size = sizeColliderEnd;
+        }
         CameraMove.Instance.AddPosition(new TaretVector3("Round Hail", ((Vector2)posZone + Data.position)/2));
         PlayerController.PlayerCurrent.DirectFire = -Direction;
         PlayerController.PlayerCurrent.LocKDirectFire = true;
@@ -207,6 +235,10 @@ public class RoundHail : RoundBase
     private void EndRound()
     {
         CameraMove.Instance.RemovePosition("Round Hail");
+        if (colliderEnd != null)
+        {
+            colliderEnd.gameObject.SetActive(false);
+        }
         if (idcurrent >= idmax - 1)
         {
             RoundComplete();
@@ -238,5 +270,4 @@ public class RoundHail : RoundBase
             idMeteo = 0;
         }
     }
-
 }

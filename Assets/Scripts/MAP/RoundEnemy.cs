@@ -9,6 +9,7 @@ public class RoundEnemy : RoundBase
     private GameObject PRSpawnEnemy;
     private List<LockRoom> LockRooms;
     private List<Enemy> ListEnemySpawned;
+    private List<Enemy> ListEnemy = new List<Enemy>();
     private int idmax = 0;
 
     private void StartRound(int a)
@@ -36,6 +37,7 @@ public class RoundEnemy : RoundBase
             return;
         }
         ListEnemySpawned.Remove(enemy);
+        enemy.OnDeath -= HasEnemyDying;
         OnHasEnemyDie(enemy);
         if (ListEnemySpawned.Count == 0)
         {
@@ -66,7 +68,8 @@ public class RoundEnemy : RoundBase
 
         if (PRSpawnEnemy == null)
         {
-            PRSpawnEnemy = Instantiate(new GameObject("PR Enemy Spawned"), transform);
+            PRSpawnEnemy = new GameObject("PR Enemy Spawned");
+            PRSpawnEnemy.transform.parent = transform;
         }
         if (Data.Waves == null)
         {
@@ -88,12 +91,18 @@ public class RoundEnemy : RoundBase
         }
         foreach (Enemy LE in listEnemy)
         {
-
             Vector3 position = TileManager.GetPositionInGoundCurrent();
             Enemy ene = EntityManager.Instance.SpawnEnemy(LE, position, PRSpawnEnemy.transform, Data.GetPositionLimit());
-            ene.OnDeath += HasEnemyDying;
-            ListEnemySpawned.Add(ene);
+            HasMoreEnemy(ene);
         }
+    }
+
+    private void HasMoreEnemy(Enemy e)
+    {
+        ListEnemySpawned.Add(e);
+        ListEnemy.Add(e);
+        e.OnDeath += HasEnemyDying;
+        e.OnSpawnEnemyMore += HasMoreEnemy;
     }
 
     protected virtual void OnStartRound(int id)
@@ -103,7 +112,17 @@ public class RoundEnemy : RoundBase
             PlayerController.PlayerCurrent.setLimitMove(Data.GetPositionLimit());
         }
     }
-
+    protected override void RoundComplete()
+    {
+        base.RoundComplete();
+        foreach (Enemy e in ListEnemy)
+        {
+            if (e != null)
+            {
+                Destroy(e.gameObject);
+            }
+        }
+    }
     protected virtual void OnClear()
     {
         Vector3 pos = TileManager.GetPositionInGoundCurrent();

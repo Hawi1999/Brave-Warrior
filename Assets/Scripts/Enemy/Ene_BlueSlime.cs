@@ -23,9 +23,9 @@ public class Ene_BlueSlime : EnemyGround
 
     private int id_bul;
 
-    protected override void Awake()
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         id_bul = pool.AddPrefab(bulletPrefabs);
     }
 
@@ -33,18 +33,6 @@ public class Ene_BlueSlime : EnemyGround
     {
         base.OnDestroy();
         pool.RemovePrefab(id_bul);
-    }
-
-    protected override void OnDead()
-    {
-        base.OnDead();
-        pool.RemovePrefab(id_bul);
-    }
-
-    public override void Revive()
-    {
-        base.Revive();
-        id_bul = pool.AddPrefab(bulletPrefabs);
     }
 
     protected override void ChooseNextAction()

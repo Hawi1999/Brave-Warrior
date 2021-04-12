@@ -13,12 +13,6 @@ public class BulletExtraViling : BulletBase
 
     private float RadiusCollider => _RadiusColldier * transform.localScale.x;
     private Color colorCurrent;
-
-    protected override void UpdateCollision()
-    {
-        CheckCollider();
-    }
-
     public override void StartUp(DamageData dam)
     {
         base.StartUp(dam);
@@ -38,20 +32,9 @@ public class BulletExtraViling : BulletBase
         render.color = colorCurrent;
     }
 
-    void CheckCollider()
+    protected override Collider2D[] GetAllCollision()
     {
-        Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, RadiusCollider, target);
-        if (col != null && col.Length != 0)
-        {
-            foreach (Collider2D c in col)
-            {
-                ITakeHit take = c.GetComponent<ITakeHit>();
-                if (take != null)
-                {
-                    OnHitTarget(take, transform.position);
-                }
-            }
-        }
+        return Physics2D.OverlapCircleAll(transform.position, RadiusCollider, target);
     }
 
     protected override void OnDestroyed(ControlPartice VFX)

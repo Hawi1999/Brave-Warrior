@@ -24,7 +24,7 @@ public class PlayerController : Entity
     [SerializeField] private int shield = 5;
     [SerializeField] private int healPhy = 100;
     [SerializeField] private SpriteRenderer RenderSelected;
-    [SerializeField] private LayerMask layerTargetFind;
+    public LayerMask layerTargetFind;
     [SerializeField] private Transform OffSetWeapon;
     [SerializeField] private Transform OffSetCenter;
     public List<SkillConnect> skills;
@@ -74,7 +74,7 @@ public class PlayerController : Entity
             float o = _currentHealphy;
             _currentHealphy = value;
             if (PlayerCurrent == this)
-                OnHealPhyChanged?.Invoke(o, value, MaxHealphy, Tied.Value);
+                OnHealPhyChanged?.Invoke(o, value, MaxHealphy);
         }
     }
     public override bool IsForFind => base.IsForFind && !Died.Value;
@@ -90,11 +90,11 @@ public class PlayerController : Entity
             targetfire = value;
             if (old != targetfire)    
             {
-                if (old != null && old as Object != null)
+                if (old != null && old as UnityEngine.Object != null)
                 {
                     old.OnTargetFound(this, targetfire);
                 }
-                if (targetfire != null && targetfire as Object != null)
+                if (targetfire != null && targetfire as UnityEngine.Object != null)
                 {
                     targetfire.OnTargetFound(this, targetfire);
                 }
@@ -128,18 +128,31 @@ public class PlayerController : Entity
     Animator anim;
     Rigidbody2D rig;
 
-    private ValueBool Tied = new ValueBool(false);
+    public ValueBool Tied = new ValueBool(false);
     private IFindTarget targetfire;
     #region Start & Update
-    protected override void Awake()
+    protected override void SetUpAwake()
     {
-        base.Awake();
+
+        base.SetUpAwake();
         gameObject.tag = "Player";
         gameObject.layer = LayerMask.NameToLayer("Player");
         anim = GetComponent<Animator>();
         rig = GetComponent<Rigidbody2D>();
         OnAttacked += TakeTied;
-        SetUpStartEvents();
+    }
+
+    protected override void SetUpStart()
+    {
+        base.SetUpStart();
+        if (PlayerCurrent == this)
+        {
+            OnHeathChanged?.Invoke(0, CurrentHeath, MaxHP);
+            OnShieldChanged?.Invoke(0, ShieldCurrent, MaxShield);
+            OnHealPhyChanged?.Invoke(0, CurrentHealPhy, MaxHealphy);
+
+        }
+
     }
 
     protected override void SetUpStartvalue()
@@ -262,7 +275,7 @@ public class PlayerController : Entity
             Find();
         } else
         {
-            if (TargetFire == null || (TargetFire as Object) == null || !TargetFire.IsForFind)
+            if (TargetFire == null || (TargetFire as UnityEngine.Object) == null || !TargetFire.IsForFind)
             {
                 Find();
             }
@@ -270,14 +283,14 @@ public class PlayerController : Entity
     }
     void Find()
     {
-        TargetFire = global::Find.FindTargetNearest(transform.position, 15f, layerTargetFind);
+        TargetFire = global::Find.FindTargetNearest(transform.position, DistanceFindTarget, layerTargetFind);
         timeToFind = 0;
     }
     void CheckDistanceWithTargetFire()
     {
         if (!HasEnemyAliveNear)
             return;
-        if (Vector2.Distance(TargetFire.center, transform.position) >= 15f)
+        if (Vector2.Distance(TargetFire.center, transform.position) >= DistanceFindTarget)
         {
             TargetFire = null;
         }
@@ -358,7 +371,7 @@ public class PlayerController : Entity
     void UpdateCamera()
     {
         CameraMove.Instance.AddPosition(new TaretVector3("Player", center));
-        if (TargetFire != null && TargetFire as Object != null)
+        if (TargetFire != null && TargetFire as UnityEngine.Object != null)
         {
             CameraMove.Instance.AddPosition(new TaretVector3("Enemy", TargetFire.center));
         }
@@ -383,14 +396,16 @@ public class PlayerController : Entity
             OnNotAttack?.Invoke();
         }
     }
+    
 
     protected override void SetUpDamageData(DamageData damageData)
     {
         base.SetUpDamageData(damageData);
         damageData.Direction = DirectFire;
+        damageData.OnHitEnemy += (e) => OnHitTarget?.Invoke(e);
         damageData.OnHitToDieEnemy += (Enemy enemy) =>
         {
-            Debug.Log("Ban da giet: " + enemy.GetName());
+            OnKilledTarget?.Invoke(enemy);
         };
         damageData.AddDamageOrigin(PlayerTakeBuff.GetValue(BuffRegister.TypeBuff.IncreaseDamageByValue));
         damageData.AddDamagePercentOrigin(PlayerTakeBuff.GetValue(BuffRegister.TypeBuff.IncreaseDamageByPercent));
@@ -510,7 +525,7 @@ public class PlayerController : Entity
         }
     }
     public static UnityAction<int, int, int> OnShieldChanged;
-    public static UnityAction<float, float, float, bool> OnHealPhyChanged;
+    public static UnityAction<float, float, float> OnHealPhyChanged;
     public static UnityAction<int, int, int> OnHeathChanged;
     public static UnityAction<DamageData> OnSetUpDamageToAttack;
     // Gọi khi nhân dame nào đó

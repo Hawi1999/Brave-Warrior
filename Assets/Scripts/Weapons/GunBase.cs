@@ -10,6 +10,7 @@ public class GunBase : Weapon
     [Range(0, 90)]
     [SerializeField] protected float DoGiat = 10;
     [SerializeField] protected Transform HeadGun;
+    [SerializeField] protected AudioClip clipAttack;
     [HideInInspector] public bool isLeftDir;
 
     protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
@@ -55,6 +56,7 @@ public class GunBase : Weapon
         {
             id_pool_bullet = pool.AddPrefab(VienDan);
         }
+        OnAttacked += AudioAttack; 
     }
 
     protected override void Start()
@@ -97,6 +99,7 @@ public class GunBase : Weapon
         bool isCritical = Random.Range(0, 1f) < 0.2f;
         int SatThuong = this.SatThuong;
         damageData.Damage = SatThuong;
+        damageData.Direction = GiatSung(damageData.Direction);
         damageData.FromGunWeapon = true;
         damageData.IsCritical = isCritical;
     }
@@ -112,6 +115,11 @@ public class GunBase : Weapon
         transform.rotation = MathQ.DirectionToQuaternion(Host.DirectFire);
         isLeftDir = Host.DirectFire.x < 0;
         render.flipY = isLeftDir;
+    }
+
+    protected virtual void AudioAttack() {
+        if (clipAttack != null)
+        SoundManager.PLayOneShot(clipAttack, 0.3f);
     }
 
     protected virtual Vector3 GiatSung(Vector3 direction)

@@ -15,6 +15,9 @@ public class DataMap : MonoBehaviour
     static LockRoomDatas[] _DoorDatas;
     static Buff1Datas[] _Buff1Datas;
     static Buff2Datas[] _Buff2Datas;
+    static LegacyBuff[] _BuffLegacy;
+    static ClipDatas[] _Clipdatas;
+    static ClipLegacyDatas[] _ClipLegacyDatas;
     /// <summary>
     /// Load tat ca du lieu game tu Resoures 
     /// </summary>
@@ -27,6 +30,9 @@ public class DataMap : MonoBehaviour
         _RoundDatas = Resources.LoadAll<RoundDatas>(Path);
         _Buff1Datas = Resources.LoadAll<Buff1Datas>(Path);
         _Buff2Datas = Resources.LoadAll<Buff2Datas>(Path);
+        _BuffLegacy = Resources.LoadAll<LegacyBuff>(Path);
+        _Clipdatas = Resources.LoadAll<ClipDatas>(Path);
+        _ClipLegacyDatas = Resources.LoadAll<ClipLegacyDatas>(Path);
     }
     public static LockRoom GetLockRoomPrefab(LockRoomDatas.Direct direct)
     {
@@ -177,6 +183,28 @@ public class DataMap : MonoBehaviour
         return Array.Find(_Buff1Datas, e => e.Code == code);
     }
 
+    public static AudioClip GetClip(ClipDatas.Type type)
+    {
+        if (_Clipdatas == null || _Clipdatas.Length == 0)
+        {
+            Debug.Log("Có ClipDatas nào đâu mà tìm?");
+            return null;
+        }
+        for (int i = 0; i < _Clipdatas.Length; i++)
+        {
+            ClipDatas c = _Clipdatas[i];
+            if (c.type == type)
+            {
+                return c.GetClip();
+            }
+        }
+        Debug.Log("Không có ClipDatas nào type = " + type.ToString() + " cả!");
+        return null;
+    }
+    public static AudioClip GetClip(string code)
+    {
+        return Array.Find(_ClipLegacyDatas, e => e.EqualAndReady(code)).GetClip();
+    }
     /// <summary>
     /// Lay Clone Data type Buff2Data in Resources
     /// </summary>
@@ -188,5 +216,14 @@ public class DataMap : MonoBehaviour
         if (b == null)
             return null;
         return b.GetBuff;
+    }
+
+    public static LegacyBuff GetLegacyBuff()
+    {
+        if (_BuffLegacy == null || _BuffLegacy.Length == 0)
+        {
+            return null;
+        }
+        return _BuffLegacy[UnityEngine.Random.Range(0, _BuffLegacy.Length)].Clone();
     }
 }

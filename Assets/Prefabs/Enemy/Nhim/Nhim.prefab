@@ -4980,8 +4980,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f64fbf2152b13428747a50ee8d99bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeathBasic: 80
+  HeathBasic: 60
   sizeDefault: {x: 0.7, y: 0.52}
+  DistanceFindTarget: 15
   render: {fileID: 2848821326652682352}
   DirectionCurrent: {x: 0, y: 0, z: 0}
   Harmful_Electric: 0

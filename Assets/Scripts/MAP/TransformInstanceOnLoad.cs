@@ -13,7 +13,7 @@ public class TransformInstanceOnLoad : MonoBehaviour
     {
         if (Instance == null)
         {
-            Instance = Instantiate(new GameObject("TransformInstanceOnLoad")).AddComponent<TransformInstanceOnLoad>();
+            Instance = new GameObject("TransformInstanceOnLoad").AddComponent<TransformInstanceOnLoad>();
         }
         return Instance.transform;
     }

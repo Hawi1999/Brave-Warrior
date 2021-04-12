@@ -6,4 +6,5 @@ public interface IBattle
 {
     void OnSceneStarted();
     void OnSceneEnded();
+    void OnSceneOpen();
 }

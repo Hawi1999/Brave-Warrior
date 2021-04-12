@@ -27,9 +27,10 @@ public class Ene_OcSen : EnemyGround
     }
 
     #region StartAndUpdate
-    protected override void Awake()
+
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         id_bul = pool.AddPrefab(bulletPrefab);
     }
 
@@ -104,18 +105,6 @@ public class Ene_OcSen : EnemyGround
         base.OnDestroy();
         pool.RemovePrefab(id_bul);
     }
-    protected override void OnDead()
-    {
-        base.OnDead();
-        pool.RemoveAllPooled(id_bul);
-    }
-
-    public override void Revive()
-    {
-        base.Revive();
-        id_bul = pool.AddPrefab(bulletPrefab);
-    }
-
     #endregion
 
     protected override void OnDrawGizmos()

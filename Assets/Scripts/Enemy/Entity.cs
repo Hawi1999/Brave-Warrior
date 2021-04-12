@@ -29,6 +29,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     protected virtual bool PermitAttack => LockAttack.isOk;
     protected virtual bool PermitSkill => LockUseSkill.isOk;
     public virtual bool IsForFind => (isActiveAndEnabled && !Died.Value);
+    [HideInInspector] public float DistanceFindTarget = 15f;
     public SpriteRenderer render;
 
     public Vector3 Direction
@@ -49,6 +50,8 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     public LockAction LockAttack = new LockAction();
     public LockAction LockColliderTakeDamage = new LockAction();
     public LockAction LockUseSkill = new LockAction();
+    public UnityAction<Entity> OnHitTarget;
+    public UnityAction<Entity> OnKilledTarget;
     [Tooltip("được gọi khi chui xuống đất")]
     public UnityAction OnIntoTheGound;
     [Tooltip("được gọi khi chui xuống đất")]
@@ -88,9 +91,11 @@ public abstract class Entity : MonoBehaviour, IFindTarget
             }
         }
     }
-    protected virtual void Awake()
+    private void Awake()
     {
+        SetUpAwake();
         SetUpStartEvents();
+        SetUpStartvalue();
     }
 
     #region Invoke UnityAction
@@ -106,9 +111,19 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     #endregion
 
     protected Vector2[] limitMove;
-    protected virtual void Start()
+    private void Start()
     {
-        SetUpStartvalue();
+        SetUpStart();
+    }
+
+    protected virtual void SetUpStart()
+    {
+
+    }
+
+    protected virtual void SetUpAwake()
+    {
+
     }
 
     protected virtual void Update()
@@ -373,7 +388,7 @@ public abstract class Entity : MonoBehaviour, IFindTarget
         CurrentHeath = MaxHP;
     }
 
-    protected virtual void OnBuffRegistersValueChanged(BuffRegister.TypeBuff Type, ChangesValue changes)
+    protected virtual void OnBuffRegistersValueChanged(int Type, ChangesValue changes)
     {
         if (Type == BuffRegister.TypeBuff.IncreaseSizeByPercent)
         {
@@ -430,6 +445,11 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     {
         damage.From = this;
     }
+
+    public virtual void SetUpDamageDataOutSide(DamageData damage)
+    {
+        SetUpDamageData(damage);
+    }
     public virtual void OnTargetFound(Entity entity, IFindTarget t)
     {
 
@@ -454,11 +474,11 @@ public abstract class Entity : MonoBehaviour, IFindTarget
     public static int TIED = 5;
     public static int SCALESIZE = 6;
     public static int TRANSFORM = 7;
-    public static int HP;
-    public static int MAPHP;
-    public static int SHIELD;
-    public static int MAXSHIELD;
-    public static int HEALPHY;
+    public static int HP = 8;
+    public static int MAPHP = 9;
+    public static int SHIELD = 10;
+    public static int MAXSHIELD = 11;
+    public static int HEALPHY = 12;
 
     public static int HARMFUL_ELECTIC = 100;
     public static int HARMFUL_POISON = 101;

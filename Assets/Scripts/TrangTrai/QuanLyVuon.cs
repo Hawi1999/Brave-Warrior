@@ -240,7 +240,6 @@ public class QuanLyVuon : MonoBehaviour
     {
         CayTrong cay = dat_current.Tree;
         Vector3 pos = dat_current.getDiaChi();
-        Personal.AddDKN(cay.ThoiGianLon/10);
         Kho.AddItemSave(cay, cay.SoLuong);
         dat_current.ThuHoach();
         VFXManager.ThuHoach(vfx, cay, cay.SoLuong, pos);
@@ -300,7 +299,8 @@ public class QuanLyVuon : MonoBehaviour
     }
     void CreateNewDatTrong(Vector2 diachi)
     {
-        DatTrong dattrong = Instantiate(new GameObject("DatTrong(" + diachi.x + "," + diachi.y + ")"), gameObject.transform).AddComponent<DatTrong>() as DatTrong;
+        DatTrong dattrong = new GameObject("DatTrong(" + diachi.x + "," + diachi.y + ")").AddComponent<DatTrong>() as DatTrong;
+        dattrong.transform.parent = transform;
         dattrong.setDiaChi(diachi);
         dattrong.setStart();
         dats.Add(dattrong);
@@ -315,7 +315,8 @@ public class QuanLyVuon : MonoBehaviour
             int n = 0;
             foreach (DatTrongSave datdt in qlvdata.DanhSachDat)
             {
-                DatTrong dat = Instantiate(new GameObject("DatTrong" + n.ToString()), gameObject.transform).AddComponent<DatTrong>() as DatTrong;
+                DatTrong dat = new GameObject("DatTrong" + n.ToString()).AddComponent<DatTrong>() as DatTrong;
+                dat.transform.parent = transform;
                 dat.setStart(datdt);
                 dats.Add(dat);
                 n++;

@@ -82,4 +82,9 @@ public class LockRoom : Door, IBattle
     {
         
     }
+
+    public void OnSceneOpen()
+    {
+
+    }
 }

@@ -16,6 +16,7 @@ public class ShowHPPlayer : MonoBehaviour
     public Image fillHealPhy;
     private void Awake()
     {
+
         SetUp();
     }
 
@@ -32,7 +33,7 @@ public class ShowHPPlayer : MonoBehaviour
         {
             OnHPChanged(0, player.CurrentHeath, player.MaxHP);
             OnShieldChanged(0, player.ShieldCurrent, player.MaxShield);
-            OnHealPhyChanged(0, player.CurrentHealPhy, player.MaxHealphy, false);
+            OnHealPhyChanged(0, player.CurrentHealPhy, player.MaxHealphy);
         }
     }
 
@@ -50,11 +51,11 @@ public class ShowHPPlayer : MonoBehaviour
         textShield.text = b.ToString() + "/" + c.ToString();
     }
 
-    private void OnHealPhyChanged(float a, float b, float c, bool Tied)
+    private void OnHealPhyChanged(float a, float b, float c)
     {
         sliderSpeedAttack.maxValue = c;
         sliderSpeedAttack.value = b;
-        if (Tied)
+        if (PlayerController.PlayerCurrent.Tied.Value)
         {
             fillHealPhy.color = Color.red;
         }

@@ -65,7 +65,6 @@ public class RoundBoss : RoundBase
     }
     private void HasMoreEnemy(Enemy e)
     {
-        Debug.Log("Enemy Added");
         enemtsSpawned.Add(e);
         e.OnDeath += (E) => OnHasEnemyDie(E as Enemy);
         e.OnSpawnEnemyMore += HasMoreEnemy;
@@ -74,7 +73,6 @@ public class RoundBoss : RoundBase
     private void OnHasEnemyDie(Enemy e)
     {
         enemtsSpawned.Remove(e);
-        Debug.Log("Removed con lai :" + enemtsSpawned.Count);
         if (enemtsSpawned.Count <= 0)
         {
             EndRound();
@@ -87,5 +85,11 @@ public class RoundBoss : RoundBase
         RoundComplete();
         RoundCurrent = null;
         PlayerController.PlayerCurrent.setLimitMove(null);
+    }
+
+    protected override void RoundComplete()
+    {
+        base.RoundComplete();
+        RewardManager.LegacyBuff(TileManager.GetPositionInGoundCurrent());
     }
 }

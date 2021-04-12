@@ -67,17 +67,20 @@ public class Chest : MonoBehaviour
     public void OpenChest()
     {
         ani.setAnimation("OpenChest");
-        if (Data.NameOfRewards == null || Data.NameOfRewards.Length == 0)
+        Reward reward = Data.getRandomReward();
+        if (reward == null)
         {
-            Debug.Log("Danh sach phần thưởng trống");
+            Debug.Log("Reward is Null");
             return;
         }
-        Reward reward = RewardManager.GetRewardByName(Data.getRandomReward());
-        reward = Instantiate(reward, transform.position, Quaternion.identity);
+         reward = Instantiate(reward, transform.position, Quaternion.identity);
         if (flyup != null)
         {
             flyup.Play();
         }
+        PositionControl pct = reward.gameObject.AddComponent<PositionControl>();
+        pct.SetUp(reward.transform.position, reward.transform.position + new Vector3(0, 0.4f, 0), 0.5f);
+        pct.StartAnimation();
     }
 
     private void Update()

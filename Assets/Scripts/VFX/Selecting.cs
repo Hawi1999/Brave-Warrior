@@ -31,7 +31,7 @@ public class Selecting : MonoBehaviour
 
     private void Update()
     {
-        if (target == null || target as Object == null)
+        if (target == null || target as UnityEngine.Object == null)
         {
             gameObject.SetActive(false);
             return;

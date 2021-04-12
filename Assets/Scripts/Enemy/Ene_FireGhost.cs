@@ -22,29 +22,19 @@ public class Ene_FireGhost : EnemyGhost
 
 
     int id_bull;
-    protected override void Awake()
+
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         id_bull = pool.AddPrefab(Bullet);
     }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
         pool.RemovePrefab(id_bull);
     }
 
-
-    protected override void OnDead()
-    {
-        base.OnDead();
-        pool.RemovePrefab(id_bull);
-    }
-
-    public override void Revive()
-    {
-        base.Revive();
-        id_bull = pool.AddPrefab(Bullet);
-    }
     protected override void ChooseNextAction()
     {
         if (CurrentAction == Action.Idle)

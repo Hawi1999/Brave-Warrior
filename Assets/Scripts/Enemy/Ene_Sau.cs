@@ -26,9 +26,9 @@ public class Ene_Sau : EnemyGround
     }
 
     #region StartAndUpdate
-    protected override void Awake()
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         id_bul = pool.AddPrefab(bulletPrefab);
     }
 
@@ -91,24 +91,12 @@ public class Ene_Sau : EnemyGround
             return;
         }
     }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
         pool.RemovePrefab(id_bul);
     }
-
-    protected override void OnDead()
-    {
-        base.OnDead();
-        pool.RemovePrefab(id_bul);
-    }
-
-    public override void Revive()
-    {
-        base.Revive();
-        id_bul = pool.AddPrefab(bulletPrefab);
-    }
-
     #endregion
 
     protected override void OnDrawGizmos()

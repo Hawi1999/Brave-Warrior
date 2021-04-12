@@ -17,5 +17,5 @@ MonoBehaviour:
   buffs:
   - typeBuff: 8
     value: 1
+    codeName: IncreaseDamageCritByPercent
   CloneID: 0
-  colorName: {r: 0, g: 1, b: 0, a: 1}

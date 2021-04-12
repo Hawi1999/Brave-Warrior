@@ -24,9 +24,38 @@ public class RewardWeapon : Reward
             return _Name;
         }
     }
+
+    public override bool EqualTypeByChest(TypeReward type)
+    {
+        if (type == TypeReward.Gold1 || type == TypeReward.Gold2 || type == TypeReward.Gold3)
+            return false;
+        if (type == TypeReward.WeaponCommon && weapon.TypeOfWeapon == LevelWeapon.Common)
+        {
+            return true;
+        }
+        if (type == TypeReward.WeaponEpic && weapon.TypeOfWeapon == LevelWeapon.Epic)
+        {
+            return true;
+        }
+        if (type == TypeReward.WeaponRare && weapon.TypeOfWeapon == LevelWeapon.Rare)
+        {
+            return true;
+        }
+        if (type == TypeReward.WeaponVeryRare && weapon.TypeOfWeapon == LevelWeapon.VeryRare)
+        {
+            return true;
+        }
+        if (type == TypeReward.WeaponLegendary && weapon.TypeOfWeapon == LevelWeapon.Legendary)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public override void OnChoose(IManipulation manipulation)
     {
-        if (manipulation != null && manipulation as Object == this)
+        base.OnChoose(manipulation);
+        if (manipulation != null && manipulation as UnityEngine.Object == this)
         {
             showname.Show();
         }
@@ -42,22 +71,10 @@ public class RewardWeapon : Reward
         showname.Hide();
     }
 
-    public override void OnPlayerInto()
-    {
-        base.OnPlayerInto();
-        if (!showed)
-        {
-            PositionControl pct = gameObject.AddComponent<PositionControl>();
-            pct.SetUp(transform.position, transform.position + new Vector3(0,0.4f,0), 0.5f);
-            pct.StartAnimation();
-            showed = true;
-        }
-    }
-
     private void OnValidate()
     {
         weapon = GetComponent<Weapon>();
         showname = GetComponent<ShowName>();
-        _Name = "Reward " + weapon.GetNameOfWeapon();
+        _Name = "Reward " + weapon.TypeOfWeapon.ToString() + " " + weapon.GetNameOfWeapon();
     }
 }

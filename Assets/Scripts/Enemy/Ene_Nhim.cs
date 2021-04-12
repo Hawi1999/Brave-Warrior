@@ -197,9 +197,10 @@ public class Ene_Nhim : EnemyUnderGround
     #endregion
 
     #region StartAndUpdate
-    protected override void Start()
+
+    protected override void SetUpStart()
     {
-        base.Start();
+        base.SetUpStart();
         OnTookDamage += StopByBackForce;
         VFXAttack?.Stop();
     }

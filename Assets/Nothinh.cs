@@ -38,7 +38,7 @@ public class Line
 
     public Line(Vector3 StartPosition, float Size)
     {
-        line = GameObject.Instantiate(new GameObject("Hihi")).AddComponent<LineRenderer>();
+        line = new GameObject("Hihi").AddComponent<LineRenderer>();
         Vector3[] a = new Vector3[2];
         positionStart = StartPosition;
         a[0] = positionStart;

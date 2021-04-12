@@ -2,17 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RewardGold : Reward
+public partial class RewardGold : Reward
 {
     public override string Name => "Reward Gold " + Level.ToString();
     [Range(1, 3)]
     [SerializeField] int Level = 1;
     int amount;
     protected bool showed = false;
+    
     public int Amount => amount;
     [SerializeField] TakeGoldFromMap Prejabs;
 
     public override bool WaitingForChoose => true;
+
+    public override bool EqualTypeByChest(TypeReward type)
+    {
+        if (Level == 1 && type == TypeReward.Gold1)
+        {
+            return true;
+        }
+        if (Level == 2 && type == TypeReward.Gold2)
+        {
+            return true;
+        }
+        if (Level == 3 && type == TypeReward.Gold3)
+        {
+            return true;
+        }
+        return false;
+    }
 
     public override void OnPlayerInto()
     {

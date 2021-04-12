@@ -215,14 +215,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c19cf9afa3e460948b4bbf35b1329845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Heath: 50
-  Shield: 0
+  HeathBasic: 40
+  sizeDefault: {x: 0.5, y: 0.3}
+  DistanceFindTarget: 15
   render: {fileID: 5426267566257498371}
+  DirectionCurrent: {x: 0, y: 0, z: 0}
+  Harmful_Electric: 0
+  Harmful_Poison: 0
+  Harmful_Fire: 0
+  Harmful_Ice: 0
   EnemyCodeName: SauLa
   PR_HP: {fileID: 5964169202379816414}
   PR_HPsub: {fileID: 5223254241339383948}
   OffsetCenter: {fileID: 3243155403522643096}
-  sizeDefault: {x: 0.5, y: 0.3}
   time_range_idle: {x: 0.5, y: 1}
   LastDamageData: {fileID: 0}
   time_range_move: {x: 0.5, y: 1}

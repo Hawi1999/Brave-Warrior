@@ -21,11 +21,11 @@ public abstract class PoolingBehaviour : MonoBehaviour
 
     public virtual void Rest()
     {
+        OnRest();
         if (DestroyWhenDone)
         {
             Destroy(gameObject);
         }
-        OnRest();
         ready = true;
     }
 

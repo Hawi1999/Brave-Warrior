@@ -49,7 +49,9 @@ public class DatTrong : MonoBehaviour
     {
         Tree = cay;
         ThoiGianTrong = DateTime.Now;
-        GameObject goj = Instantiate(new GameObject(Tree.Name + gameObject.transform.position), gameObject.transform);
+        GameObject goj = new GameObject(Tree.Name + gameObject.transform.position);
+        goj.transform.parent = transform;
+        goj.transform.position = DiaChi;
         CayTrongRender = goj.AddComponent<SpriteRenderer>();
         CayTrongRender.sortingOrder = -(int)DiaChi.y * 10 - Tree.Offset_Shorting;
         CayTrongRender.sortingLayerName = "Current";
@@ -179,7 +181,9 @@ public class DatTrong : MonoBehaviour
         // Xu ly Cay dang trong
         if (Tree != null)
         {
-            GameObject goj = Instantiate(new GameObject(Tree.Name + gameObject.transform.position), gameObject.transform);
+            GameObject goj = new GameObject(Tree.Name + gameObject.transform.position);
+            goj.transform.parent = transform;
+            goj.transform.position = DiaChi;
             CayTrongRender = goj.AddComponent<SpriteRenderer>();
             CayTrongRender.sortingOrder = -(int)DiaChi.y * 10 - Tree.Offset_Shorting;
             CayTrongRender.sortingLayerName = "Current";

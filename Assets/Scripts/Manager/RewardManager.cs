@@ -20,6 +20,25 @@ public class RewardManager : MonoBehaviour
         return Array.Find(Rewards.ToArray(), e => e.Name == Name);
 
     }
+
+    public static List<Reward> GetRewards(TypeReward type)
+    {
+        List<Reward> Rewards = new List<Reward>();
+        // Thêm danh dách Reward
+        Rewards.AddRange(AllRewards.rewardWeapons);
+        Rewards.AddRange(AllRewards.rewardGolds);
+        List<Reward> re = new List<Reward>();
+        foreach (Reward reward in Rewards)
+        {
+            if (reward.EqualTypeByChest(type))
+            {
+                Debug.Log("Add:" + reward.Name);
+                re.Add(reward);
+            }
+        }
+        return re;
+    }
+
     public static Reward[] GetRewardsByName(string[] Name)
     {
         List<Reward> rewards = new List<Reward>();
@@ -39,6 +58,25 @@ public class RewardManager : MonoBehaviour
     {
         BuffInGround prefab = Resources.Load<BuffInGround>(PathRewardBuff);
         Buff2Data b = DataMap.GetBuff2(level);
+        if (prefab == null || b == null)
+        {
+            Debug.Log("Khong tin tai Prefab hoac Buff");
+            return;
+        }
+        BuffInGround buff = Instantiate(prefab);
+        buff.transform.position = position;
+        buff.SetUp(b);
+    }
+
+    /// <summary>
+    /// Chua dinh nghia ham nay ma
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="level"></param>
+    public static void LegacyBuff(Vector2 position)
+    {
+        BuffInGround prefab = Resources.Load<BuffInGround>(PathRewardBuff);
+        LegacyBuff b = DataMap.GetLegacyBuff();
         if (prefab == null || b == null)
         {
             Debug.Log("Khong tin tai Prefab hoac Buff");

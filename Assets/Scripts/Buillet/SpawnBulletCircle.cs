@@ -55,6 +55,12 @@ public class SpawnBulletCircle : SpawnBullet
         spawning = StartWhenAwake;
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        pool.RemovePrefab(id_bul);
+    }
+
     private void Start()
     {
         if (spawning)

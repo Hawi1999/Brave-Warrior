@@ -12,6 +12,18 @@ public class TimeToTakeHit
         this.time = time;
     }
 }
+
+public class TimeToAction
+{
+    public Object Object;
+    public float time;
+    public TimeToAction(Object Object, float time)
+    {
+        this.Object = Object;
+        this.time = time;
+    }
+}
+
 public interface ITakeHit 
 {
     Collider2D GetCollider();

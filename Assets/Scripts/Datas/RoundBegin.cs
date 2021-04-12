@@ -13,4 +13,9 @@ public class RoundBegin : RoundBase, IBattle
     {
         
     }
+
+    public void OnSceneOpen()
+    {
+        
+    }
 }

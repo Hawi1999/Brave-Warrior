@@ -17,7 +17,8 @@ public class SpawnPracticeEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PREnemy = Instantiate(new GameObject("PREnemy"), transform).transform;
+        PREnemy = new GameObject("PREnemy").transform;
+        PREnemy.transform.parent = transform;
     }
 
     // Update is called once per frame

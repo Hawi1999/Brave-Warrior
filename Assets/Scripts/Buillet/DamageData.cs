@@ -4,7 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DamageData : Object
+public class DamageData : UnityEngine.Object
 {
     public Entity To = null;
     public Entity From = null;
@@ -24,10 +24,6 @@ public class DamageData : Object
             _damageOriginal = value;
         }
     }
-
-    
-
-
     private float AddDamageOriginal = 0;
     private float AddDamagePercentOriginal = 0;
     private float DamageDecrease = 0;
@@ -76,6 +72,7 @@ public class DamageData : Object
     public bool FromMeleeWeapon = false;
     public bool FromGunWeapon = false;
     public bool FromTNT = false;
+    public bool FromLegacyBuff1 = false;
 
     public bool CanDestroyBullet => FromMeleeWeapon || FromMeleeWeapon;
 
@@ -134,4 +131,5 @@ public class DamageData : Object
         return ss;
     }
     public UnityAction<Enemy> OnHitToDieEnemy;
+    public UnityAction<Enemy> OnHitEnemy;
 }

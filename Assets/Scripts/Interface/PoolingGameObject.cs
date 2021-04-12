@@ -47,22 +47,18 @@ public class PoolingGameObject
 
     public void RemovePrefab(int id)
     {
-        List<PoolingType> listRemove = new List<PoolingType>();
         if (list_Pooling == null || list_Pooling.Count == 0)
         {
             return;
         }
-        foreach (PoolingType poolingType in list_Pooling)
+        for (int i = list_Pooling.Count - 1; i > -1; i--)
         {
+            PoolingType poolingType = list_Pooling[i];
             if (poolingType.id == id)
             {
-                listRemove.Add(poolingType);
+                list_Pooling.RemoveAt(i);
+                hihi[poolingType.id] = false;
             }
-        }
-        foreach (PoolingType pooling in listRemove)
-        {
-            hihi[pooling.id] = false;
-            list_Pooling.Remove(pooling);
         }
         RemoveAllPooled(id);
     }
@@ -84,23 +80,18 @@ public class PoolingGameObject
         PoolingBehaviour t = null;
         if (pooledGobjects != null && pooledGobjects.Count != 0)
         {
-            List<PoolingType> listRemove = new List<PoolingType>();
-            foreach (PoolingType poolingType in pooledGobjects)
+            for (int i = pooledGobjects.Count - 1; i > -1; i--)
             {
-                if (poolingType.gameobject == null)
+                if (pooledGobjects[i].gameobject == null)
                 {
-                    listRemove.Add(poolingType);
+                    pooledGobjects.RemoveAt(i);
                     continue;
                 }
-                if (poolingType.id == id && poolingType.gameobject.isReady)
+                if (pooledGobjects[i].id == id && pooledGobjects[i].gameobject.isReady)
                 {
-                    t = poolingType.gameobject;
+                    t = pooledGobjects[i].gameobject;
                     break;
                 }
-            }
-            foreach(PoolingType poolingType1 in listRemove)
-            {
-                pooledGobjects.Remove(poolingType1);
             }
         }
         if (t == null)
@@ -179,17 +170,18 @@ public class PoolingGameObject
         {
             pooledGobjects.Remove(poolingType1);
         }
+        
     }
 
-    public void RemoveAllPooled(int id)
+    private void RemoveAllPooled(int id)
     {
-        List<PoolingType> listRemove = new List<PoolingType>();
         if (pooledGobjects == null || pooledGobjects.Count == 0)
         {
             return;
         }
-        foreach (PoolingType poolingType in pooledGobjects)
+        for (int i = pooledGobjects.Count - 1; i > -1; i--)
         {
+            PoolingType poolingType = pooledGobjects[i]; 
             if (poolingType.id == id)
             {
                 if (poolingType.gameobject != null)
@@ -197,17 +189,14 @@ public class PoolingGameObject
                     if (poolingType.gameobject.isReady)
                     {
                         GameObject.Destroy(poolingType.gameobject.gameObject);
-                    } else
+                    }
+                    else
                     {
                         poolingType.gameobject.DestroyWhenDone = true;
                     }
                 }
-                listRemove.Add(poolingType);
+                pooledGobjects.RemoveAt(i);
             }
-        }
-        foreach (PoolingType poolingType1 in listRemove)
-        {
-            pooledGobjects.Remove(poolingType1);
         }
     }
 

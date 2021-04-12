@@ -30,16 +30,16 @@ public class BulletBase : PoolingBehaviour
     }
     private float timelife;
 
-    private PoolingGameObject pool => PoolingGameObject.PoolingMain;
-    private int id_pooling_vfx;
+    protected PoolingGameObject pool => PoolingGameObject.PoolingMain;
+    protected int id_pooling_vfx;
 
-    private Vector3 oldposition;
-    private Vector3 newposition;
+    protected Vector3 oldposition;
+    protected Vector3 newposition;
     protected virtual void Awake()
     {
         if (VFXDestroyed != null)
         {
-            id_pooling_vfx = PoolingGameObject.PoolingMain.AddPrefab(VFXDestroyed);
+            id_pooling_vfx = pool.AddPrefab(VFXDestroyed);
         }
         render = GetComponent<SpriteRenderer>();
         render.sortingLayerName = "Current";
@@ -97,19 +97,31 @@ public class BulletBase : PoolingBehaviour
         transform.rotation = MathQ.DirectionToQuaternion(damage.Direction);
     }
 
-    protected virtual void UpdateCollision()
+    private void UpdateCollision()
     {
         if (damage.Direction != Vector3.zero)
         {
-            RaycastHit2D[] hits = Physics2D.RaycastAll(vitri_daudan, damage.Direction, Vector2.Distance(oldposition, newposition), target);
-            foreach (RaycastHit2D hit in hits)
+            Collider2D[] cols = GetAllCollision();
+            foreach (Collider2D collider in cols)
             {
-                if (hit.collider != null && hit.collider.GetComponent<ITakeHit>() != null)
+                if (collider != null && collider.GetComponent<ITakeHit>() != null)
                 {
-                    OnHitTarget(hit.collider.GetComponent<ITakeHit>(), hit.point);
+                    OnHitTarget(collider.GetComponent<ITakeHit>(), transform.position);
                 }
             }
         }
+    }
+
+    protected virtual Collider2D[] GetAllCollision()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(vitri_daudan, damage.Direction, Vector2.Distance(oldposition, newposition), target);
+        Collider2D[] cols = new Collider2D[hits.Length];
+        for (int i = 0; i < hits.Length; i++)
+        {
+            cols[i] = hits[i].collider;
+        }
+        return cols;
+
     }
 
     protected virtual void OnHitTarget(ITakeHit take, Vector3 point)
@@ -161,5 +173,10 @@ public class BulletBase : PoolingBehaviour
     protected virtual void OnDrawGizmos()
     {
 
+    }
+
+    protected override void OnRest()
+    {
+        base.OnRest();
     }
 }

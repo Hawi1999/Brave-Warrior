@@ -22,7 +22,10 @@ public class SpawnBullet : MonoBehaviour
     {
         spawning = true;
     }
+    protected virtual void OnDestroy()
+    {
 
+    }
     protected DamageData SetUpDamageData()
     {
         DamageData damage = this.damageData.Clone;

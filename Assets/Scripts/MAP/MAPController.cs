@@ -54,6 +54,14 @@ public class MAPController : MonoBehaviour
         SetPlayerPositionInMap();
         if (PlayerController.PlayerCurrent != null)
             CameraMove.Instance.transform.position = PlayerController.PlayerCurrent.GetPosition();
+        AdsManager.Initialize();
+        StartAudio();
+    }
+
+    protected virtual void StartAudio()
+    {
+        SoundManager.PlayBackGround(DataMap.GetClip(ClipDatas.Type.MapNormal), volume: 0);
+        StartCoroutine(SoundManager.ChangeValueBackGround(0.1f, 0.5f));
     }
 
     protected virtual PlayerController CreatePlayer()
@@ -87,7 +95,8 @@ public class MAPController : MonoBehaviour
         {
             if (LTeleportion == null || LTeleportion.Length == 0)
                 return;
-            PRTeleporter = Instantiate(new GameObject("Parent Teleporter"), gameObject.transform).transform;
+            PRTeleporter = new GameObject("Parent Teleporter").transform;
+            PRTeleporter.transform.parent = transform;
         }
         foreach (Teleporttion tele in LTeleportion)
         {
@@ -101,7 +110,8 @@ public class MAPController : MonoBehaviour
     {
         if (PRLimitMoveMap == null)
         {
-            PRLimitMoveMap = Instantiate(new GameObject("Parent Litmit Move"), gameObject.transform).transform;
+            PRLimitMoveMap = new GameObject("Parent Litmit Move").transform;
+            PRLimitMoveMap.transform.parent = transform;
         }
         
         if (LimitMoveMap == null || LimitMoveMap.Length < 3)
@@ -121,7 +131,8 @@ public class MAPController : MonoBehaviour
 
             for (int i = 0; i < 4; i++)
             {
-                BoxCollider2D col = Instantiate(new GameObject(), gameObject.transform).AddComponent<BoxCollider2D>();
+                BoxCollider2D col = new GameObject().AddComponent<BoxCollider2D>();
+                col.transform.parent = transform;
                 col.transform.position = Tam[i];
                 col.size = Sizes[i];
             }
@@ -139,7 +150,8 @@ public class MAPController : MonoBehaviour
                 Vector2 position = (pos1 + pos2)/2;
                 Vector2 size = new Vector2(Vector2.Distance(pos1, pos2), 1f);
                 Vector3 rotation = RotateCollierMap(pos1, pos2);
-                GameObject ob = Instantiate(new GameObject(), PRLimitMoveMap.transform);
+                GameObject ob = new GameObject();
+                ob.transform.parent = PRLimitMoveMap;
                 BoxCollider2D col = ob.AddComponent<BoxCollider2D>();
                 col.isTrigger = false;
                 col.size = new Vector2(1, 1);

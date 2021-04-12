@@ -127,10 +127,11 @@ public abstract class RoundBase : MonoBehaviour
     protected virtual void OnPLayerOnInFirst()
     {
         RoundCurrent = this;
+        StartCoroutine(SoundManager.ChangeValueBackGround(0.5f, 0.5f));
     }
     protected virtual void OnPLayerLeaveFirst()
     {
-        
+        StartCoroutine(SoundManager.ChangeValueBackGround(0.25f, 0.5f));
     }
 
     protected virtual void RoundComplete()

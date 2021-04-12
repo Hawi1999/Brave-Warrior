@@ -13,7 +13,7 @@ public class TakeGoldFromMap : MonoBehaviour
     // MovingToPlayer
     bool waitPlayer;
     bool comingPlayer;
-    float a = 10f;
+    float speed = 10f;
     private void Start()
     {
         render.sortingLayerName = "Effect";
@@ -29,10 +29,9 @@ public class TakeGoldFromMap : MonoBehaviour
             {
                 comingPlayer = true;
             }
-            if (comingPlayer)
+            if (comingPlayer && player.IsALive)
             {
-                a += Time.deltaTime * 5;
-                iTween.MoveUpdate(gameObject, iTween.Hash("position", player.GetPosition(), "time", 0.5f));
+                transform.position = transform.position + ((Vector3)player.center - transform.position).normalized * speed * Time.deltaTime;
                 onComingPlayer();
             }
         }
@@ -57,6 +56,8 @@ public class TakeGoldFromMap : MonoBehaviour
     {
         if (isNearPlayer(0.3f))
         {
+            Personal.AddCoin(1);
+            SoundManager.PLayOneShot("Collect Coin", 0.1f);
             Destroy(gameObject);
         }
     }

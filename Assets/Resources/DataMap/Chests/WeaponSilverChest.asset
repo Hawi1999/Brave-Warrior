@@ -13,11 +13,6 @@ MonoBehaviour:
   m_Name: WeaponSilverChest
   m_EditorClassIdentifier: 
   Type: 5
-  UuTien: 010000000100000001000000010000000100000001000000
-  NameOfRewards:
-  - Reward Gun K1
-  - Reward Gun Viling
-  - Reward Melee Sword of Light
-  - Reward Gun K20
-  - Reward Gun Boring
-  - Reward Gun Shockick
+  codeMap: 1
+  UuTien: 0000000000000000000000000a000000640000000a0000000000000000000000
+  NameOfRewards: 0000000001000000020000000300000004000000050000000600000007000000

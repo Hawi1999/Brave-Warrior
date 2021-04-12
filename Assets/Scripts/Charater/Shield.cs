@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Skill/Shield")]
 public class Shield : Skill
 {
     public float timeShield = 4;

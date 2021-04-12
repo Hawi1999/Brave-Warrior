@@ -62,7 +62,7 @@ public class Gun_K20 : GunBase
             bull.StartUp(dam);
             vitriTren = false;
             dam = damageData.Clone;
-            SetUpDamageData(damageData);
+            SetUpDamageData(dam);
             bull = pool.Spawn(id_pool_bullet,PositionStartAttack, MathQ.DirectionToQuaternion(dam.Direction)) as BulletBase;
             bull.StartUp(dam);
             nextAmountbullet = 1;

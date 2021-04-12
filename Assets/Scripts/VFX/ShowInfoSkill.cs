@@ -36,7 +36,7 @@ public class ShowInfoSkill : MonoBehaviour
         {
             return;
         }
-        float a = skill.GetCountDownPercent;
+        float a = skill.GetCurrentCountDownPercent;
         if (a == 0)
         {
             if (mainfill != null)

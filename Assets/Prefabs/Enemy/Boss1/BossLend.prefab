@@ -490,6 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeathBasic: 1500
   sizeDefault: {x: 1.48, y: 1.16}
+  DistanceFindTarget: 15
   render: {fileID: 7305011111817504869}
   DirectionCurrent: {x: 0, y: 0, z: 0}
   Harmful_Electric: 0

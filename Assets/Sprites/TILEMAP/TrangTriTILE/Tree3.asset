@@ -34,5 +34,5 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 3626772442869139897, guid: f695bb242371df349b54a0171f796bc3,
     type: 3}
   m_Flags: 0
-  m_ColliderType: 1
+  m_ColliderType: 2
   Pivot_Offset: -5

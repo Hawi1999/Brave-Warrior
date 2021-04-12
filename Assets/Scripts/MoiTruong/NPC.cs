@@ -19,7 +19,7 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
     bool geting = false;
     public virtual void OnChoose(IManipulation manipulation)
     {
-        if (manipulation != null && manipulation as Object == this)
+        if (manipulation != null && manipulation as UnityEngine.Object == this)
         {
             showname.Show();
         }
@@ -31,7 +31,12 @@ public class NPC : MonoBehaviour, IManipulation, IShowName
 
     public virtual void TakeManipulation(PlayerController host)
     {
-        Notification.NoticeBelow("Bấm vào làm gì chưa có gì đâu");
+        geting = true;
+    }
+
+
+    public void DeGeting()
+    {
         geting = false;
     }
 

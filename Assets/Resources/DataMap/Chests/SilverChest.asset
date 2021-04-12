@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: SilverChest
   m_EditorClassIdentifier: Assembly-CSharp::ChestData
   Type: 1
-  UuTien: 14000000010000000100000001000000
-  NameOfRewards:
-  - Reward Gold 2
-  - Reward Gun Shockick
-  - Reward Gun Boring
-  - Reward Gun K20
+  codeMap: 1
+  UuTien: 00000000e8030000000000006400000032000000190000000a00000005000000
+  NameOfRewards: 0000000001000000020000000300000004000000050000000600000007000000

@@ -211,8 +211,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2979647d06c76438d52104fe38d3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeathBasic: 60
+  HeathBasic: 50
   sizeDefault: {x: 0.7, y: 0.64}
+  DistanceFindTarget: 15
   render: {fileID: 5426267566257498371}
   DirectionCurrent: {x: 0, y: 0, z: 0}
   Harmful_Electric: 0

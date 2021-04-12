@@ -76,7 +76,9 @@ public class Illusion : MonoBehaviour
             Debug.Log("SpriteRenderer's not found to Illusion");
             return;
         }
-        Illusion ill = Instantiate(new GameObject("Illusion"), transform.position, transform.rotation).AddComponent<Illusion>();
+        Illusion ill = new GameObject("Illusion").AddComponent<Illusion>();
+        ill.transform.position = transform.position;
+        ill.transform.rotation = transform.rotation;
         SpriteRenderer render = ill.Render;
         render.sortingLayerName = this.render.sortingLayerName;
         render.sortingOrder = this.render.sortingOrder - 10;

@@ -27,9 +27,10 @@ public class ChestManager
         ChestDatas = Resources.LoadAll<ChestData>(Path);
         ChestPrefabs = Resources.LoadAll<Chest>(Path);
     }
-    public static Chest SpawnStartChest(ColorChest color, CodeMap codeMap, Vector3 Position)
+
+    public static Chest SpawnStartChest(ColorChest color, TypeChest type, CodeMap codeMap, Vector3 Position)
     {
-        ChestData cdt = getDataChest(TypeChest.Start, codeMap);
+        ChestData cdt = getDataChest(type, codeMap);
         if (cdt == null)
         {
             Debug.Log("Không tìm thấy ChestData type = " + TypeChest.Start);

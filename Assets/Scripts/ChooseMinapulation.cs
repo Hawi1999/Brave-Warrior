@@ -71,7 +71,6 @@ public class ChooseMinapulation : MonoBehaviour
             Control.OnEndWaitToClick?.Invoke("X");
         }
     }
-
     private bool isExist(IManipulation manipulation)
     {
         foreach (IManipulation manipulation1 in manipulations)

@@ -61,9 +61,6 @@ public class Meteorite : PoolingBehaviour
         z += DirectRotate * Time.deltaTime * Speed;
         render.transform.rotation = Quaternion.Euler(new Vector3(0, 0, z));
 
-        Vector2 oldhead = head;
-        Vector2 newhead = head + DirectMove * Time.deltaTime * Speed;
-
         transform.position = transform.position + (Vector3)(DirectMove * Time.deltaTime * Speed);
         CheckCollision(Physics2D.OverlapCircleAll(transform.position, size.magnitude / 3, Target));
         render.sortingOrder = (int)(-10f * (transform.position.y));
@@ -94,7 +91,7 @@ public class Meteorite : PoolingBehaviour
     }
     public void TakeDamage(DamageData damage)
     {
-        hp -= damage.Damage;
+        hp -= (damage.Damage + 5) / 5;
         OnHit?.Invoke(damage);
         if (hp <= 0)
         {

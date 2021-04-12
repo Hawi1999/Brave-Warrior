@@ -42,7 +42,7 @@ public class VFXManager : MonoBehaviour
         SpritesIce = Resources.LoadAll<Sprite>("Sprites/Ices");
 
         // LoadPooling
-        PoolingParrent = Instantiate(new GameObject("PoolingParrent")).transform;
+        PoolingParrent = new GameObject("PoolingParrent").transform;
         PoolingParrent.transform.parent = GameController.Instance.transform;
         IDPooling_Fire = PoolingGameObject.PoolingMain.AddPrefab(FirePrefab);
         IDPooling_Dust = PoolingGameObject.PoolingMain.AddPrefab(DustPrefab);

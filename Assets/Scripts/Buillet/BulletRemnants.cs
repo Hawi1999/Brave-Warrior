@@ -13,11 +13,14 @@ public class BulletRemnants : BulletBase
         destroyed = false;
         render.enabled = true;
     }
-    protected override void UpdateCollision()
+    protected override Collider2D[] GetAllCollision()
     {
         if (!destroyed)
         {
-            base.UpdateCollision();
+            return base.GetAllCollision();
+        } else
+        {
+            return null;
         }
     }
 

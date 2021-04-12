@@ -204,13 +204,13 @@ MonoBehaviour:
   Path: Sprites/Meteorites
   Target:
     serializedVersion: 2
-    m_Bits: 208896
+    m_Bits: 204800
   render: {fileID: 7786877788236187670}
   Damage: 5
   Head: {fileID: 2532664289035855377}
   ScaleDefault: 0.5
-  ScalePerLevel: 0.1
-  HpPerLevel: 1
+  ScalePerLevel: 0.3
+  HpPerLevel: 3
 --- !u!114 &1230989949375448030
 MonoBehaviour:
   m_ObjectHideFlags: 0

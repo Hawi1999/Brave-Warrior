@@ -11,20 +11,8 @@ public class PersonalSave
     public int TheLuc = 100;
     public ThoiGian lastUpdateTL = new ThoiGian(DateTime.Now);
 }
-public class Personal : MonoBehaviour
+public class Personal : MonoBehaviour, IBattle
 {
-    public static int DKN
-    {
-        set
-        {
-            PSNS.DKN = value;
-            SaveData();
-        }
-        get
-        {
-            return PSNS.DKN;
-        }
-    }
     public static Personal Instance
     {
         get;
@@ -67,18 +55,7 @@ public class Personal : MonoBehaviour
             SaveData();
         }
     }
-    public static int TheLuc
-    {
-        get
-        {
-            return PSNS.TheLuc;
-        }
-        set
-        {
-            PSNS.TheLuc = Mathf.Clamp(value, 0, THELUCMAX);
-            SaveData();
-        }
-    }
+    public static int Coin;
     public static ThoiGian lastUpdateTL 
     {
         get
@@ -91,34 +68,32 @@ public class Personal : MonoBehaviour
             SaveData();
         }
     }
-    public static int THELUCMAX;
     private void Start()
     {
         LoadData();
-        THELUCMAX = 100;
         OnDOLAChanged += ThongBaoDOLAChanged;
         OnDiaChanged += ThongBaoDiaChanged;
-        OnTheLucChanged += ThongBaoTLChanged;
-        OnDKNChanged += ThongBaoDKNChanged;
     }
-
-    public static UnityAction<int, int> OnDKNChanged;
     public static UnityAction<int, int> OnDOLAChanged;
     public static UnityAction<int, int> OnDiaChanged;
-    public static UnityAction<int, int> OnTheLucChanged;
+    public static UnityAction<int, int> OnCoinChanged;
 
-    public static void AddDKN(int a)
-    {
-        int o = DKN;
-        int n = DKN + a;
-        DKN = n;
-        OnDKNChanged?.Invoke(o, n);
-    }
     public static void AddDOLA(int a)
     {
         int old = DOLA;
         DOLA += a;
         OnDOLAChanged?.Invoke(old, DOLA);
+    }
+    public static bool TryToSubDOLA(int a)
+    {
+        if (DOLA - a < 0)
+        {
+            return false;
+        } else
+        {
+            AddDOLA(-a);
+            return true;
+        }
     }
     public static void AddDia(int a)
     {
@@ -126,11 +101,27 @@ public class Personal : MonoBehaviour
         Dia += a;
         OnDiaChanged?.Invoke(old, Dia);
     }
-    public static void AddTheLuc(int a)
+
+    public static bool TryToSubDia(int a)
     {
-        int old = TheLuc;
-        TheLuc += a;
-        OnTheLucChanged?.Invoke(old, TheLuc);
+        if (Dia - a < 0)
+        {
+            return false;
+        }
+        else
+        {
+            AddDia(-a);
+            return true;
+        }
+    }
+    public static void AddCoin(int a)
+    {
+        int old = Coin;
+        Coin += a;
+        if (Coin != old)
+        {
+            OnCoinChanged?.Invoke(old, Coin);
+        }
     }
     private void ThongBaoDOLAChanged(int o, int n)
     {
@@ -157,30 +148,6 @@ public class Personal : MonoBehaviour
             Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=blue>" + (-a).ToString() + " " + Languages.getString("KimCuongXanh", a > 1) + "</color>. ");
         }
     }
-    private void ThongBaoTLChanged(int o, int n)
-    {
-        int a = n - o;
-        if (a >= 0)
-        {
-            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " <color=orange>" + a.ToString() + " " + Languages.getString("TheLuc", a > 1) + "</color>. ");
-        }
-        else
-        {
-            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=orange>" + (-a).ToString() + " " + Languages.getString("TheLuc", a > 1) + "</color>. ");
-        }
-    }
-    private void ThongBaoDKNChanged(int o, int n)
-    {
-        int a = n - o;
-        if (a >= 0)
-        {
-            Notification.NoticeBelow(Languages.getString("BanNhanDuoc") + " <color=cyan>" + a.ToString() + " Exp</color>. ");
-        }
-        else
-        {
-            Notification.NoticeBelow(Languages.getString("BanBiTru") + " <color=cyan>" + a.ToString() + " Exp</color>.");
-        }
-    }
 
     static void LoadData()
     {
@@ -195,5 +162,20 @@ public class Personal : MonoBehaviour
     static void SaveData()
     {
         PlayerPrefs.SetString("Save_Personal", JsonUtility.ToJson(PSNS));
+    }
+
+    public void OnSceneStarted()
+    {
+        
+    }
+
+    public void OnSceneEnded()
+    {
+        
+    }
+
+    public void OnSceneOpen()
+    {
+        Coin = 0;
     }
 }

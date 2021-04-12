@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_3_12;UNITY_2019_3;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;UNITY_ASTC_ONLY_DECOMPRESS;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;UNITY_POST_PROCESSING_STACK_V2;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_3_12;UNITY_2019_3;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_INCLUDE_TESTS;UNITY_ADS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;UNITY_ASTC_ONLY_DECOMPRESS;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;UNITY_POST_PROCESSING_STACK_V2;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -78,10 +78,17 @@
     <Compile Include="Assets\Scripts\AutoSortingLayerBySortingGroup.cs" />
     <Compile Include="Assets\Scripts\BTThaoTacManHinh.cs" />
     <Compile Include="Assets\Scripts\Bag.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\Buff.cs" />
     <Compile Include="Assets\Scripts\Buff_Neft\BuffInGround.cs" />
     <Compile Include="Assets\Scripts\Buff_Neft\BuffRegister.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\IGiveBuff.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\LegacyBuff.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\LegacyBuff1.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\LegacyBuff2.cs" />
+    <Compile Include="Assets\Scripts\Buff_Neft\LegacyBuff3.cs" />
     <Compile Include="Assets\Scripts\Buillet\Boom.cs" />
     <Compile Include="Assets\Scripts\Buillet\BoomDrop.cs" />
+    <Compile Include="Assets\Scripts\Buillet\BoomerangBullet.cs" />
     <Compile Include="Assets\Scripts\Buillet\BulletBase.cs" />
     <Compile Include="Assets\Scripts\Buillet\BulletBoring.cs" />
     <Compile Include="Assets\Scripts\Buillet\BulletEnemy.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="Assets\Scripts\Buillet\Meteorite.cs" />
     <Compile Include="Assets\Scripts\Buillet\SpawnBullet.cs" />
     <Compile Include="Assets\Scripts\Buillet\SpawnBulletCircle.cs" />
+    <Compile Include="Assets\Scripts\Buillet\SurikenBullet.cs" />
     <Compile Include="Assets\Scripts\CameraMove.cs" />
     <Compile Include="Assets\Scripts\CanvasMain.cs" />
     <Compile Include="Assets\Scripts\Charater\Glide.cs" />
@@ -113,6 +121,8 @@
     <Compile Include="Assets\Scripts\Datas\Buff2Data.cs" />
     <Compile Include="Assets\Scripts\Datas\Buff2Datas.cs" />
     <Compile Include="Assets\Scripts\Datas\ChestData.cs" />
+    <Compile Include="Assets\Scripts\Datas\ClipDatas.cs" />
+    <Compile Include="Assets\Scripts\Datas\ClipLegacyDatas.cs" />
     <Compile Include="Assets\Scripts\Datas\Data.cs" />
     <Compile Include="Assets\Scripts\Datas\EnemyBossDatas.cs" />
     <Compile Include="Assets\Scripts\Datas\Enums.cs" />
@@ -148,15 +158,20 @@
     <Compile Include="Assets\Scripts\Enemy\ShowText.cs" />
     <Compile Include="Assets\Scripts\GoTo.cs" />
     <Compile Include="Assets\Scripts\HienThiTaiSan.cs" />
-    <Compile Include="Assets\Scripts\IU\ShowBuff2Player.cs" />
+    <Compile Include="Assets\Scripts\IU\PauseButton.cs" />
+    <Compile Include="Assets\Scripts\IU\ShowBuffA.cs" />
     <Compile Include="Assets\Scripts\IU\ShowTableDied.cs" />
+    <Compile Include="Assets\Scripts\IU\UIChooseWeaponSeller.cs" />
     <Compile Include="Assets\Scripts\Interface\IBattle.cs" />
+    <Compile Include="Assets\Scripts\Interface\IBuffInGround.cs" />
     <Compile Include="Assets\Scripts\Interface\ICameraTarget.cs" />
     <Compile Include="Assets\Scripts\Interface\IFindTarget.cs" />
     <Compile Include="Assets\Scripts\Interface\ILockMove.cs" />
     <Compile Include="Assets\Scripts\Interface\IManipulation.cs" />
+    <Compile Include="Assets\Scripts\Interface\IShowBuffA.cs" />
     <Compile Include="Assets\Scripts\Interface\IShowName.cs" />
     <Compile Include="Assets\Scripts\Interface\ITakeHit.cs" />
+    <Compile Include="Assets\Scripts\Interface\IUpdateItemEditor.cs" />
     <Compile Include="Assets\Scripts\Interface\IUpdateLanguage.cs" />
     <Compile Include="Assets\Scripts\Interface\PoolingBehaviour.cs" />
     <Compile Include="Assets\Scripts\Interface\PoolingGameObject.cs" />
@@ -182,21 +197,24 @@
     <Compile Include="Assets\Scripts\MAP\TransformInstanceOnLoad.cs" />
     <Compile Include="Assets\Scripts\MAP\Waves.cs" />
     <Compile Include="Assets\Scripts\MaHoavaBienDIch.cs" />
+    <Compile Include="Assets\Scripts\Manager\AdsManager.cs" />
     <Compile Include="Assets\Scripts\Manager\ChestManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Classs.cs" />
     <Compile Include="Assets\Scripts\Manager\RewardManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Savemanager.cs" />
+    <Compile Include="Assets\Scripts\Manager\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Manager\TileManager.cs" />
     <Compile Include="Assets\Scripts\Manager\VFXManager.cs" />
     <Compile Include="Assets\Scripts\Manager\WeaponManager.cs" />
     <Compile Include="Assets\Scripts\MinhHao\Force.cs" />
-    <Compile Include="Assets\Scripts\MinhHao\GiveBuff.cs" />
     <Compile Include="Assets\Scripts\MinhHao\MathQ.cs" />
+    <Compile Include="Assets\Scripts\MinhHao\StraightLine2D.cs" />
     <Compile Include="Assets\Scripts\MinhHao\TakeBuff.cs" />
     <Compile Include="Assets\Scripts\MinhHao\Value.cs" />
     <Compile Include="Assets\Scripts\MoMan.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\CayTrong.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\Chest.cs" />
+    <Compile Include="Assets\Scripts\MoiTruong\ChestBuyWeapon.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\DatTrong.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\Door.cs" />
     <Compile Include="Assets\Scripts\MoiTruong\NPC.cs" />
@@ -208,10 +226,12 @@
     <Compile Include="Assets\Scripts\Personal.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Reset.cs" />
+    <Compile Include="Assets\Scripts\Reward\AdsButton.cs" />
     <Compile Include="Assets\Scripts\Reward\Reward.cs" />
     <Compile Include="Assets\Scripts\Reward\RewardGold.cs" />
     <Compile Include="Assets\Scripts\Reward\RewardWeapon.cs" />
     <Compile Include="Assets\Scripts\Reward\Rewards.cs" />
+    <Compile Include="Assets\Scripts\Reward\Type.cs" />
     <Compile Include="Assets\Scripts\ShowName.cs" />
     <Compile Include="Assets\Scripts\StartGame.cs" />
     <Compile Include="Assets\Scripts\TILE\Barrier.cs" />
@@ -248,6 +268,7 @@
     <Compile Include="Assets\Scripts\VFX\DustControl.cs" />
     <Compile Include="Assets\Scripts\VFX\DustFromMeteorite.cs" />
     <Compile Include="Assets\Scripts\VFX\DustFromPlayer.cs" />
+    <Compile Include="Assets\Scripts\VFX\ElectricConnect.cs" />
     <Compile Include="Assets\Scripts\VFX\Electrified.cs" />
     <Compile Include="Assets\Scripts\VFX\ElementalBuff.cs" />
     <Compile Include="Assets\Scripts\VFX\ElementalBuffBad.cs" />
@@ -269,6 +290,7 @@
     <Compile Include="Assets\Scripts\VFX\VFXThuHoach.cs" />
     <Compile Include="Assets\Scripts\VFX\iTween.cs" />
     <Compile Include="Assets\Scripts\VisibleByTree.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Boomerang.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunBase.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunJerky.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunLaze.cs" />
@@ -278,6 +300,8 @@
     <Compile Include="Assets\Scripts\Weapons\Gun_Viling.cs" />
     <Compile Include="Assets\Scripts\Weapons\MeleeBase.cs" />
     <Compile Include="Assets\Scripts\Weapons\Melee_SwordofLight.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Suriken.cs" />
+    <Compile Include="Assets\Scripts\Weapons\SurikenJerky.cs" />
     <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
     <Compile Include="Assets\Scripts\Weapons\Weapons.cs" />
     <Compile Include="Assets\ScriptsTest.cs" />
@@ -822,6 +846,9 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Monetization">
+      <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.Animation.Runtime">
       <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/Unity.2D.Animation.Runtime.dll</HintPath>
     </Reference>
@@ -830,6 +857,9 @@
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.SpriteShape.Editor">
       <HintPath>C:/Users/haomi/Documents/Unity Projects/OpenWorld_Tree/Library/ScriptAssemblies/Unity.2D.SpriteShape.Editor.dll</HintPath>

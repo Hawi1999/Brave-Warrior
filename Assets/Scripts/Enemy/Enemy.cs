@@ -64,7 +64,7 @@ public abstract class Enemy : Entity
             {
                 return false;
             }
-            return Vector2.Distance(TargetFire.center, center) <= 20f;
+            return Vector2.Distance(TargetFire.center, center) <= DistanceFindTarget;
         }
     }
     private Animator anim;
@@ -77,9 +77,9 @@ public abstract class Enemy : Entity
     protected float time_start_action;
     protected float time_action;
     #endregion
-    protected override void Awake()
+    protected override void SetUpAwake()
     {
-        base.Awake();
+        base.SetUpAwake();
         gameObject.tag = "Enemy"; 
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         anim = GetComponent<Animator>();
@@ -88,14 +88,13 @@ public abstract class Enemy : Entity
         selecting.gameObject.SetActive(false);
         render.sortingLayerName = "Current";
     }
-
     protected virtual void ShowHP()
     {
         EntityManager.Instance.ShowHP(this);
     }
-    protected override void Start()
+    protected override void SetUpStart()
     {
-        base.Start();
+        base.SetUpStart();
         ShowHP();
         SetNewAction(Action.Idle);
         OnBeginIdle();
@@ -116,6 +115,7 @@ public abstract class Enemy : Entity
     public override void TakeDamage(DamageData dama)
     {
         CurrentDamageData = dama;
+        dama.OnHitEnemy?.Invoke(this);
         base.TakeDamage(dama);
     }
     protected override void CheckHP(DamageData damage)
@@ -428,9 +428,9 @@ public abstract class Enemy : Entity
             return;
         if (host == PlayerController.PlayerCurrent)
         {
-            if (target != null && target as Object != null)
+            if (target != null && target as UnityEngine.Object != null)
             {
-                 selecting.gameObject.SetActive(target as Object == this);
+                selecting.gameObject.SetActive(target as UnityEngine.Object == this);
             } else
             {
                 selecting.gameObject.SetActive(false);

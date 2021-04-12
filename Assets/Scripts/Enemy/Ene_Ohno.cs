@@ -107,6 +107,10 @@ public class Ene_Ohno : EnemyGround
 
     private void Attacking2()
     {
+        if (Died.Value)
+        {
+            return;
+        }
         Vector3 pos = TileManager.GetPositionInGoundCurrent();
         DamageData damage = new DamageData();
         damage.From = this;

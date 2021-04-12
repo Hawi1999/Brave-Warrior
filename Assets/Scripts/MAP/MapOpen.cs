@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class MapOpen : MAPController
 {
@@ -13,7 +14,11 @@ public class MapOpen : MAPController
     protected override void Start()
     {
         base.Start();
-        ChestManager.SpawnStartChest(ColorChest.Silver, CodeMap.Map1, PositionSpawnChestStart ? PositionSpawnChestStart.position : Vector3.zero);
+        var updateLanguages = GameObject.FindObjectsOfType<MonoBehaviour>().OfType<IBattle>();
+        foreach (IBattle i in updateLanguages)
+        {
+            i.OnSceneOpen();
+        }
     }
 
     protected override PlayerController CreatePlayer()
@@ -22,7 +27,7 @@ public class MapOpen : MAPController
         {
             Destroy(ParentGamePlay.Instance.gameObject);
         }
-        Instantiate(new GameObject("ParentGamePlay")).AddComponent<ParentGamePlay>();
+        new GameObject("ParentGamePlay").AddComponent<ParentGamePlay>();
         PlayerController player = base.CreatePlayer();
         PlayerController.PlayerTakeBuff.Reset();
         player.transform.parent = ParentGamePlay.Instance;

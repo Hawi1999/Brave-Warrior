@@ -59,7 +59,6 @@ public class GameController : MonoBehaviour
         WeaponManager.LoadData();
         DataMap.LoadData();
     }
-
     public static string getStringTime(long Giay)
     {
 
@@ -104,7 +103,6 @@ public class GameController : MonoBehaviour
 
         return (layers | 1 << game.layer) == layers;
     }
-
     public void LoadScene(string scene)
     {
         if (MAPController.Instance != null)
@@ -117,12 +115,10 @@ public class GameController : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
     }
-
     public void moMan()
     {
         MoMan.SetActive(true);
     }
-
     public static A GetRandomItem<A>(List<int> ut, List<A> a) where A : UnityEngine.Object
     { 
         if (a.Count == 0 || ut.Count == 0)
@@ -155,7 +151,6 @@ public class GameController : MonoBehaviour
         }
         return a[0];
     }
-
     public static string GetRandomItem(List<int> ut, List<string> a) 
     {
         if (a.Count == 0 || ut.Count == 0)
@@ -188,5 +183,6 @@ public class GameController : MonoBehaviour
         }
         return a[0];
     }
+
 }
 

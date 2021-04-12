@@ -164,26 +164,27 @@ public class MAP_GamePlay : MAPController
         switch (round.typeRound)
         {
             case TypeRound.Enemy:
-                r = Instantiate(new GameObject("Round Enemy"), transform)
+                r = new GameObject("Round Enemy")
                     .AddComponent<RoundEnemy>();
                 break;
             case TypeRound.Chest:
-                r = Instantiate(new GameObject("Round Chest"), transform)
+                r = new GameObject("Round Chest")
                     .AddComponent<RoundChest>();
                 break;
             case TypeRound.Boss:
-                r = Instantiate(new GameObject("Round Boss"), transform)
+                r = new GameObject("Round Boss")
                     .AddComponent<RoundBoss>();
                 break;
             case TypeRound.Begin:
-                r = Instantiate(new GameObject("Round Begin"), transform)
+                r = new GameObject("Round Begin")
                     .AddComponent<RoundBegin>();
                 break;
             case TypeRound.Hail:
-                r = Instantiate(new GameObject("Round Hail"), transform)
+                r =new GameObject("Round Hail")
                     .AddComponent<RoundHail>();
                 break;
         }
+        r.transform.parent = transform;
         r.SetUp(round);
         r.SetLocKRoom(round.GetDirects().ToArray());
         r.OnRoundComplete += RoundFinalComplete;
@@ -207,5 +208,11 @@ public class MAP_GamePlay : MAPController
         {
             i.OnSceneStarted();
         }
+    }
+
+    protected override void StartAudio()
+    {
+        SoundManager.PlayBackGround(DataMap.GetClip(ClipDatas.Type.RoundNormal), volume: 0);
+        StartCoroutine(SoundManager.ChangeValueBackGround(0.3f, 0.5f));
     }
 }

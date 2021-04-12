@@ -65,15 +65,18 @@ public class ShowName : MonoBehaviour
     {
         if (Info == null)
         {
-            Info = Instantiate(new GameObject("infomation"), transform);
+            Info = new GameObject("infomation");
+            Info.transform.parent = transform;
         }
         if (renderMT == null)
         {
-            renderMT = Instantiate(new GameObject("renderMT"), Info.transform).AddComponent<SpriteRenderer>();
+            renderMT = new GameObject("renderMT").AddComponent<SpriteRenderer>();
+            renderMT.transform.parent = Info.transform;
         }
         if (renderName == null)
         {
-            renderName = Instantiate(new GameObject("renderName"), Info.transform).AddComponent<SpriteRenderer>();
+            renderName = new GameObject("renderName").AddComponent<SpriteRenderer>();
+            renderName.transform.parent = Info.transform;
         }
         if (nameSkin != null)
         {

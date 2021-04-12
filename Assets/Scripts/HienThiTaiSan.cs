@@ -7,19 +7,26 @@ public class HienThiTaiSan : MonoBehaviour
 {
     public Text textDOLA;
     public Text textDia;
-    public Text textTL;
-    public Text textDKN;
+    public Text textCoin;
     // Start is called before the first frame update
     void Start()
     {
-        Personal.OnDOLAChanged += setTextDOLA;
-        Personal.OnDiaChanged += setTextDia;
-        Personal.OnTheLucChanged += setTextTL;
-        Personal.OnDKNChanged += setTextDKN;
-        setTextDOLA(0, Personal.DOLA);
-        setTextDia(0, Personal.Dia);
-        setTextDKN(0, 0);
-        setTextTL(0, 0);
+        if (textDOLA != null)
+        {
+            Personal.OnDOLAChanged += setTextDOLA;
+            setTextDOLA(0, Personal.DOLA);
+        }
+        if (textDia != null)
+        {
+            Personal.OnDiaChanged += setTextDia;
+            setTextDia(0, Personal.Dia);
+        }
+        if (textCoin != null)
+        {
+            Personal.OnCoinChanged += setTextCoin;
+            setTextCoin(0, Personal.Coin);
+        }
+
     }
     private void setTextDOLA(int o, int n)
     {
@@ -29,20 +36,26 @@ public class HienThiTaiSan : MonoBehaviour
     {
         textDia.text = n.ToString();
     }
-    private void setTextTL(int o, int n)
+
+    private void setTextCoin(int o, int n)
     {
-        textTL.text = Personal.TheLuc.ToString() + "/" + Personal.THELUCMAX.ToString();
-    }
-    private void setTextDKN(int o, int n)
-    {
-        textDKN.text = Personal.DKN.ToString();
+        textCoin.text = n.ToString();
     }
 
     private void OnDestroy()
     {
-        Personal.OnDOLAChanged -= setTextDOLA;
-        Personal.OnDiaChanged -= setTextDia;
-        Personal.OnTheLucChanged -= setTextTL;
-        Personal.OnDKNChanged -= setTextDKN;
+
+        if (textDOLA != null)
+        {
+            Personal.OnDOLAChanged -= setTextDOLA;
+        }
+        if (textDia != null)
+        {
+            Personal.OnDiaChanged -= setTextDia;
+        }
+        if (textCoin != null)
+        {
+            Personal.OnCoinChanged -= setTextCoin;
+        }
     }
 }

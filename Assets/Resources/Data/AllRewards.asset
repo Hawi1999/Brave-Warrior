@@ -13,15 +13,18 @@ MonoBehaviour:
   m_Name: AllRewards
   m_EditorClassIdentifier: 
   rewardWeapons:
-  - {fileID: 2422506037603961047, guid: 62c412463eb164d4a83240f04224fe0f, type: 3}
-  - {fileID: -8808814182322680711, guid: 26aef3c758329ff4b86736fa86d1e6ed, type: 3}
-  - {fileID: -8808814182322680711, guid: 9a022f42bfde0254eaf487949c019cfa, type: 3}
-  - {fileID: 582422041288849897, guid: e0ee225d65ca0154ea72bcea729d1282, type: 3}
-  - {fileID: 1871398524974568193, guid: a248b84039715314ba3e98b0f0e5401a, type: 3}
-  - {fileID: 285602991418993159, guid: aaed38f83d9f49e4fa49011f8b7cd577, type: 3}
-  - {fileID: 5945235851873355518, guid: 9d7de08e2d4d3b24ab8b34d0d1480d6e, type: 3}
   - {fileID: 2710216697594111671, guid: 1ff1587256c450340b15c357e10ce8ca, type: 3}
+  - {fileID: 285602991418993159, guid: aaed38f83d9f49e4fa49011f8b7cd577, type: 3}
+  - {fileID: 2422506037603961047, guid: 62c412463eb164d4a83240f04224fe0f, type: 3}
+  - {fileID: 688851508097198121, guid: 5e922c59994b6a2419b8b1d34ea492f3, type: 3}
+  - {fileID: 5945235851873355518, guid: 9d7de08e2d4d3b24ab8b34d0d1480d6e, type: 3}
+  - {fileID: 1871398524974568193, guid: a248b84039715314ba3e98b0f0e5401a, type: 3}
+  - {fileID: -8808814182322680711, guid: 9a022f42bfde0254eaf487949c019cfa, type: 3}
+  - {fileID: -8808814182322680711, guid: 26aef3c758329ff4b86736fa86d1e6ed, type: 3}
+  - {fileID: 582422041288849897, guid: e0ee225d65ca0154ea72bcea729d1282, type: 3}
+  - {fileID: 7106767373877137945, guid: c39f35adc3f22b4449e4cff70b80d9b2, type: 3}
   rewardGolds:
   - {fileID: 1379741184104274330, guid: b8304be3819f90047a5c13e133202d96, type: 3}
   - {fileID: 1379741184104274330, guid: af88f33fc8e1f974da6d7ae1322a2e1b, type: 3}
   - {fileID: 1379741184104274330, guid: 3d346655a6d3431478002a6b09d41793, type: 3}
+  Update: 0
